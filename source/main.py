@@ -11,6 +11,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # لیست URL کانفیگ‌ها
 URLS = [
+    "https://raw.githubusercontent.com/MahsaNetConfigTopic/config/refs/heads/main/xray_final.txt",
     "https://istanbulsydneyhotel.com/blogs/site/sni.php?security=reality",
     "https://istanbulsydneyhotel.com/blogs/site/sni.php",
     "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt",
