@@ -2,152 +2,190 @@
 # -*- coding: utf-8 -*-
 
 """
-ConfigForge – اتوآپدیت کانفیگ‌های V2Ray/VLESS/VMess
-این اسکریپت به‌صورت دوره‌ای subscription URLs را دریافت کرده،
-کانفیگ‌ها را ذخیره و در GitHub ریپوی شما آپلود می‌کند.
-
-- هم‌زمان‌سازی با Mirror قبلی (لیستی از URL) انجام می‌شود
-- لاگ‌گذاری کامل برای هر فایل داریم تا Debug راحت باشد
-- طراحی ماژولار برای افزودن منابع یا فرآیندهای بعدی
+ConfigForge – اتوآپدیت پیشرفته کانفیگ‌های V2Ray
+--------------------------------------------------
+- جمع‌آوری کانفیگ‌ها از منابع متعدد
+- تفکیک بر اساس پروتکل: vless، vmess، trojan و ...
+- ساخت فایل کلی و فایل لایت با ۳۰ کانفیگ سریع
+- ذخیره در پوشه configs/
+- اتوماسیون commit و push به گیت‌هاب
+Author: ShatakVPN
 """
 
 import os
 import re
+import subprocess
 import threading
-import urllib.parse
-import urllib3
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
-from github import Github, GithubException
+
 import requests
+import urllib.parse
+import urllib3
+from github import Github, GithubException
 
-# ---------------------- تنظیمات ---------------------- #
+# ------------------- تنظیمات ------------------- #
+CONFIG_DIR = "configs"
+MIRROR_DIR = "githubmirror"  # برای ذخیره خام فایل‌ها
+MAX_LIGHT_CONFIGS = 30  # تعداد کانفیگ‌های سریع در فایل light.txt
 
-# محل ذخیره‌ فایل‌های نمایش داده شده در پوشه githubmirror/
-MIRROR_DIR = "githubmirror"
-# لیست subscription URL برای fetch
 URLS = [
-    # مثال واقعی از نمونه‌ای که فرستادی؛ می‌تونی لیست رو گسترش بدی
     "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt",
     "https://raw.githubusercontent.com/acymz/AutoVPN/refs/heads/main/data/V2.txt",
-    # در ادامه …
+    # URLهای بیشتر را اینجا اضافه کنید
 ]
 
-# ---------- ساختار برای لاگ‌گذاری با ترتیبی مشخص ---------- #
-LOGS_BY_FILE = defaultdict(list)
-_LOG_LOCK = threading.Lock()
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/138.0.0.0 Safari/537.36"
+)
 
-def _extract_index(msg: str) -> int:
-    """استخراج شماره فایل از پیام مانند 'githubmirror/3.txt' برای دسته‌بندی لاگ‌ها"""
-    m = re.search(r"githubmirror/(\d+)\.txt", msg)
-    return int(m.group(1)) if m else 0
-
-def log(msg: str):
-    """لاگ امن در ساختاری مرتب‌شده بر اساس شماره فایل"""
-    idx = _extract_index(msg)
-    with _LOG_LOCK:
-        LOGS_BY_FILE[idx].append(msg)
-
-# دریافت زمان محلی برای کامیت
-OFFSET = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-# توکن و ریپو از محیط
+# توکن و ریپو از متغیر محیطی
 TOKEN = os.environ.get("GITHUB_TOKEN")
 REPO_NAME = os.environ.get("REPO_NAME", "ShatakVPN/ConfigForge")
 
-# نمونه‌سازی GitHub API
-g = Github(TOKEN)
-repo = g.get_repo(REPO_NAME)
-
-# خاموش کردن Warning مربوط به SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-USER_AGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-              "AppleWebKit/537.36 (KHTML, like Gecko) "
-              "Chrome/138.0.0.0 Safari/537.36")
+# لاگ‌ها به صورت thread-safe ذخیره می‌شوند
+log_lock = threading.Lock()
+logs = []
 
-# ---------------------- تابع‌های اصلی ---------------------- #
+def log(msg):
+    with log_lock:
+        time_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        full_msg = f"[{time_str}] {msg}"
+        logs.append(full_msg)
+        print(full_msg)
 
-def fetch_data(url: str, timeout=10, max_attempts=3) -> str:
-    """دریافت محتوا با ۳ تلاش: https + verify, https + no verify, http + no verify"""
+# ----------------- توابع اصلی ----------------- #
+
+def fetch_url(url, timeout=15, retries=3):
+    """دریافت محتوا با تلاش مجدد و fallback http/https و ignore ssl errors"""
     headers = {"User-Agent": USER_AGENT}
     last_exc = None
 
-    for attempt in range(1, max_attempts + 1):
-        modified_url = url
+    for attempt in range(1, retries + 1):
+        target_url = url
         verify = True
-
         if attempt == 2:
             verify = False
         elif attempt == 3:
             parsed = urllib.parse.urlparse(url)
             if parsed.scheme == "https":
-                modified_url = parsed._replace(scheme="http").geturl()
+                target_url = parsed._replace(scheme="http").geturl()
             verify = False
-
         try:
-            resp = requests.get(modified_url, timeout=timeout, verify=verify, headers=headers)
-            resp.raise_for_status()
-            log(f"دانلود موفق: {url} (تلاش {attempt})")
-            return resp.text
+            r = requests.get(target_url, timeout=timeout, headers=headers, verify=verify)
+            r.raise_for_status()
+            log(f"دانلود موفق: {target_url} (تلاش {attempt})")
+            return r.text
         except Exception as e:
             last_exc = e
-            log(f"تلاش {attempt} برای {url} ناموفق: {e}")
-    raise last_exc or RuntimeError("Unknown fetch error")
+            log(f"خطا در تلاش {attempt} برای {target_url}: {e}")
+    raise last_exc or RuntimeError("Unknown download error")
 
-def save_and_push(local_path: str, remote_path: str):
-    """ذخیره محتوای دانلود شده و آپلود در GitHub (ایجاد یا آپدیت)"""
-    with open(local_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    try:
-        file_in_repo = repo.get_contents(remote_path)
-        prev = file_in_repo.decoded_content.decode("utf-8")
-        if prev != content:
-            repo.update_file(path=remote_path,
-                             message=f"Update {remote_path} @ {OFFSET}",
-                             content=content,
-                             sha=file_in_repo.sha)
-            log(f"✏️ به‌روزرسانی فایل {remote_path}")
+def parse_configs(raw_text):
+    """
+    استخراج لینک‌های کانفیگ V2Ray از متن خام.
+    فیلتر پروتکل‌ها براساس پیشوند لینک‌ها:
+      - vless://
+      - vmess://
+      - trojan://
+      - shadowsocks:// (در صورت نیاز)
+    """
+    lines = raw_text.splitlines()
+    result = defaultdict(list)
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("vless://"):
+            result["vless"].append(line)
+        elif line.startswith("vmess://"):
+            result["vmess"].append(line)
+        elif line.startswith("trojan://"):
+            result["trojan"].append(line)
+        elif line.startswith("ss://"):
+            result["shadowsocks"].append(line)
         else:
-            log(f"↩️ تغییری در {remote_path} نبود")
-    except GithubException as ge:
-        if ge.status == 404:
-            repo.create_file(path=remote_path,
-                             message=f"Create {remote_path} @ {OFFSET}",
-                             content=content)
-            log(f"✅ فایل جدید {remote_path} ساخته شد")
-        else:
-            log(f"🚫 خطای GitHub برای {remote_path}: {ge.data}")
+            result["unknown"].append(line)
+    return result
 
-def process_url(idx: int):
-    url = URLS[idx]
-    local = f"{MIRROR_DIR}/{idx+1}.txt"
-    remote = f"{MIRROR_DIR}/{idx+1}.txt"
+def save_list_to_file(lst, filepath):
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write("\n".join(lst))
+    log(f"ذخیره فایل: {filepath} تعداد خطوط: {len(lst)}")
 
-    os.makedirs(MIRROR_DIR, exist_ok=True)
+def merge_all_protocols(protocol_dict):
+    all_links = []
+    for proto_list in protocol_dict.values():
+        all_links.extend(proto_list)
+    # حذف تکراری‌ها
+    return list(dict.fromkeys(all_links))
 
-    try:
-        text = fetch_data(url)
-        with open(local, "w", encoding="utf-8") as f:
-            f.write(text)
-        log(f"ذخیره محلی: {local}")
-        save_and_push(local, remote)
-    except Exception as e:
-        log(f"خطا در پردازش {url}: {e}")
+def save_light_file(all_links, filepath, max_count=MAX_LIGHT_CONFIGS):
+    # برای ساده‌سازی: فایل لایت شامل اولین ۳۰ کانفیگ است
+    # در آینده می‌توان با تست سرعت واقعی جایگزین شود
+    limited = all_links[:max_count]
+    save_list_to_file(limited, filepath)
+    log(f"ذخیره فایل Light با {len(limited)} کانفیگ")
+
+def git_commit_push():
+    """
+    کامیت و پوش تغییرات به ریپو با نام کاربر و ایمیل گیت‌هاب اکشن
+    """
+    subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"], check=True)
+    subprocess.run(["git", "config", "--global", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"], check=True)
+    subprocess.run(["git", "add", CONFIG_DIR], check=True)
+    # اگر تغییر نیست commit نمی‌کنیم
+    result = subprocess.run(["git", "diff", "--cached", "--quiet"])
+    if result.returncode == 0:
+        log("هیچ تغییری برای کامیت وجود ندارد.")
+        return
+    subprocess.run(["git", "commit", "-m", f"Update VPN configs {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"], check=True)
+    subprocess.run(["git", "push"], check=True)
+    log("تغییرات به ریپو پوش شد.")
 
 def main():
-    """نقطه ورود: دانلود موازی، لاگ‌گذاری منظم، خروجی به کنسول"""
-    with ThreadPoolExecutor(max_workers=min(10, len(URLS))) as ex:
-        futures = {ex.submit(process_url, i): i for i in range(len(URLS))}
-        for fut in as_completed(futures):
-            pass  # لاگ‌ها در توابع درون fut انجام شده
+    log("شروع به‌روزرسانی کانفیگ‌ها")
 
-    # چاپ مرتب‌شده بر اساس فایل
-    for idx in sorted(LOGS_BY_FILE.keys()):
-        print(f"\n--- لاگ فایل {idx}.txt ---")
-        for m in LOGS_BY_FILE[idx]:
-            print(m)
+    os.makedirs(CONFIG_DIR, exist_ok=True)
+
+    all_protocol_configs = defaultdict(list)
+
+    # دانلود موازی
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = {executor.submit(fetch_url, url): url for url in URLS}
+        for fut in as_completed(futures):
+            url = futures[fut]
+            try:
+                text = fut.result()
+                configs = parse_configs(text)
+                for proto, links in configs.items():
+                    all_protocol_configs[proto].extend(links)
+                log(f"پردازش و جمع‌آوری کانفیگ از: {url}")
+            except Exception as e:
+                log(f"خطا در دریافت یا پردازش {url}: {e}")
+
+    # ذخیره فایل‌های جداگانه پروتکل
+    for proto, links in all_protocol_configs.items():
+        filename = os.path.join(CONFIG_DIR, f"{proto}.txt")
+        unique_links = list(dict.fromkeys(links))  # حذف تکراری
+        save_list_to_file(unique_links, filename)
+
+    # فایل جامع همه کانفیگ‌ها
+    all_links = merge_all_protocols(all_protocol_configs)
+    save_list_to_file(all_links, os.path.join(CONFIG_DIR, "all.txt"))
+
+    # فایل Light با 30 کانفیگ سریع (اینجا فقط ۳۰ اول رو برمی‌داریم)
+    save_light_file(all_links, os.path.join(CONFIG_DIR, "light.txt"), MAX_LIGHT_CONFIGS)
+
+    # کامیت و پوش
+    git_commit_push()
+
+    log("پایان عملیات")
 
 if __name__ == "__main__":
     main()
