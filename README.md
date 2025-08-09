@@ -4,6 +4,19 @@
 
 ---
 
+## Available Config Files / فایل‌های کانفیگ موجود / 可用配置文件 / Доступные файлы конфигурации / ملفات الإعدادات المتوفرة
+
+| Filename           | Description                       | Link                                              |
+|--------------------|---------------------------------|---------------------------------------------------|
+| `all.txt`          | All combined configs             | [configs/all.txt](configs/all.txt)                 |
+| `light.txt`        | Lightweight top 30 configs       | [configs/light.txt](configs/light.txt)             |
+| `vless.txt`        | VLESS protocol configs           | [configs/vless.txt](configs/vless.txt)             |
+| `vmess.txt`        | VMess protocol configs           | [configs/vmess.txt](configs/vmess.txt)             |
+| `shadowsocks.txt`  | Shadowsocks configs              | [configs/shadowsocks.txt](configs/shadowsocks.txt) |
+| `unknown.txt`      | Unknown or other configs         | [configs/unknown.txt](configs/unknown.txt)         |
+
+---
+
 ## English
 
 A powerful tool to automatically download, parse, and organize VPN configurations (VLESS, VMess, Shadowsocks, etc.) and push updates to GitHub.
