@@ -1,116 +1,101 @@
 import os
 import requests
-import concurrent.futures
+import urllib.parse
+import urllib3
 import re
 from datetime import datetime
-import subprocess
+import zoneinfo
 
-# --------- تنظیمات ---------
+# غیرفعال کردن هشدارهای SSL
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# لیست URL کانفیگ‌ها
 URLS = [
     "https://istanbulsydneyhotel.com/blogs/site/sni.php?security=reality",
     "https://istanbulsydneyhotel.com/blogs/site/sni.php",
     "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt",
     "https://raw.githubusercontent.com/acymz/AutoVPN/refs/heads/main/data/V2.txt",
-    # (بقیه URL ها را اینجا اضافه کن)
+    #... بقیه URL ها را اینجا اضافه کن ...
 ]
 
-CONFIG_DIR = "configs"
-REPO_NAME = os.environ.get("REPO_NAME", "ShatakVPN/ConfigForge")
-TOKEN = os.environ.get("GITHUB_TOKEN", "").strip()
+# فولدر ذخیره‌سازی فایل‌ها
+OUTPUT_DIR = "configs"
 
-# --------- توابع ---------
+# ساخت فولدر در صورت عدم وجود
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def log(msg):
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}")
+# گرفتن زمان محلی اروپا/مسکو برای کامیت‌ها
+zone = zoneinfo.ZoneInfo("Europe/Moscow")
+now = datetime.now(zone)
+timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
 
-def fetch_url(url):
-    headers = {"User-Agent": "Mozilla/5.0"}
+# یوزر-ایجنت مرورگر
+CHROME_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/138.0.0.0 Safari/537.36"
+)
+
+def fetch_data(url: str, timeout=10):
+    headers = {"User-Agent": CHROME_UA}
     try:
-        r = requests.get(url, headers=headers, timeout=15)
+        r = requests.get(url, timeout=timeout, headers=headers, verify=False)
         r.raise_for_status()
-        log(f"دانلود موفق: {url} تعداد خطوط: {len(r.text.strip().splitlines())}")
-        return r.text.strip()
+        return r.text
     except Exception as e:
-        log(f"خطا در دانلود {url}: {e}")
+        print(f"⚠️ خطا در دانلود {url}: {e}")
         return ""
 
-def classify_configs(lines):
-    vless, vmess, ss, unknown = [], [], [], []
-
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        # بررسی پروتکل
-        if line.startswith("vless://"):
-            vless.append(line)
-        elif line.startswith("vmess://"):
-            vmess.append(line)
-        elif line.startswith("ss://"):
-            ss.append(line)
-        else:
-            unknown.append(line)
-    return vless, vmess, ss, unknown
-
-def save_file(path, lines):
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
-    log(f"ذخیره فایل: {path} تعداد خطوط: {len(lines)}")
-
-def ensure_dir():
-    if not os.path.exists(CONFIG_DIR):
-        os.makedirs(CONFIG_DIR)
-        log(f"ساخت پوشه {CONFIG_DIR}")
-
-def git_commit_push():
-    if not TOKEN or not REPO_NAME:
-        log("❌ توکن یا نام ریپو تنظیم نشده‌اند!")
-        return
-
-    try:
-        # تنظیم URL ریموت با توکن
-        remote_url = f"https://x-access-token:{TOKEN}@github.com/{REPO_NAME}.git"
-        subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=True)
-
-        subprocess.run(["git", "add", "."], check=True)
-        commit_msg = f"Update VPN configs {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        subprocess.run(["git", "commit", "-m", commit_msg], check=True)
-        subprocess.run(["git", "push", "origin", "main"], check=True)
-        log("🚀 عملیات push با موفقیت انجام شد.")
-    except subprocess.CalledProcessError as e:
-        log(f"❌ خطا در git push: {e}")
-
-# --------- تابع اصلی ---------
+def detect_protocol(line: str) -> str:
+    line = line.strip()
+    if line.startswith("vless://"):
+        return "vless"
+    elif line.startswith("vmess://"):
+        return "vmess"
+    elif line.startswith("ss://"):
+        return "shadowsocks"
+    else:
+        return "unknown"
 
 def main():
-    log("شروع دانلود و پردازش کانفیگ‌ها...")
-    ensure_dir()
-
+    print(f"[{timestamp}] شروع دانلود و پردازش کانفیگ‌ها...")
+    
     all_lines = []
+    categorized = {
+        "vless": [],
+        "vmess": [],
+        "shadowsocks": [],
+        "unknown": []
+    }
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
-        results = executor.map(fetch_url, URLS)
+    for url in URLS:
+        data = fetch_data(url)
+        lines = [line for line in data.splitlines() if line.strip()]
+        print(f"دانلود موفق: {url} تعداد خطوط: {len(lines)}")
 
-    for data in results:
-        if data:
-            all_lines.extend(data.splitlines())
-
-    vless, vmess, ss, unknown = classify_configs(all_lines)
+        for line in lines:
+            proto = detect_protocol(line)
+            categorized[proto].append(line)
+            all_lines.append(line)
 
     # ذخیره در فایل‌ها
-    save_file(f"{CONFIG_DIR}/vless.txt", vless)
-    save_file(f"{CONFIG_DIR}/vmess.txt", vmess)
-    save_file(f"{CONFIG_DIR}/shadowsocks.txt", ss)
-    save_file(f"{CONFIG_DIR}/unknown.txt", unknown)
+    for proto, lines in categorized.items():
+        path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+        print(f"ذخیره فایل: {path} تعداد خطوط: {len(lines)}")
 
-    save_file(f"{CONFIG_DIR}/all.txt", all_lines)
+    # فایل کلی شامل همه کانفیگ‌ها
+    all_path = os.path.join(OUTPUT_DIR, "all.txt")
+    with open(all_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(all_lines))
+    print(f"ذخیره فایل: {all_path} تعداد خطوط: {len(all_lines)}")
 
-    # ذخیره فایل light با 30 کانفیگ سریع (اولی‌ها)
-    light = all_lines[:30]
-    save_file(f"{CONFIG_DIR}/light.txt", light)
-
-    log("شروع عملیات گیت...")
-    git_commit_push()
+    # فایل light شامل ۳۰ کانفیگ سریع (اینجا ۳۰ تای اول از all)
+    light_path = os.path.join(OUTPUT_DIR, "light.txt")
+    with open(light_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(all_lines[:30]))
+    print(f"ذخیره فایل Light با {min(len(all_lines),30)} کانفیگ")
 
 if __name__ == "__main__":
     main()
