@@ -2,11 +2,11 @@ name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '0 * * * *'  # هر ساعت یکبار اجرا می‌شود، می‌توانید تغییر دهید
-  workflow_dispatch:  # امکان اجرا دستی
+    - cron: '0 * * * *'  # هر ساعت
+  workflow_dispatch:
 
 jobs:
-  build:
+  update-configs:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,3 +34,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         REPO_NAME: ShatakVPN/ConfigForge
       run: python source/main.py
+
+    - name: Push changes
+      env:
+        # این متغیر برای git push استفاده می‌شود
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+      run: |
+        git add .
+        git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+        git push https://x-access-token:${GITHUB_TOKEN}@github.com/ShatakVPN/ConfigForge.git main
