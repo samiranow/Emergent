@@ -8,7 +8,7 @@ ConfigForge – اتوآپدیت پیشرفته کانفیگ‌های V2Ray
 - تفکیک بر اساس پروتکل: vless، vmess، trojan و ...
 - ساخت فایل کلی و فایل لایت با ۳۰ کانفیگ سریع
 - ذخیره در پوشه configs/
-- اتوماسیون commit و push به گیت‌هاب
+- اتوماسیون commit و push به گیت‌هاب با توکن و آدرس ریموت صحیح
 Author: ShatakVPN
 """
 
@@ -27,7 +27,6 @@ from github import Github, GithubException
 
 # ------------------- تنظیمات ------------------- #
 CONFIG_DIR = "configs"
-MIRROR_DIR = "githubmirror"  # برای ذخیره خام فایل‌ها
 MAX_LIGHT_CONFIGS = 30  # تعداد کانفیگ‌های سریع در فایل light.txt
 
 URLS = [
@@ -135,17 +134,31 @@ def save_light_file(all_links, filepath, max_count=MAX_LIGHT_CONFIGS):
 def git_commit_push():
     """
     کامیت و پوش تغییرات به ریپو با نام کاربر و ایمیل گیت‌هاب اکشن
+    و تنظیم URL ریموت با توکن برای پوش امن
     """
     subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"], check=True)
     subprocess.run(["git", "config", "--global", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"], check=True)
     subprocess.run(["git", "add", CONFIG_DIR], check=True)
-    # اگر تغییر نیست commit نمی‌کنیم
+
+    # چک کردن تغییرات برای کامیت
     result = subprocess.run(["git", "diff", "--cached", "--quiet"])
     if result.returncode == 0:
         log("هیچ تغییری برای کامیت وجود ندارد.")
         return
+
     subprocess.run(["git", "commit", "-m", f"Update VPN configs {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"], check=True)
-    subprocess.run(["git", "push"], check=True)
+
+    token = TOKEN
+    repo_name = REPO_NAME
+    if not token or not repo_name:
+        log("توکن یا نام ریپو برای push تنظیم نشده است.")
+        return
+
+    remote_url = f"https://x-access-token:{token}@github.com/{repo_name}.git"
+    subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=True)
+
+    # فرض بر این است که branch اصلی main است. اگر master است تغییر بده
+    subprocess.run(["git", "push", "origin", "main"], check=True)
     log("تغییرات به ریپو پوش شد.")
 
 def main():
@@ -179,7 +192,7 @@ def main():
     all_links = merge_all_protocols(all_protocol_configs)
     save_list_to_file(all_links, os.path.join(CONFIG_DIR, "all.txt"))
 
-    # فایل Light با 30 کانفیگ سریع (اینجا فقط ۳۰ اول رو برمی‌داریم)
+    # فایل Light با ۳۰ کانفیگ سریع (اینجا فقط ۳۰ اول رو برمی‌داریم)
     save_light_file(all_links, os.path.join(CONFIG_DIR, "light.txt"), MAX_LIGHT_CONFIGS)
 
     # کامیت و پوش
