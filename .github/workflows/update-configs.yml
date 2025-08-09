@@ -2,7 +2,7 @@ name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '0 * * * *'  # هر ساعت یک بار اجرا میشه، میتونی تغییرش بدی
+    - cron: '0 * * * *'  # هر ساعت یکبار اجرا می‌شود، می‌توانید تغییر دهید
   workflow_dispatch:  # امکان اجرا دستی
 
 jobs:
@@ -25,10 +25,9 @@ jobs:
       with:
         python-version: '3.12'
 
-   - name: Install dependencies
-  run: |
-    if [ -f source/requirements.txt ]; then pip install -r source/requirements.txt; fi
-
+    - name: Install dependencies
+      run: |
+        if [ -f source/requirements.txt ]; then pip install -r source/requirements.txt; fi
 
     - name: Run main.py
       env:
