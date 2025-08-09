@@ -1,10 +1,6 @@
-
-markdown
-Copy
-Edit
 # ConfigForge - VPN Config Collector
 
-[English](#english) | [فارسی](#%D9%81%D8%A7%D8%B1%D8%B3%DB%8C) | [中文](#%E4%B8%AD%E6%96%87)
+[English](#english) | [فارسی](#فارسی) | [中文](#中文)
 
 ---
 
@@ -12,132 +8,93 @@ Edit
 
 A powerful tool to automatically download, parse, and organize VPN configurations (VLESS, VMess, Shadowsocks, etc.) and push updates to GitHub.
 
-### Features
+**Features:**
+- Download VPN config lists from multiple sources
+- Parse and categorize configs by protocol
+- Generate aggregated and lightweight subscription files
+- Auto commit and push updates to GitHub
+- Easy to customize and extend
 
-- Download VPN config lists from multiple sources  
-- Parse and categorize configs by protocol  
-- Generate aggregated and lightweight subscription files  
-- Auto commit and push updates to GitHub  
-- Easy to customize and extend  
-
-### Usage
-
+**Usage:**
 1. Clone this repository:  
-   ```bash
-   git clone https://github.com/ShatakVPN/ConfigForge.git
-   cd ConfigForge
-Set your GitHub Personal Access Token (PAT) as a secret PAT_TOKEN in GitHub Actions for push access.
+   `git clone https://github.com/ShatakVPN/ConfigForge.git`  
+   `cd ConfigForge`
+2. Set your GitHub Personal Access Token (PAT) as a secret `PAT_TOKEN` in GitHub Actions for push access.
+3. Install dependencies:  
+   `pip install -r source/requirements.txt`
+4. Run the main script:  
+   `python source/main.py`
+5. Or use the included GitHub Actions workflow for scheduled updates.
 
-Install dependencies:
+**Requirements:**
+- Python 3.8+
+- `requests` package (from requirements.txt)
 
-bash
-Copy
-Edit
-pip install -r source/requirements.txt
-Run the main script:
+**License:**  
+GPL-3.0 License
 
-bash
-Copy
-Edit
-python source/main.py
-Or use the included GitHub Actions workflow for scheduled updates.
+---
 
-Requirements
-Python 3.8+
+## فارسی
 
-requests package (from requirements.txt)
-
-License
-MIT License
-
-فارسی
 ابزاری قدرتمند برای دانلود، پردازش و دسته‌بندی خودکار کانفیگ‌های VPN (VLESS، VMess، Shadowsocks و ...) و به‌روزرسانی خودکار مخزن گیت‌هاب.
 
-ویژگی‌ها
-دانلود لیست کانفیگ از منابع مختلف
+**ویژگی‌ها:**
+- دانلود لیست کانفیگ از منابع مختلف
+- دسته‌بندی کانفیگ‌ها بر اساس پروتکل
+- تولید فایل‌های اشتراک کلی و سبک
+- ارسال خودکار تغییرات به گیت‌هاب
+- قابل سفارشی‌سازی و توسعه آسان
 
-دسته‌بندی کانفیگ‌ها بر اساس پروتکل
+**نحوه استفاده:**
+1. کلون کردن مخزن:  
+   `git clone https://github.com/ShatakVPN/ConfigForge.git`  
+   `cd ConfigForge`
+2. تنظیم توکن دسترسی شخصی گیت‌هاب (PAT) به عنوان متغیر مخفی `PAT_TOKEN` در GitHub Actions جهت دسترسی به ارسال تغییرات.
+3. نصب وابستگی‌ها:  
+   `pip install -r source/requirements.txt`
+4. اجرای اسکریپت اصلی:  
+   `python source/main.py`
+5. یا استفاده از Workflow گیت‌هاب برای به‌روزرسانی زمان‌بندی شده.
 
-تولید فایل‌های اشتراک کلی و سبک
+**پیش‌نیازها:**
+- پایتون نسخه ۳.۸ و بالاتر
+- بسته `requests` (از فایل requirements.txt)
 
-ارسال خودکار تغییرات به گیت‌هاب
+**مجوز:**  
+مجوز GPL-3.0
 
-قابل سفارشی‌سازی و توسعه آسان
+---
 
-نحوه استفاده
-کلون کردن مخزن:
+## 中文
 
-bash
-Copy
-Edit
-git clone https://github.com/ShatakVPN/ConfigForge.git
-cd ConfigForge
-تنظیم توکن دسترسی شخصی گیت‌هاب (PAT) به عنوان متغیر مخفی PAT_TOKEN در GitHub Actions جهت دسترسی به ارسال تغییرات.
-
-نصب وابستگی‌ها:
-
-bash
-Copy
-Edit
-pip install -r source/requirements.txt
-اجرای اسکریپت اصلی:
-
-bash
-Copy
-Edit
-python source/main.py
-یا استفاده از Workflow گیت‌هاب برای به‌روزرسانی زمان‌بندی شده.
-
-پیش‌نیازها
-پایتون نسخه ۳.۸ و بالاتر
-
-بسته requests (از فایل requirements.txt)
-
-مجوز
-مجوز MIT
-
-中文
 一个强大的工具，用于自动下载、解析和整理VPN配置（VLESS、VMess、Shadowsocks等），并自动推送更新到GitHub。
 
-功能
-从多个来源下载VPN配置列表
+**功能:**
+- 从多个来源下载VPN配置列表
+- 按协议解析和分类配置
+- 生成汇总和轻量级订阅文件
+- 自动提交并推送更新到GitHub
+- 易于定制和扩展
 
-按协议解析和分类配置
+**使用方法:**
+1. 克隆仓库:  
+   `git clone https://github.com/ShatakVPN/ConfigForge.git`  
+   `cd ConfigForge`
+2. 在GitHub Actions中设置个人访问令牌（PAT）为`PAT_TOKEN`秘密变量，以获得推送权限。
+3. 安装依赖:  
+   `pip install -r source/requirements.txt`
+4. 运行主脚本:  
+   `python source/main.py`
+5. 或使用内置的GitHub Actions工作流进行定时更新。
 
-生成汇总和轻量级订阅文件
+**需求:**
+- Python 3.8及以上版本
+- `requests`包（通过requirements.txt安装）
 
-自动提交并推送更新到GitHub
+**许可:**  
+GPL-3.0 许可
 
-易于定制和扩展
+---
 
-使用方法
-克隆仓库：
-
-bash
-Copy
-Edit
-git clone https://github.com/ShatakVPN/ConfigForge.git
-cd ConfigForge
-在GitHub Actions中设置个人访问令牌（PAT）为PAT_TOKEN秘密变量，以获得推送权限。
-
-安装依赖：
-
-bash
-Copy
-Edit
-pip install -r source/requirements.txt
-运行主脚本：
-
-bash
-Copy
-Edit
-python source/main.py
-或使用内置的GitHub Actions工作流进行定时更新。
-
-需求
-Python 3.8及以上版本
-
-requests包（通过requirements.txt安装）
-
-许可
-MIT 许可
+[Back to top](#configforge---vpn-config-collector)
