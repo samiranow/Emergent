@@ -9,14 +9,12 @@ import json
 from datetime import datetime
 import zoneinfo
 
-# Disable SSL warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 URLS = [
     "https://raw.githubusercontent.com/MahsaNetConfigTopic/config/refs/heads/main/xray_final.txt",
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
     "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt",
-
     # ... Add more URLs here ...
 ]
 
@@ -50,6 +48,8 @@ def detect_protocol(line: str) -> str:
         return "vmess"
     elif line.startswith("ss://"):
         return "shadowsocks"
+    elif line.startswith("trojan://"):  # اضافه شده
+        return "trojan"
     else:
         return "unknown"
 
@@ -67,6 +67,11 @@ def extract_host(line: str, proto: str) -> str:
                 return m.group(1)
         elif proto == "shadowsocks":
             m = re.search(r"ss://(?:[^@]+@)?([^:/]+)", line)
+            if m:
+                return m.group(1)
+        elif proto == "trojan":  # اضافه شده
+            # معمولاً فرمت trojan: trojan://password@host:port?param=xxx#tag
+            m = re.search(r"trojan://[^@]+@([^:/?#]+)", line)
             if m:
                 return m.group(1)
     except Exception:
@@ -98,6 +103,7 @@ async def main_async():
         "vless": [],
         "vmess": [],
         "shadowsocks": [],
+        "trojan": [],   # اضافه شده
         "unknown": []
     }
 
@@ -118,7 +124,6 @@ async def main_async():
             latency = await test_speed(host)
             return (latency, line, proto)
 
-    # تست سرعت روی همه کانفیگ‌ها در دسته‌بندی‌ها
     all_results = []
     for proto in categorized:
         lines = categorized[proto]
@@ -129,24 +134,20 @@ async def main_async():
         categorized[proto] = [line for _, line, _ in results]
         all_results.extend(results)
 
-    # کل کانفیگ‌ها بر اساس سرعت مرتب می‌شوند
     all_results.sort(key=lambda x: x[0])
     all_sorted_lines = [line for _, line, _ in all_results]
 
-    # ذخیره فایل‌های جداگانه دسته‌بندی شده (مرتب‌شده)
     for proto, lines in categorized.items():
         path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
         print(f"Saved: {path} | Lines: {len(lines)}")
 
-    # ذخیره کل کانفیگ‌ها به ترتیب سرعت
     all_path = os.path.join(OUTPUT_DIR, "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted_lines))
     print(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
 
-    # ذخیره نسخه لایت با ۳۰ کانفیگ برتر
     light_path = os.path.join(OUTPUT_DIR, "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted_lines[:30]))
