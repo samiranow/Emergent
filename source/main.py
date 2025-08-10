@@ -12,10 +12,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # List of configuration URLs
 URLS = [
     "https://raw.githubusercontent.com/MahsaNetConfigTopic/config/refs/heads/main/xray_final.txt",
-    "https://istanbulsydneyhotel.com/blogs/site/sni.php?security=reality",
-    "https://istanbulsydneyhotel.com/blogs/site/sni.php",
+    "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
+    "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/All_Configs_Sub.txt",
     "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt",
-    "https://raw.githubusercontent.com/acymz/AutoVPN/refs/heads/main/data/V2.txt",
+    "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/all_configs.txt",
     # ... Add more URLs here ...
 ]
 
