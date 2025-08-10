@@ -2,8 +2,6 @@
 
 [English](#english) | [فارسی](#فارسی) | [中文](#中文) | [Русский](#русский) | [العربية](#العربية)
 
-\---ش
-
 | Filename          | Description                | Link                                                                                                                |
 | ----------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `all.txt`         | All combined configs       | [all.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/all.txt)                 |
