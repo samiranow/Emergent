@@ -1,6 +1,15 @@
-# ConfigForge - VPN Config Collector
+<h1 align="center">ConfigForge 🚀</h1>
+<p align="center">
+  <b>Powerful VPN Config Collector & Organizer</b>
+</p>
 
-[English](#english) | [فارسی](#فارسی) | [中文](#中文) | [Русский](#русский) | [العربية](#العربية)
+<p align="center">
+  <img src="https://img.shields.io/github/stars/ShatakVPN/ConfigForge?style=for-the-badge&color=yellow" alt="Stars" />
+  <img src="https://img.shields.io/github/forks/ShatakVPN/ConfigForge?style=for-the-badge&color=blue" alt="Forks" />
+  <img src="https://img.shields.io/github/last-commit/ShatakVPN/ConfigForge?style=for-the-badge&color=brightgreen" alt="Last Commit" />
+  <img src="https://img.shields.io/github/license/ShatakVPN/ConfigForge?style=for-the-badge&color=orange" alt="License" />
+  <img src="https://img.shields.io/github/languages/top/ShatakVPN/ConfigForge?style=for-the-badge&color=purple" alt="Top Language" />
+</p>
 
 | Filename          | Description                | Link                                                                                                                |
 | ----------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------- |
