@@ -1,5 +1,5 @@
-<h1 align="center">ConfigForge 🚀</h1>
-<p align="center">
+<h1>ConfigForge 🚀</h1>
+<p>
   <b>Powerful VPN Config Collector & Organizer</b>
 </p>
 
@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/github/last-commit/ShatakVPN/ConfigForge?style=for-the-badge&color=brightgreen" alt="Last Commit" />
   <img src="https://img.shields.io/github/license/ShatakVPN/ConfigForge?style=for-the-badge&color=orange" alt="License" />
   <img src="https://img.shields.io/github/languages/top/ShatakVPN/ConfigForge?style=for-the-badge&color=purple" alt="Top Language" />
-</p>
+
 
 | Filename          | Description                | Link                                                                                                                |
 | ----------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------- |
@@ -21,7 +21,7 @@
 | `unknown.txt`     | Unknown or other configs   | [unknown.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/unknown.txt)         |
 
 ---
-
+</p>
 <details>
 <summary>English</summary>
 
