@@ -4,6 +4,14 @@ hysteria2://Yet-Another-Public-Config-1@YAPC-1.adamhayward.co.uk:36300?security=
 hy2://Yet-Another-Public-Config-1@yapc-1.adamhayward.co.uk:36300/?insecure=1&sni=YAPC-1.afshin.ir&obfs=salamander&obfs-password=Yet-Another-Public-Config-1#%F0%9F%9B%B0%EF%B8%8F15%40oneclickvpnkeys
 hy2://10193f1d-9a4d-457a-b668-bdeb240e092c@netcupus.alisaku.com:34444/?insecure=1&sni=apps.apple.com#%F0%9F%8F%B5%EF%B8%8F38%40oneclickvpnkeys`
 hysteria2://FREEEE_7.87958795@91.107.251.13:443?security=tls&obfs=salamander&obfs-password=aA%408795&insecure=1&sni=fast.com#%40Daily_Configs
+hy2://1JA6CF8JMUDvoz6zfm5qHwlN3Wo@43.207.119.98:4410/?insecure=1#%E2%8F%B061%40oneclickvpnkeys
+hy2://ok6aX0A7QX9SkYo6R0GBBJDUsK4@143.244.140.87:8460/?insecure=1&sni=bing.com#%E2%8F%B052%40oneclickvpnkeys
+hy2://Y5kSCRNcOSz5YQUkjehzVXeT2mk@175.41.154.215:19298/?insecure=1&sni=bing.com#%E2%8F%B054%40oneclickvpnkeys
+hy2://3C8h8X6kimbOX68joVe3kTERw@206.189.20.193:7197/?insecure=1&sni=bing.com#%E2%8F%B044%40oneclickvpnkeys
+hy2://79c4fe11-9787-406b-bf94-c1c1dbf59e28@77.223.214.193:31468/?insecure=1&sni=www.bing.com#%E2%8F%B046%40oneclickvpnkeys
+hy2://Yet-Another-Public-Config-1@yapc-1.adamhayward.co.uk:36600/?insecure=1&sni=YAPC-1.afshin.ir&obfs=salamander&obfs-password=Yet-Another-Public-Config-1#%E2%8F%B045%40oneclickvpnkeys
+hy2://1abdc446-f90e-466f-95ce-e006edd89628@hshl.huasuan666.top:22157/?insecure=1&sni=hshl.huasuan666.top#%E2%8F%B047%40oneclickvpnkeys
+hy2://2574ef1a-1ff9-4db0-9df3-5940de07235b@hsyg.huasuan666.top:22156/?insecure=1&sni=hsyg.huasuan666.top#%E2%8F%B043%40oneclickvpnkeys`
 🇯🇵
 🇺🇸
 🇺🇲ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88
@@ -41,3 +49,4 @@ hysteria2://FREEEE_7.87958795@91.107.251.13:443?security=tls&obfs=salamander&obf
 🇺🇸ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88
 🇩🇪
 آموزش اشتراک‌گذاری اینترنت بدون فیلتر از نسخه ویندوز #oblivionDesktop، بر روی سایر دستگاه‌ها ...💡 telegra.ph/Enable-and-Share-VPN-Internet-from-Your-Laptop-06-21© Amirhossein.J🧑‍🦱 iSegaro
+ssr://c3NjYS5pcnVuZG5zLm5ldDo0NDM6YXV0aF9hZXMxMjhfbWQ1OmFlcy0xMjgtY2ZiOmh0dHBfcG9zdDpKQ1JVZFhKaU1GWlFUaVFrLz9wcm90b3BhcmFtPSZyZW1hcms9OEorSHMvQ2ZoN0ZmVGt4ZjZJMjM1WVd3Jm9iZnNwYXJhbT0mcmVtYXJrcz04SitIcVBDZmg2WkRRUzAwTlM0eE5UUXVNakEwTGpFekxUQXlPRGc9
