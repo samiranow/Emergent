@@ -2,15 +2,11 @@ hy2://dongtaiwang.com@51.158.218.2:50066/?insecure=1&sni=www.bing.com#%F0%9F%8D%
 hy2://Yet-Another-Public-Config-1@yapc-1.adamhayward.co.uk:36300/?insecure=1&sni=YAPC-1.afshin.ir&obfs=salamander&obfs-password=Yet-Another-Public-Config-1#%F0%9F%9B%B0%EF%B8%8F15%40oneclickvpnkeys
 hy2://3C8h8X6kimbOX68joVe3kTERw@206.189.20.193:7197/?insecure=1&sni=bing.com#%E2%8F%B044%40oneclickvpnkeys
 hy2://ok6aX0A7QX9SkYo6R0GBBJDUsK4@143.244.140.87:8460/?insecure=1&sni=bing.com#%E2%8F%B052%40oneclickvpnkeys
-hy2://Y5kSCRNcOSz5YQUkjehzVXeT2mk@175.41.154.215:19298/?insecure=1&sni=bing.com#%E2%8F%B054%40oneclickvpnkeys
 hy2://79c4fe11-9787-406b-bf94-c1c1dbf59e28@77.223.214.193:31468/?insecure=1&sni=www.bing.com#%E2%8F%B046%40oneclickvpnkeys
 hy2://Yet-Another-Public-Config-1@yapc-1.adamhayward.co.uk:36600/?insecure=1&sni=YAPC-1.afshin.ir&obfs=salamander&obfs-password=Yet-Another-Public-Config-1#%E2%8F%B045%40oneclickvpnkeys
 hy2://wxiTacqUnFMT6QPG1xHX578Omo@138.197.185.116:7444/?insecure=1&sni=bing.com#%F0%9F%9A%9C57%40oneclickvpnkeys
 hysteria2://Yet-Another-Public-Config-1@yapc-1.adamhayward.co.uk:36600?sni=YAPC-1.afshin.ir&obfs=salamander&obfs-password=Yet-Another-Public-Config-1&insecure=1#%40Daily_Configs
 hysteria2://Yet-Another-Public-Config-1@yapc-1.adamhayward.co.uk:36600?security=tls&obfs=salamander&obfs-password=Yet-Another-Public-Config-1&insecure=1&sni=YAPC-1.afshin.ir#%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%B6%F0%9D%97%BB%20%E2%9E%A0%20%F0%9D%90%93%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%A0%F0%9D%90%AB%F0%9D%90%9A%F0%9D%90%A6%3A%20%40V2rayTun0
-hy2://651a72ad-40c6-4ffb-b468-747fe3df9ef0@hsels.huasuan666.top:22160/?insecure=1&sni=hsels.huasuan666.top#%F0%9F%A7%8180%40oneclickvpnkeys
-hy2://ec8b45d0-ddb0-4758-bf19-5ce2d409dc3c@rb.dport.top:33657/?insecure=1&sni=rb.dport.top&obfs=salamander&obfs-password=ZDQxZDhjZDk4ZjAwYjIwNA%3D%3D#%F0%9F%A7%8190%40oneclickvpnkeys`
-hy2://ec8b45d0-ddb0-4758-bf19-5ce2d409dc3c@hg.dport.top:33656/?insecure=1&sni=hg.dport.top&obfs=salamander&obfs-password=ZDQxZDhjZDk4ZjAwYjIwNA%3D%3D#%F0%9F%A7%8191%40oneclickvpnkeys
 🇯🇵
 🇺🇸
 🇺🇲ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88
@@ -48,4 +44,3 @@ hy2://ec8b45d0-ddb0-4758-bf19-5ce2d409dc3c@hg.dport.top:33656/?insecure=1&sni=hg
 🇺🇸ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88
 🇩🇪
 آموزش اشتراک‌گذاری اینترنت بدون فیلتر از نسخه ویندوز #oblivionDesktop، بر روی سایر دستگاه‌ها ...💡 telegra.ph/Enable-and-Share-VPN-Internet-from-Your-Laptop-06-21© Amirhossein.J🧑‍🦱 iSegaro
-ssr://NjIuMTAwLjIwNS40ODo5ODk6b3JpZ2luOmFlcy0yNTYtY2ZiOnBsYWluOlpqaG1OMkZEZW1OUVMySnpSamh3TXc9PS8/cHJvdG9wYXJhbT0mcmVtYXJrPThKK0hyUENmaDZkZlIwSmY2SXV4NVp1OSZvYmZzcGFyYW09JnJlbWFya3M9OEorSHJQQ2ZoNmRIUWkwMk1pNHhNREF1TWpBMUxqUTRMVFV5TVRJPQ==
