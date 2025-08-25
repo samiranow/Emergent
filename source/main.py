@@ -15,12 +15,11 @@ URLS = [
     "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
     "https://www.v2nodes.com/subscriptions/country/all/?key=92E2CCF69B51739",
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
+    # ... Add more URLs here ...
 ]
 
 OUTPUT_DIR = "configs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-API_ENDPOINT = "https://your-api.example.com/ping"
 
 zone = zoneinfo.ZoneInfo("Europe/Moscow")
 timestamp = datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
@@ -49,7 +48,7 @@ def detect_protocol(line: str) -> str:
         return "vmess"
     elif line.startswith("ss://"):
         return "shadowsocks"
-    elif line.startswith("trojan://"):
+    elif line.startswith("trojan://"):  # اضافه شده
         return "trojan"
     else:
         return "unknown"
@@ -70,7 +69,8 @@ def extract_host(line: str, proto: str) -> str:
             m = re.search(r"ss://(?:[^@]+@)?([^:/]+)", line)
             if m:
                 return m.group(1)
-        elif proto == "trojan":
+        elif proto == "trojan":  # اضافه شده
+            # معمولاً فرمت trojan: trojan://password@host:port?param=xxx#tag
             m = re.search(r"trojan://[^@]+@([^:/?#]+)", line)
             if m:
                 return m.group(1)
@@ -80,7 +80,7 @@ def extract_host(line: str, proto: str) -> str:
 
 async def test_speed(host: str, timeout=5):
     if not host:
-        return 9999
+        return float('inf')
     url = f"http://{host}"
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
@@ -89,12 +89,11 @@ async def test_speed(host: str, timeout=5):
             r = await client.get(url)
             if r.status_code == 200:
                 end = time.monotonic()
-                latency_ms = (end - start) * 1000
+                return end - start
             else:
-                latency_ms = 9999
+                return float('inf')
     except Exception:
-        latency_ms = 9999
-    return latency_ms
+        return float('inf')
 
 async def main_async():
     print(f"[{timestamp}] Starting download and processing with speed test...")
@@ -104,11 +103,9 @@ async def main_async():
         "vless": [],
         "vmess": [],
         "shadowsocks": [],
-        "trojan": [],
+        "trojan": [],   # اضافه شده
         "unknown": []
     }
-
-    hosts_to_send = []
 
     for url in URLS:
         data = fetch_data(url)
@@ -117,36 +114,30 @@ async def main_async():
         for line in lines:
             proto = detect_protocol(line)
             categorized[proto].append(line)
-            all_lines.append((line, proto))
-            host = extract_host(line, proto)
-            hosts_to_send.append({"host": host})
+            all_lines.append(line)
 
     sem = asyncio.Semaphore(100)
 
-    async def test_line(item):
-        line, proto = item
-        host = extract_host(line, proto)
-        latency = await test_speed(host)
-        return {"line": line, "protocol": proto, "host": host, "latency_ms": latency}
+    async def test_line(line, proto):
+        async with sem:
+            host = extract_host(line, proto)
+            latency = await test_speed(host)
+            return (latency, line, proto)
 
-    results = await asyncio.gather(*[test_line(item) for item in all_lines])
+    all_results = []
+    for proto in categorized:
+        lines = categorized[proto]
+        if not lines:
+            continue
+        results = await asyncio.gather(*[test_line(line, proto) for line in lines])
+        results.sort(key=lambda x: x[0])
+        categorized[proto] = [line for _, line, _ in results]
+        all_results.extend(results)
 
-    # ارسال همه هاست‌ها یکجا به API
-    for r in results:
-        if "latency_ms" in r and (r["latency_ms"] is None or r["latency_ms"] == float('inf')):
-            r["latency_ms"] = 9999
-    try:
-        requests.post(API_ENDPOINT, json=results, timeout=10)
-    except Exception as e:
-        print(f"⚠️ Error sending batch to API: {e}")
+    all_results.sort(key=lambda x: x[0])
+    all_sorted_lines = [line for _, line, _ in all_results]
 
-    # مرتب‌سازی نتایج برای فایل‌ها
-    results.sort(key=lambda x: x["latency_ms"])
-    categorized_lines = {k: [] for k in categorized}
-    for r in results:
-        categorized_lines[r["protocol"]].append(r["line"])
-
-    for proto, lines in categorized_lines.items():
+    for proto, lines in categorized.items():
         path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
@@ -154,13 +145,13 @@ async def main_async():
 
     all_path = os.path.join(OUTPUT_DIR, "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
-        f.write("\n".join([r["line"] for r in results]))
-    print(f"Saved: {all_path} | Lines: {len(results)}")
+        f.write("\n".join(all_sorted_lines))
+    print(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
 
     light_path = os.path.join(OUTPUT_DIR, "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
-        f.write("\n".join([r["line"] for r in results[:30]]))
-    print(f"Saved Light version with {min(len(results), 30)} configs")
+        f.write("\n".join(all_sorted_lines[:30]))
+    print(f"Saved Light version with {min(len(all_sorted_lines), 30)} configs")
 
 if __name__ == "__main__":
     import asyncio
