@@ -1,193 +1,90 @@
-import os
-import requests
-import urllib3
-import re
 import asyncio
+import aiohttp
 import base64
+import re
+from urllib.parse import urlparse
 import json
-from datetime import datetime
-import zoneinfo
+import time
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+CHECK_HOST_API_BASE = "https://check-host.net/check-ping"
 
-# ===== تنظیمات =====
-URLS = [
-    "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
-    "https://www.v2nodes.com/subscriptions/country/all/?key=92E2CCF69B51739",
-    "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
-    # ... Add more URLs here ...
-]
-
-OUTPUT_DIR = "configs"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-zone = zoneinfo.ZoneInfo("Europe/Moscow")
-timestamp = datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
-
-CHROME_UA = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/138.0.0.0 Safari/537.36"
-)
-
-CHECK_HOST_BASE = "https://check-host.net/check-ping"
-
-# ===== توابع اصلی =====
-
-def fetch_data(url: str, timeout=10):
-    headers = {"User-Agent": CHROME_UA}
+async def get_ping_result_from_checkhost(session, link, country_code="ir"):
     try:
-        r = requests.get(url, timeout=timeout, headers=headers, verify=False)
-        r.raise_for_status()
-        return r.text
+        # استخراج آدرس سرور از لینک VPN
+        parsed = urlparse(link)
+        hostname = parsed.hostname
+
+        if not hostname:
+            return float('inf')  # اگر نتوانست hostname پیدا کند
+
+        # ارسال درخواست پینگ به API
+        params = {"host": hostname}
+        async with session.get(CHECK_HOST_API_BASE, params=params) as resp:
+            data = await resp.json()
+            request_id = data.get("request_id")
+            if not request_id:
+                print(f"[ERROR] No request_id for {hostname}")
+                return float('inf')
+
+        # منتظر ماندن برای نتیجه (API async)
+        await asyncio.sleep(2)  # کمی صبر برای پردازش
+
+        # گرفتن نتیجه پینگ
+        result_url = f"https://check-host.net/check-result/{request_id}"
+        async with session.get(result_url) as resp:
+            result_data = await resp.json()
+
+        if not result_data:
+            print(f"[WARNING] No result for {hostname}")
+            return float('inf')
+
+        # پیدا کردن نودهای ایران
+        latencies = []
+        for node, checks in result_data.items():
+            if node.startswith(country_code):  # فقط IR
+                for check in checks:
+                    if check and isinstance(check, list) and check[0] is not None:
+                        latencies.append(check[0])
+
+        if latencies:
+            avg_latency = sum(latencies) / len(latencies)
+            print(f"[PING] {hostname} -> {avg_latency:.2f} ms (IR nodes)")
+            return avg_latency
+        else:
+            print(f"[PING] {hostname} -> No IR nodes found")
+            return float('inf')
+
     except Exception as e:
-        print(f"⚠️ Error downloading {url}: {e}")
-        return ""
+        print(f"[ERROR] {hostname}: {e}")
+        return float('inf')
 
-def detect_protocol(line: str) -> str:
-    line = line.strip()
-    if line.startswith("vless://"):
-        return "vless"
-    elif line.startswith("vmess://"):
-        return "vmess"
-    elif line.startswith("ss://"):
-        return "shadowsocks"
-    elif line.startswith("trojan://"):
-        return "trojan"
-    else:
-        return "unknown"
 
-def extract_host(line: str, proto: str) -> str:
-    try:
-        if proto == "vmess":
-            b64_part = line[8:]
-            padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
-            decoded = base64.b64decode(padded).decode(errors="ignore")
-            data = json.loads(decoded)
-            return data.get("add", "")
-        elif proto == "vless":
-            m = re.search(r"vless://[^@]+@([^:\/]+)", line)
-            if m:
-                return m.group(1)
-        elif proto == "shadowsocks":
-            m = re.search(r"ss://(?:[^@]+@)?([^:/]+)", line)
-            if m:
-                return m.group(1)
-        elif proto == "trojan":
-            m = re.search(r"trojan://[^@]+@([^:/?#]+)", line)
-            if m:
-                return m.group(1)
-    except Exception:
-        pass
-    return ""
+async def process_links(links, country_code="ir"):
+    async with aiohttp.ClientSession() as session:
+        tasks = []
+        for link in links:
+            tasks.append(get_ping_result_from_checkhost(session, link, country_code))
+            await asyncio.sleep(3)  # برای جلوگیری از بلاک شدن API
 
-async def get_ping_result_from_checkhost(host: str) -> dict:
-    """
-    درخواست به API سرویس check-host برای پینگ گرفتن
-    """
-    if not host:
-        return {}
+        results = await asyncio.gather(*tasks)
 
-    # مرحله 1: ایجاد تست جدید
-    create_url = f"{CHECK_HOST_BASE}?host={host}"
-    try:
-        resp = requests.get(create_url, timeout=10)
-        data = resp.json()
-        test_id = data.get("request_id")
-        if not test_id:
-            return {}
-    except Exception:
-        return {}
+    # ترکیب لینک با پینگ و مرتب‌سازی
+    combined = list(zip(links, results))
+    combined.sort(key=lambda x: x[1])
 
-    # مرحله 2: منتظر بمانیم و نتیجه را بگیریم
-    await asyncio.sleep(3)
-    result_url = f"https://check-host.net/check-result/{test_id}"
-    try:
-        resp = requests.get(result_url, timeout=10)
-        result = resp.json()
-        return result
-    except Exception:
-        return {}
+    print("\n--- Sorted by IR Ping ---")
+    for link, latency in combined:
+        status = f"{latency:.2f} ms" if latency != float('inf') else "No Data"
+        print(f"{status} | {link}")
 
-def calculate_avg_ping_iran(api_result: dict) -> float:
-    """
-    محاسبه میانگین پینگ فقط از نودهایی که موقعیت‌شان شامل 'IR' باشد.
-    """
-    latencies = []
-    for node, results in api_result.items():
-        for result in results:
-            if len(result) >= 3:
-                status = result[0]
-                latency = result[1]
-                location = result[2]
-                if status == "OK" and latency is not None and "IR" in location.upper():
-                    latencies.append(latency)
-    if latencies:
-        return sum(latencies) / len(latencies)
-    return float('inf')
+    return combined
 
-# ===== منطق اصلی =====
-async def main_async():
-    print(f"[{timestamp}] Starting download and processing with Check-Host API...")
-
-    all_lines = []
-    categorized = {
-        "vless": [],
-        "vmess": [],
-        "shadowsocks": [],
-        "trojan": [],
-        "unknown": []
-    }
-
-    # دانلود داده‌ها
-    for url in URLS:
-        data = fetch_data(url)
-        lines = [line for line in data.splitlines() if line.strip()]
-        print(f"Downloaded: {url} | Lines: {len(lines)}")
-        for line in lines:
-            proto = detect_protocol(line)
-            categorized[proto].append(line)
-            all_lines.append(line)
-
-    sem = asyncio.Semaphore(10)  # محدودیت برای جلوگیری از بلاک شدن API
-
-    async def test_line(line, proto):
-        async with sem:
-            host = extract_host(line, proto)
-            api_result = await get_ping_result_from_checkhost(host)
-            latency = calculate_avg_ping_iran(api_result)
-            return (latency, line, proto)
-
-    all_results = []
-    for proto in categorized:
-        lines = categorized[proto]
-        if not lines:
-            continue
-        results = await asyncio.gather(*[test_line(line, proto) for line in lines])
-        results.sort(key=lambda x: x[0])
-        categorized[proto] = [line for _, line, _ in results]
-        all_results.extend(results)
-
-    # مرتب‌سازی کلی
-    all_results.sort(key=lambda x: x[0])
-    all_sorted_lines = [line for _, line, _ in all_results]
-
-    # ذخیره فایل‌ها
-    for proto, lines in categorized.items():
-        path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
-        with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(lines))
-        print(f"Saved: {path} | Lines: {len(lines)}")
-
-    all_path = os.path.join(OUTPUT_DIR, "all.txt")
-    with open(all_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines))
-    print(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
-
-    light_path = os.path.join(OUTPUT_DIR, "light.txt")
-    with open(light_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines[:30]))
-    print(f"Saved Light version with {min(len(all_sorted_lines), 30)} configs")
 
 if __name__ == "__main__":
-    asyncio.run(main_async())
+    # تست با چند لینک VPN
+    sample_links = [
+        "vmess://Y29uZmlnMQ==",
+        "vless://example.com:443",
+        "trojan://node.ir:443"
+    ]
+    asyncio.run(process_links(sample_links, "ir"))
