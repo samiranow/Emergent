@@ -3,11 +3,12 @@ import requests
 import urllib3
 import re
 import asyncio
-import httpx
 import base64
 import json
 from datetime import datetime
 import zoneinfo
+import httpx
+import time
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -30,6 +31,8 @@ CHROME_UA = (
     "Chrome/138.0.0.0 Safari/537.36"
 )
 
+API_HEADERS = {"Accept": "application/json", "User-Agent": CHROME_UA}
+
 def fetch_data(url: str, timeout=10):
     headers = {"User-Agent": CHROME_UA}
     try:
@@ -48,7 +51,7 @@ def detect_protocol(line: str) -> str:
         return "vmess"
     elif line.startswith("ss://"):
         return "shadowsocks"
-    elif line.startswith("trojan://"):  # اضافه شده
+    elif line.startswith("trojan://"):
         return "trojan"
     else:
         return "unknown"
@@ -69,8 +72,7 @@ def extract_host(line: str, proto: str) -> str:
             m = re.search(r"ss://(?:[^@]+@)?([^:/]+)", line)
             if m:
                 return m.group(1)
-        elif proto == "trojan":  # اضافه شده
-            # معمولاً فرمت trojan: trojan://password@host:port?param=xxx#tag
+        elif proto == "trojan":
             m = re.search(r"trojan://[^@]+@([^:/?#]+)", line)
             if m:
                 return m.group(1)
@@ -78,32 +80,68 @@ def extract_host(line: str, proto: str) -> str:
         pass
     return ""
 
-async def test_speed(host: str, timeout=5):
-    if not host:
-        return float('inf')
-    url = f"http://{host}"
+async def check_host_ping_request(host: str, max_nodes=10):
+    url = f"https://check-host.net/check-ping?host={host}&max_nodes={max_nodes}"
     try:
-        async with httpx.AsyncClient(timeout=timeout) as client:
-            import time
-            start = time.monotonic()
-            r = await client.get(url)
+        async with httpx.AsyncClient(timeout=10) as client:
+            r = await client.get(url, headers=API_HEADERS)
             if r.status_code == 200:
-                end = time.monotonic()
-                return end - start
-            else:
-                return float('inf')
+                return r.json()
     except Exception:
-        return float('inf')
+        return None
+    return None
+
+async def check_host_ping_result(request_id: str, timeout=30):
+    url = f"https://check-host.net/check-result/{request_id}"
+    stime = time.time()
+    while time.time() - stime < timeout:
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                r = await client.get(url, headers=API_HEADERS)
+                if r.status_code == 200:
+                    data = r.json()
+                    if all(v is not None for v in data.values()):
+                        return data
+        except Exception:
+            pass
+        await asyncio.sleep(2)
+    return None
+
+async def get_iran_ping(host: str):
+    req_data = await check_host_ping_request(host)
+    if not req_data or "request_id" not in req_data:
+        return float("inf")
+
+    request_id = req_data["request_id"]
+    nodes_info = req_data.get("nodes", {})
+
+    res_data = await check_host_ping_result(request_id)
+    if not res_data:
+        return float("inf")
+
+    # محاسبه میانگین پینگ برای نودهای ایران
+    iran_latencies = []
+    for node, results in res_data.items():
+        if not results or not isinstance(results, list) or len(results) == 0:
+            continue
+        node_info = nodes_info.get(node, [])
+        if len(node_info) >= 2 and node_info[1].lower() == "iran":
+            values = [item[1] * 1000 for item in results[0] if item and item[0] == "OK"]
+            iran_latencies.extend(values)
+
+    if iran_latencies:
+        return sum(iran_latencies) / len(iran_latencies)
+    return float("inf")
 
 async def main_async():
-    print(f"[{timestamp}] Starting download and processing with speed test...")
+    print(f"[{timestamp}] Starting download and processing with Check-Host API...")
 
     all_lines = []
     categorized = {
         "vless": [],
         "vmess": [],
         "shadowsocks": [],
-        "trojan": [],   # اضافه شده
+        "trojan": [],
         "unknown": []
     }
 
@@ -116,12 +154,12 @@ async def main_async():
             categorized[proto].append(line)
             all_lines.append(line)
 
-    sem = asyncio.Semaphore(100)
+    sem = asyncio.Semaphore(20)
 
-    async def test_line(line, proto):
+    async def process_line(line, proto):
         async with sem:
             host = extract_host(line, proto)
-            latency = await test_speed(host)
+            latency = await get_iran_ping(host)
             return (latency, line, proto)
 
     all_results = []
@@ -129,7 +167,7 @@ async def main_async():
         lines = categorized[proto]
         if not lines:
             continue
-        results = await asyncio.gather(*[test_line(line, proto) for line in lines])
+        results = await asyncio.gather(*[process_line(line, proto) for line in lines])
         results.sort(key=lambda x: x[0])
         categorized[proto] = [line for _, line, _ in results]
         all_results.extend(results)
@@ -154,5 +192,4 @@ async def main_async():
     print(f"Saved Light version with {min(len(all_sorted_lines), 30)} configs")
 
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(main_async())
