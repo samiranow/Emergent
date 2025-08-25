@@ -78,6 +78,4 @@ You can **fork this repository** and let **GitHub Actions** handle everything fo
 ---
 
 **License:** GPL-3.0 License
-</details>
 
----
