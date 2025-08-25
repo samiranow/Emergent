@@ -2,12 +2,12 @@ import os
 import requests
 import urllib3
 import re
+import json
 import asyncio
 import httpx
-import base64
-import json
 from datetime import datetime
 import zoneinfo
+import base64
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -15,6 +15,7 @@ URLS = [
     "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
     "https://www.v2nodes.com/subscriptions/country/all/?key=92E2CCF69B51739",
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
+    # ... Add more URLs here ...
 ]
 
 OUTPUT_DIR = "configs"
@@ -28,6 +29,9 @@ CHROME_UA = (
     "AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/138.0.0.0 Safari/537.36"
 )
+
+API_URL = "https://check-host.net/check-ping?host="  # API برای تست latency
+SEM_LIMIT = 50  # تعداد همزمان درخواست‌ها
 
 def fetch_data(url: str, timeout=10):
     headers = {"User-Agent": CHROME_UA}
@@ -61,7 +65,7 @@ def extract_host(line: str, proto: str) -> str:
             data = json.loads(decoded)
             return data.get("add", "")
         elif proto == "vless":
-            m = re.search(r"vless://[^@]+@([^:\/]+)", line)
+            m = re.search(r"vless://[^@]+@([^:/]+)", line)
             if m:
                 return m.group(1)
         elif proto == "shadowsocks":
@@ -76,85 +80,85 @@ def extract_host(line: str, proto: str) -> str:
         pass
     return ""
 
-async def test_speed(host: str, timeout=5):
+async def get_latency(client: httpx.AsyncClient, host: str):
     if not host:
         return float('inf')
-    url = f"http://{host}"
     try:
-        async with httpx.AsyncClient(timeout=timeout) as client:
-            import time
-            start = time.monotonic()
-            r = await client.get(url)
-            if r.status_code == 200:
-                end = time.monotonic()
-                return round((end - start) * 1000, 2)  # ms
-            else:
-                return float('inf')
+        r = await client.get(f"{API_URL}{host}", timeout=10)
+        r.raise_for_status()
+        data = r.json()
+        if isinstance(data, dict):
+            return data.get("ping", float('inf'))
+        return float('inf')
     except Exception:
         return float('inf')
 
+async def process_line(sem, client, line, proto, output_json):
+    async with sem:
+        host = extract_host(line, proto)
+        latency = await get_latency(client, host)
+        output_json.append({
+            "line": line,
+            "protocol": proto,
+            "host": host,
+            "latency_ms": latency
+        })
+        return line, proto
+
 async def main_async():
-    print(f"[{timestamp}] Starting download and processing with speed test...")
+    print(f"[{timestamp}] Starting download and processing via API latency (async)...")
 
     all_lines = []
-    categorized = {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
-    log_data = []
+    categorized = {
+        "vless": [],
+        "vmess": [],
+        "shadowsocks": [],
+        "trojan": [],
+        "unknown": []
+    }
 
-    # Download
-    for url in URLS:
-        data = fetch_data(url)
-        lines = [line for line in data.splitlines() if line.strip()]
-        print(f"Downloaded: {url} | Lines: {len(lines)}")
-        for line in lines:
-            proto = detect_protocol(line)
+    output_json = []
+    sem = asyncio.Semaphore(SEM_LIMIT)
+
+    async with httpx.AsyncClient() as client:
+        tasks = []
+        for url in URLS:
+            data = fetch_data(url)
+            lines = [line for line in data.splitlines() if line.strip()]
+            print(f"Downloaded: {url} | Lines: {len(lines)}")
+            for line in lines:
+                proto = detect_protocol(line)
+                task = asyncio.create_task(process_line(sem, client, line, proto, output_json))
+                tasks.append(task)
+
+        results = await asyncio.gather(*tasks)
+        for line, proto in results:
             categorized[proto].append(line)
             all_lines.append(line)
 
-    sem = asyncio.Semaphore(100)
+    # ذخیره فایل JSON
+    json_path = os.path.join(OUTPUT_DIR, "ping_log.json")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(output_json, f, ensure_ascii=False, indent=2)
+    print(f"Saved: {json_path} | Lines: {len(output_json)}")
 
-    async def test_line(line, proto):
-        async with sem:
-            host = extract_host(line, proto)
-            latency = await test_speed(host)
-            log_data.append({"line": line, "protocol": proto, "host": host, "latency_ms": latency})
-            return latency, line, proto
-
-    # Test speed concurrently
-    all_results = []
-    for proto, lines in categorized.items():
-        if not lines:
-            continue
-        results = await asyncio.gather(*[test_line(line, proto) for line in lines])
-        results.sort(key=lambda x: x[0])
-        categorized[proto] = [line for _, line, _ in results]
-        all_results.extend(results)
-
-    all_results.sort(key=lambda x: x[0])
-    all_sorted_lines = [line for _, line, _ in all_results]
-
-    # Save categorized files
+    # ذخیره فایل های متنی بر اساس پروتکل
     for proto, lines in categorized.items():
         path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
         print(f"Saved: {path} | Lines: {len(lines)}")
 
-    # Save all.txt and light.txt
+    # all.txt و light.txt
     all_path = os.path.join(OUTPUT_DIR, "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines))
-    print(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
+        f.write("\n".join(all_lines))
+    print(f"Saved: {all_path} | Lines: {len(all_lines)}")
 
     light_path = os.path.join(OUTPUT_DIR, "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines[:30]))
-    print(f"Saved Light version with {min(len(all_sorted_lines),30)} configs")
-
-    # Save full log JSON
-    log_path = os.path.join(OUTPUT_DIR, "ping_log.json")
-    with open(log_path, "w", encoding="utf-8") as f:
-        json.dump(log_data, f, indent=2)
-    print(f"Saved full log JSON: {log_path}")
+        f.write("\n".join(all_lines[:30]))
+    print(f"Saved Light version with {min(len(all_lines), 30)} configs")
 
 if __name__ == "__main__":
     asyncio.run(main_async())
