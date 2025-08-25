@@ -19,32 +19,54 @@
 
 ---
 
-**Features:**
+## Features:
 - Download VPN config lists from multiple sources
 - Parse and categorize configs by protocol
 - Generate aggregated and lightweight subscription files
 - Auto commit and push updates to GitHub
 - Easy to customize and extend
 
-**Usage:**
-1. Clone this repository:  
-   `git clone https://github.com/ShatakVPN/ConfigForge.git`  
-   `cd ConfigForge`
-2. Set your GitHub Personal Access Token (PAT) as a secret `PAT_TOKEN` in GitHub Actions for push access.
-3. Install dependencies:  
-   `pip install -r source/requirements.txt`
-4. Run the main script:  
-   `python source/main.py`
-5. Or use the included GitHub Actions workflow for scheduled updates.
+## How to Use
 
-**Requirements:**
-- Python 3.1+
-- `requests` package (from requirements.txt)
+** ✅ Option 1: Run Locally **
 
-**License:** GPL-3.0 License
-</details>
+Clone the repository:
+```bash
+git clone https://github.com/ShatakVPN/ConfigForge.git
+cd ConfigForge
+```
+
+Install dependencies:
+```bash
+pip install -r source/requirements.txt
+```
+
+Run the main script:
+```bash
+python source/main.py
+```
 
 ---
+
+** ✅ Option 2: Run Automatically on GitHub (No Server Needed) **
+
+You can **fork this repository** and let **GitHub Actions** handle everything for you!  
+
+1. **Fork this repository** to your own GitHub account.  
+2. **Create a Personal Access Token (PAT)** and add it as a secret:  
+   - Go to **Settings → Secrets → Actions**  
+   - Add a new secret named **`PAT_TOKEN`** with your token value.  
+3. **Enable the included workflow**:
+```bash
+.github/workflows/update.yml
+```
+4. Done! The workflow will automatically:  
+   - Download and update VPN configs  
+   - Commit changes to your forked repo  
+   - Run on a schedule — completely serverless!  
+
+---
+
 <p align="center">
   <img src="https://img.shields.io/github/stars/ShatakVPN/ConfigForge?style=for-the-badge&color=yellow" alt="Stars" />
   <img src="https://img.shields.io/github/forks/ShatakVPN/ConfigForge?style=for-the-badge&color=blue" alt="Forks" />
@@ -52,5 +74,10 @@
   <img src="https://img.shields.io/github/license/ShatakVPN/ConfigForge?style=for-the-badge&color=orange" alt="License" />
   <img src="https://img.shields.io/github/languages/top/ShatakVPN/ConfigForge?style=for-the-badge&color=purple" alt="Top Language" />
 </p>
+
+---
+
+**License:** GPL-3.0 License
+</details>
 
 ---
