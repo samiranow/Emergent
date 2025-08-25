@@ -1,8 +1,80 @@
 [
   {
-    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@138.68.231.98:7020?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
-    "protocol": "vless",
-    "host": "138.68.231.98",
+    "line": "Cgp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTMuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PSUyRiZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh6/wn4e1W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtSlAtMTExODkzMjQKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTIwLmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJmZwPWNocm9tZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZzaWQ9ZjUmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJmVuY3J5cHRpb249bm9uZSPwn4ev8J+HtVt3d3cudjJub2Rlcy5jb21dIHZsZXNzLUpQLTExMTg5MjA4CnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xNy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZmcD1jaHJvbWUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmc2lkPWY1JnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZlbmNyeXB0aW9uPW5vbmUj8J+Hr/Cfh7Vbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1KUC0xMTE4OTIwNQp2bGVzczovL2ZkM2UzNjBlLTgwNjItNDc0Yi04OWNmLTYwZTg5ZmU5ODc5MkBnb3phcmZyZWVib3QubmluaXdlYmxvZy5vcmc6MTUzMj9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9amU0dVlDcnROR1MzTEJKZmVuVHBVQ04wU1o2VFZGZlhMenZnemxmNVNGdyZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3Amc25pPXJlZmVyc2lvbi5jb20mc2lkPWM4NDg5MGEwZGJkMDRhYTkj8J+HuvCfh6Zbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1VQS0xMTE4OTIwMQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTUuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PSUyRiZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh6/wn4e1W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtSlAtMTExODkyMDAKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTQuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PS8mdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4ev8J+HtVt3d3cudjJub2Rlcy5jb21dIHZsZXNzLUpQLTExMTg5MTk5CnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xMy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh7Dwn4e3W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtS1ItMTExODkxOTgKdmxlc3M6Ly9iNWI2ODg3MS1kMDI2LTQzNzUtOGM5ZC00MDBhYjI4YTU4YTFAZ296YXJmcmVlYm90Lm5pbml3ZWJsb2cub3JnOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9azVnaENRamZ6SC12bzhkTmFqUWJhbDE3RTloenpuNFByY3JaRVNkMjN5NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3Amc25pPXJlZmVyc2lvbi5jb20mc2lkPTM3MmE5NGQyZjgwMDlhOTQj8J+HqfCfh6pbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1ERS0xMTE4OTE5NgpzczovL1kyaGhZMmhoTWpBdGFXVjBaaTF3YjJ4NU1UTXdOVHAwZGxneGRpTk9VMFpRWDB4SFgySktANjUuMjAuMTE1LjE5NDo4MDgj8J+HuPCfh6pbd3d3LnYybm9kZXMuY29tXSBzcy1TRS0xMTE4OTE5Mgp2bGVzczovL2JjNGY0OWRjLTJjNTAtNDlhYy1iOGZhLWQzMDIwYTVlNjVkZUA5MS45OS4yMTYuMjM1OjQ0Mz9zZWN1cml0eT1ub25lJmVuY3J5cHRpb249bm9uZSZob3N0PXp1bGEuaXImaGVhZGVyVHlwZT1odHRwJnR5cGU9dGNwI/Cfh6nwn4eqW3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtREUtMTExODkxOTEKdmxlc3M6Ly8xYTZmZTUwMC01OWRhLTQ1OTgtODU3Ni0yNTZmMDY3NjVmZmJAOTQuMjYuMjI4LjEwOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9Sl9qUXE5LVNXUVpqaU1odVBhRlY3VjJNYUo0cGtLZ1ZSYXo3eDZ0bXZ5OCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZzbmk9cnUuc2Zhc3RpLnJ1JnNpZD0xNjg5NTQ1OWEyYzc3NjhkI/Cfh7Pwn4exW3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtTkwtMTExODkxODQKdmxlc3M6Ly83Y2ZlZTEwYS01N2YyLTRlYjctYTE3Ni1iNGZhZWJkNDVjODNAcXAudnFwdi50b3A6MjA1Mj9zZWN1cml0eT1ub25lJmVuY3J5cHRpb249bm9uZSZoZWFkZXJUeXBlPW5vbmUmdHlwZT10Y3Aj8J+HqfCfh6pbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1ERS0xMTE4OTE4Mwp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTMuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mZnA9Y2hyb21lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JnNpZD1mNSZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mZW5jcnlwdGlvbj1ub25lI/Cfh7rwn4e4W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtLTExMTg5MDk4VVMKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTE1LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4ev8J+HtVt3d3cudjJub2Rlcy5jb21dIHZsZXNzLS0xMTE4OTA5M0pQCnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi00LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0vJnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZzaWQ9ZjUj8J+Hr/Cfh7Vbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1KUC0xMTE4OTA4OQp2bGVzczovLzRhZTFlZDkyLWU2NzYtNzZmMC1jZmUzLTJhNmU5NTUyNWMxZEBVc2EuYmF6aWlyLmlyOjQ0ND9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9QVVnMmgxNlg4eFA1czd0bmtjRHV5Zlg1Q0JWN1d2Q29ZNDhPS2hidFF5dyZoZWFkZXJUeXBlPW5vbmUmZnA9ZmlyZWZveCZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXRnanUub3JnJnNpZD04MjFiYmM0NGRkN2E0ZTE1I/Cfj7Nbd3d3LnYybm9kZXMuY29tXSB2bGVzcy0tMTExODkwNzYKc3M6Ly9ZV1Z6TFRJMU5pMW5ZMjA2TVRJNVptVXdPVFV0Tm1Fek15MDBPR0ZpTFdFeFpUSXRZVEl6WW1SbVpUa3lNekE0QDQ1LjEzNC4xMy43NTo0NDMj8J+Ht/Cfh7pbd3d3LnYybm9kZXMuY29tXSBzcy1SVS0xMTE4OTA3NQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tNC5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZzcHg9LyZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh6jwn4emW3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtQ0EtMTExODg5MzUKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTE1LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4e48J+HrFt3d3cudjJub2Rlcy5jb21dIHZsZXNzLVNHLTExMTg4OTI1CnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xNy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZmcD1jaHJvbWUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmc2lkPWY1JnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZlbmNyeXB0aW9uPW5vbmUj8J+Hr/Cfh7Vbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1KUC0xMTE4ODkxMQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTcuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mZnA9Y2hyb21lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JnNpZD1mNSZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mZW5jcnlwdGlvbj1ub25lI/Cfh7rwn4e4W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtLTExMTg4NjE2VVMKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTE1LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4e68J+HuFt3d3cudjJub2Rlcy5jb21dIHZsZXNzLS0xMTE4ODYxM1VTCnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xMy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZzcHg9JTJGJnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZzaWQ9ZjUj8J+HuvCfh7hbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1VUy0xMTE4ODYwNQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tNC5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZzcHg9LyZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh7Dwn4e3W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtS1ItMTExODg2MDQKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTQuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PS8mdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4ew8J+Ht1t3d3cudjJub2Rlcy5jb21dIHZsZXNzLS0xMTE4ODUxMktS",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇯🇵",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇺🇸",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇺🇲ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇨🇵",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇰🇷",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇬🇸",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇲🇩ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@45.87.175.65:8080#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇹🇴",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇹🇷ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "به نظر میرسه دورزدن #فیلترینگ از طریق #oblivion و #oblivionDesktop در برخی از اینترنت‌های ثابت (مثل مخابرات و آسیاتک) با استفاده از اندپوینت‌های سفارشی امکان‌پذیر شده.👉  github.com/bepass-org/oblivion-desktop/releases👉 play.google.com/store/apps/details?id=org.bepass.oblivion&hl=en💡 ircfspace.github.io/endpoint▫️ 188.114.98.224:3476▫️ 188.114.98.224:500▫️ 188.114.98.224:2371▫️ 188.114.98.224:1070▫️ 188.114.98.224:854▫️ 188.114.98.224:864▫️ 188.114.98.224:939▫️ 188.114.98.224:2408▫️ 188.114.98.224:908▫️ 188.114.96.145:1074🧑‍🦱 iSegaro",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇬🇧ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTozNjBlMjFkMjE5NzdkYzEx@45.139.24.24:57456#%F0%9F%87%AC%F0%9F%87%A7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇧🇻ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo3anZISEY1U2FGb2I%3D@78.153.131.96:443#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
     "latency_ms": Infinity
   },
   {
@@ -12,129 +84,9 @@
     "latency_ms": Infinity
   },
   {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.14.1:8880?path=%2FG8ZDmBYwOAz3ahmR%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B0%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.14.1",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.69.162:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B3%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.69.162",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B3%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.86.73",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.17.1.197",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://Parsashonam-287@185.146.173.39:8880?path=%2FParsashonam-Parsashonam-Parsashonam%2F%3Fed%3D2056&security=none&encryption=none&host=De.Parsashonam.CfD.&type=httpupgrade#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "185.146.173.39",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2F1ycR2zb3KeELWRha%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.17.1.197",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B9%F0%9F%87%B4%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.86.73",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.86.73",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2F1ycR2zb3KeELWRha%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.17.1.197",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "45.85.119.151",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@198.62.62.175:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "198.62.62.175",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "45.85.119.151",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "45.85.119.151",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%BA%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.86.73",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.69.162:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%AF%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.69.162",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "45.85.119.151",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.69.162:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.69.162",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%BA%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.17.1.197",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%B2%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.17.1.197",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2F1ycR2zb3KeELWRha%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.17.1.197",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@146.190.255.206:7020?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
-    "protocol": "vless",
-    "host": "146.190.255.206",
+    "line": "🇬🇸ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpjNDA2NDFjMWY4OWU3YWNi@147.45.178.200:57456#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
     "latency_ms": Infinity
   },
   {
@@ -144,9 +96,303 @@
     "latency_ms": Infinity
   },
   {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%BA%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.17.1.197",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇺🇲",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇧🇷ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5dHFoTWRJclRrZ1E0NlB2aHlBdE1I@switcher-nick-croquet.freesocks.work:443#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "سلام سلام عزیزای دل 🙋🏻صبح زیباتون بخیر 🌤️@vpn_ioss@vpn_ioss",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "ss://MjAyMi1ibGFrZTMtYWVzLTI1Ni1nY206NW9FUHhFQk1Gd08ybitVa0JkeTdCWHRIU1I4VjllRUtQWDVkcmZmV25Hdz06VTJCQVVHQ1JEbERzcCswaTVlejk2cVpBQmN6MUVDQXlkZEhBVUpLNGlGZz0@91.99.210.3:31412?type=tcp#ShatakVPN-jqw019zm",
+    "protocol": "shadowsocks",
+    "host": "91.99.210.3",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇦🇩",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇦🇪",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "ss://MjAyMi1ibGFrZTMtYWVzLTI1Ni1nY206S3dJZWxYWk5adExKTWtKMlNRUm9EcXRmUytaditPdVN3cGRWekJMNlUvWT06bTZoWXB3eVlFQ0FKUHVzTWtFdXJvZFo5NjFBUVNiVU1rMFI3RGV6REdCbz0@51.161.80.44:13523?type=tcp#%F0%9F%87%A8%F0%9F%87%A6-ShatakVPN",
+    "protocol": "shadowsocks",
+    "host": "51.161.80.44",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HrfCfh7DpppnmuK8yIHwg4qyH77iPIDEuMk1CL3MiLCJhZGQiOiJoazIubHJ6ZHgudWsiLCJwb3J0Ijo0NDMsImlkIjoiZGI2OWQ1YmMtZDM2Yy00OTAzLWY0NzEtNzRiOThjNWNlZmU1IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJoazIubHJ6ZHgudWsiLCJwYXRoIjoiL3JlZ2lzdGVyIiwiaG9zdCI6ImhrMi5scnpkeC51ayJ9",
+    "protocol": "vmess",
+    "host": "hk2.lrzdx.uk",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@95.217.27.213:7021?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
+    "protocol": "vless",
+    "host": "95.217.27.213",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "عشقای دلم سرور و پروکسی های عمومی رو براتون بارگذاری کردیم✅حجم هر کدوم از سرور ها 200 گیگ هستش♻️لطفا از دانلود کردن خودداری کنید❌در صورت امکان از ما حمایت و ما رو به دوستان خود معرفی کنید🙏🆔@vpn_ioss🆔@vpn_ioss",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%B2%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.17.1.197",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://cb8c1330-7fd4-47e0-80c3-1b75844a913c@Em.hamed-aman.ir:3630?security=none&encryption=none&host=zula.ir&headerType=http&type=tcp#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "Em.hamed-aman.ir",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.69.162:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%AF%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.69.162",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://19199927-fb46-4203-8872-672fd1daca14@54.38.214.56:37171?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "54.38.214.56",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%BA%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.86.73",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://1d0dfde1-9f18-4557-9af8-4f3124ee5dcd@wild-bird.seotoolsforyou.co.uk:80?path=%2F&security=none&encryption=none&type=ws#%F0%9F%87%B3%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "wild-bird.seotoolsforyou.co.uk",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://f0050c31-06b1-4ebd-a10c-fe1e73632067@v05.vxlimir.com:1370?security=reality&encryption=none&pbk=_N3KecwB9Ck28IIMxIck00ivkq3_ZEUvU3KXELnfvHw&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=e1afb93bfe75a34b#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "v05.vxlimir.com",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://3056458b-913a-4193-b428-cdf22675b3b5@ipw.gfdv54cvghhgfhgj-njhgj64.info:2096?path=%2Fydgmopws&security=tls&encryption=none&host=638890562127852879.amsterdam-prx-dnraaal.info&type=ws&sni=638890562127852879.amsterdam-prx-dnraaal.info#%F0%9F%87%A8%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
+    "latency_ms": Infinity
+  },
+  {
     "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%AC%F0%9F%87%A7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
     "host": "www.visa.com.sg",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuPCfh6zmlrDliqDlnaEyIHwg4qyH77iPIDEuN01CL3MiLCJhZGQiOiJhLjg4Njk2OC54eXoiLCJwb3J0IjoyMTM2OSwiaWQiOiIxNTExODdiMS1jOGYzLTRjMzItYWM3Mi0zNjc5ZTI2NGE3YTMiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6ImEuODg2OTY4Lnh5eiIsInBhdGgiOiIvd2ZkZWYiLCJob3N0IjoiYS44ODY5NjgueHl6In0=",
+    "protocol": "vmess",
+    "host": "a.886968.xyz",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://2036e2c3-18a5-4eed-9db4-f91a7f02c7d5@104.21.112.1:80?path=%2F193.123.81.105%3D443&security=none&encryption=none&host=zoomgov.vipren.biz.id&type=ws#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.21.112.1",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMDQgfCDirIfvuI8gMy4zTUIvcyIsImFkZCI6ImNsb3VkZ2V0c2VydmljZS5tY2xvdWRzZXJ2aWNlLnNpdGUiLCJwb3J0Ijo0NDMsImlkIjoiNTQyOGRjYzItOTk1MC00NDA0LWI4YTUtOWRhYzgyYWNiMjEwIiwidHlwZSI6IiIsImFpZCI6IjAiLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6ImNsb3VkZ2V0c2VydmljZS5tY2xvdWRzZXJ2aWNlLnNpdGUiLCJwYXRoIjoiL2xpbmt3cyIsImhvc3QiOiJtYVhORXRWSVAtdXNBLVZQMy5uRVRLSDMuU2lURSJ9",
+    "protocol": "vmess",
+    "host": "cloudgetservice.mcloudservice.site",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://df0680ca-e43c-498d-ed86-8e196eedd012@185.231.205.234:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%B9%F0%9F%87%B4%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "185.231.205.234",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇩🇪ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5dHFoTWRJclRrZ1E0NlB2aHlBdE1I@switcher-nick-croquet.freesocks.work:443#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "45.85.119.151",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "www.visa.com.sg",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇬🇱",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇦🇲",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇬🇧",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJhZGQiOiIxODUuMTQyLjUzLjYzIiwiYWlkIjoiMCIsImFscG4iOiIiLCJmcCI6IiIsImhvc3QiOiIiLCJpZCI6IjJiYWJmMzRhLTE2ZjUtNGUzOC1hODg1LTczOGZkZmM4ZWFiZiIsIm5ldCI6InRjcCIsInBhdGgiOiIiLCJwb3J0IjoiNDM1ODUiLCJwcyI6IvCfh6zwn4exQHZwbl9pb3NzIOKZu++4jyDYudi22Ygg2LTZiCIsInNjeSI6ImF1dG8iLCJzbmkiOiIiLCJ0bHMiOiIiLCJ0eXBlIjoibm9uZSIsInYiOiIyIn0=",
+    "protocol": "vmess",
+    "host": "185.142.53.63",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇲🇪",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.14.1:8880?path=%2FG8ZDmBYwOAz3ahmR%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B0%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.14.1",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e999db7a-1b17-4da6-bc37-c9fa24af2e93@ipw.gfdv54cvghhgfhgj-njhgj64.info:443?security=tls&alpn=h3%2Ch2&encryption=none&host=smart.gheichi.org&fp=chrome&type=ws&sni=smart.gheichi.org#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yNCB8IOKsh++4jyAzLjRNQi9zIiwiYWRkIjoieGNmMDM3LmZhY2FpMjAyNC5jb20iLCJwb3J0Ijo0NDMsImlkIjoiZDk4NjMwMzctMDQ2My00NjE1LWU5NzItMzZiYTk2NjJkMWU5IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4Y2YwMzcuZmFjYWkyMDI0LmNvbSIsInBhdGgiOiIvZDk4NjMwMzciLCJob3N0IjoieGNmMDM3LmZhY2FpMjAyNC5jb20ifQ==",
+    "protocol": "vmess",
+    "host": "xcf037.facai2024.com",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇺🇾",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.69.162:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B3%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.69.162",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇲🇪ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpjNDA2NDFjMWY4OWU3YWNi@tr.vpnsparta.pro:57456#%F0%9F%87%B2%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://a2af50d9-09c7-4a44-90d0-42da35923e9e@communal-loss.oneeat.co:80?path=%2F&security=none&encryption=none&type=ws#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "communal-loss.oneeat.co",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%AF%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "public15v7.fastipsport.com",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://decb4fce-bd8a-4d8b-a81f-2e393ee9ee02@162.19.250.162:24209?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%B0%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "162.19.250.162",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇨🇦",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇫🇮",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yNiB8IOKsh++4jyAzLjJNQi9zIiwiYWRkIjoiZ3MwMy0xLmd1b3NoaTE1MjAuY29tIiwicG9ydCI6NDQzLCJpZCI6IjgyZmY2ZDMwLTI5MjAtNGViZC1iOTVjLWIwMTZlZGUxYTg0MSIsInR5cGUiOiIiLCJhaWQiOjAsIm5ldCI6IndzIiwidGxzIjoidGxzIiwic25pIjoiZ3MwMy0xLmd1b3NoaTE1MjAuY29tIiwicGF0aCI6Ii84MmZmNmQzMCIsImhvc3QiOiJnczAzLTEuZ3Vvc2hpMTUyMC5jb20ifQ==",
+    "protocol": "vmess",
+    "host": "gs03-1.guoshi1520.com",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇳🇱",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "public15v7.fastipsport.com",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://df0680ca-e43c-498d-ed86-8e196eedd012@185.231.205.234:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "185.231.205.234",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://turboo-server@turbooserver.sadafspace.com:55990?security=reality&encryption=none&pbk=TbZDTzAIogOy-LWQjdqXElxPlUd6xdcwd9xxCqhbj04&headerType=none&fp=chrome&spx=%2F&type=tcp&sni=canva.com&sid=eebcfab3#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "turbooserver.sadafspace.com",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇹🇷",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://decb4fce-bd8a-4d8b-a81f-2e393ee9ee02@162.19.250.162:24209?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%AC%F0%9F%87%A7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "162.19.250.162",
     "latency_ms": Infinity
   },
   {
@@ -162,129 +408,15 @@
     "latency_ms": Infinity
   },
   {
-    "line": "vless://df0680ca-e43c-498d-ed86-8e196eedd012@185.231.205.234:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "185.231.205.234",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+Hq/Cfh7fms5Xlm70yIHwg4qyH77iPIDQuMU1CL3MiLCJhZGQiOiIxMDQuMTkuMzIuMCIsInBvcnQiOjQ0MywiaWQiOiI5M2VhNDg2YS1iYWRhLTQyYTQtYWMzOC1kMDg4YjMyMGZhMWUiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InhtaXZpZGVvLmNmZCIsInBhdGgiOiIvbGlua3dzIiwiaG9zdCI6InhtaXZpZGVvLmNmZCJ9",
+    "protocol": "vmess",
+    "host": "104.19.32.0",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://df0680ca-e43c-498d-ed86-8e196eedd012@185.231.205.234:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%B9%F0%9F%87%B4%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://Parsashonam-287@185.146.173.39:8880?path=%2FParsashonam-Parsashonam-Parsashonam%2F%3Fed%3D2056&security=none&encryption=none&host=De.Parsashonam.CfD.&type=httpupgrade#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
-    "host": "185.231.205.234",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://18ada603-dd03-4a0c-85e7-e63a09829766@91.99.210.3:47058?security=none&type=tcp&path=/Shatak/&headerType=http&host=soft98.ir&packetEncoding=xudp&encryption=none#ShatakVPN",
-    "protocol": "vless",
-    "host": "91.99.210.3",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@142.132.183.149:7020?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
-    "protocol": "vless",
-    "host": "142.132.183.149",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://fe837fd0-840d-4cee-9334-0dc6c2b15c1c@5.181.20.219:17422?security=reality&encryption=none&pbk=0r5rlmvACX09qUTPuxrbuKWSAn66NnNyHIfIMwalYAA&headerType=none&fp=chrome&type=tcp&sni=yahoo.com&sid=33#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "5.181.20.219",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@85.192.30.145:7021?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
-    "protocol": "vless",
-    "host": "85.192.30.145",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "www.visa.com.sg",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@85.90.207.45:7021?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
-    "protocol": "vless",
-    "host": "85.90.207.45",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%A8%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.17.1.197",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@172.67.65.158:8880?path=%2FEtb1L6YUdZFZuTOr%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "172.67.65.158",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "www.visa.com.sg",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%AF%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "public15v7.fastipsport.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "public15v7.fastipsport.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "public15v7.fastipsport.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://2036e2c3-18a5-4eed-9db4-f91a7f02c7d5@104.21.112.1:80?path=%2F193.123.81.105%3D443&security=none&encryption=none&host=zoomgov.vipren.biz.id&type=ws#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.21.112.1",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@172.67.207.54:8880?path=%2F34COh9NCiin5SJMk%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "172.67.207.54",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.25.131.154:8880?path=%2FC5itOz6YmbLanD7F%3Fed%3D2560&security=none&alpn=http%2F1.1&encryption=none&host=vngsupply.ip-ddns.com&fp=randomized&type=ws&sni=vngsUPPly.IP-DDnS.CoM#%F0%9F%87%AC%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.25.131.154",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://2036e2c3-18a5-4eed-9db4-f91a7f02c7d5@104.21.112.1:80?path=%2F193.123.81.105%3D443&security=none&encryption=none&host=zoomgov.vipren.biz.id&type=ws#%F0%9F%87%B9%F0%9F%87%B4%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.21.112.1",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.85.3:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.16.85.3",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@172.67.65.158:8880?path=%2FEtb1L6YUdZFZuTOr%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "172.67.65.158",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.25.131.154:8880?path=%2FC5itOz6YmbLanD7F%3Fed%3D2560&security=none&alpn=http%2F1.1&encryption=none&host=vngsupply.ip-ddns.com&fp=randomized&type=ws&sni=vngsUPPly.IP-DDnS.CoM#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "104.25.131.154",
+    "host": "185.146.173.39",
     "latency_ms": Infinity
   },
   {
@@ -300,99 +432,27 @@
     "latency_ms": Infinity
   },
   {
-    "line": "vless://42808c59-4d9e-46ee-a9c4-33e7c31ce9e3@ipw.gfdv54cvghhgfhgj-njhgj64.info:443?path=%2Fyaqnnows&security=tls&encryption=none&host=638890561652286310.esfahan-prx-dnraaao.info&type=ws&sni=638890561652286310.esfahan-prx-dnraaao.info#%F0%9F%87%AC%F0%9F%87%A7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
+    "line": "نسخه ۲.۴۷ از فیلترشکن #oblivionDesktop برای سیستم‌عامل‌های ویندوز، لینوکس و مک منتشر شد. هسته وارپ‌پلاس در این‌آپدیت به نگارش ۱.۲.۵ آپدیت شده، تا مشکل اتصال کاربران برطرف بشه. 🧑‍🦱 github.com/bepass-org/oblivion-desktop/releases         ",
+    "protocol": "unknown",
+    "host": "",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "www.visa.com.sg",
+    "line": "🇧🇻",
+    "protocol": "unknown",
+    "host": "",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://3056458b-913a-4193-b428-cdf22675b3b5@ipw.gfdv54cvghhgfhgj-njhgj64.info:2096?path=%2Fydgmopws&security=tls&encryption=none&host=638890562127852879.amsterdam-prx-dnraaal.info&type=ws&sni=638890562127852879.amsterdam-prx-dnraaal.info#%F0%9F%87%A8%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
+    "line": "🇨🇦ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@45.87.175.22:8080#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://2036e2c3-18a5-4eed-9db4-f91a7f02c7d5@104.21.112.1:80?path=%2F193.123.81.105%3D443&security=none&encryption=none&host=zoomgov.vipren.biz.id&type=ws#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
-    "host": "104.21.112.1",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://1d0dfde1-9f18-4557-9af8-4f3124ee5dcd@wild-bird.seotoolsforyou.co.uk:80?path=%2F&security=none&encryption=none&type=ws#%F0%9F%87%B3%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "wild-bird.seotoolsforyou.co.uk",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "public15v7.fastipsport.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://f0050c31-06b1-4ebd-a10c-fe1e73632067@v05.vxlimir.com:1370?security=reality&encryption=none&pbk=_N3KecwB9Ck28IIMxIck00ivkq3_ZEUvU3KXELnfvHw&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=e1afb93bfe75a34b#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "v05.vxlimir.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://f0050c31-06b1-4ebd-a10c-fe1e73632067@v05.vxlimir.com:1370?security=reality&encryption=none&pbk=_N3KecwB9Ck28IIMxIck00ivkq3_ZEUvU3KXELnfvHw&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=e1afb93bfe75a34b#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "v05.vxlimir.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@95.217.27.213:7021?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
-    "protocol": "vless",
-    "host": "95.217.27.213",
-    "latency_ms": 2022.69
-  },
-  {
-    "line": "vless://a2af50d9-09c7-4a44-90d0-42da35923e9e@communal-loss.oneeat.co:80?path=%2F&security=none&encryption=none&type=ws#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "communal-loss.oneeat.co",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://52adc6ba-b1c7-4541-a594-08fc698be640@grounded-brother.seotoolsforyou.co.uk:80?path=%2F&security=none&encryption=none&type=ws#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "grounded-brother.seotoolsforyou.co.uk",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://e999db7a-1b17-4da6-bc37-c9fa24af2e93@ipw.gfdv54cvghhgfhgj-njhgj64.info:443?security=tls&alpn=h3%2Ch2&encryption=none&host=smart.gheichi.org&fp=chrome&type=ws&sni=smart.gheichi.org#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://cb8c1330-7fd4-47e0-80c3-1b75844a913c@Em.hamed-aman.ir:3630?security=none&encryption=none&host=zula.ir&headerType=http&type=tcp#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "Em.hamed-aman.ir",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://d196897a-006e-4454-9478-67b6fd8ce021@aiteam.lonup.org:55900?security=reality&encryption=none&pbk=jH08UU9id-Q8i17ltvHPO3sfGL6YTJIFveAJGgNjNl8&headerType=none&fp=edge&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=190d32b118caf07f#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "aiteam.lonup.org",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://d196897a-006e-4454-9478-67b6fd8ce021@auto.lonup.org:55600?security=reality&encryption=none&pbk=jH08UU9id-Q8i17ltvHPO3sfGL6YTJIFveAJGgNjNl8&headerType=none&fp=firefox&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=190d32b118caf07f#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "auto.lonup.org",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "www.visa.com.sg",
+    "host": "104.17.1.197",
     "latency_ms": Infinity
   },
   {
@@ -402,28 +462,28 @@
     "latency_ms": Infinity
   },
   {
-    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "www.visa.com.sg",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMyB8IOKsh++4jyAxLjhNQi9zIiwiYWRkIjoieGMxMjUtMS5tZWl6aWJhNTU2Ni5jb20iLCJwb3J0Ijo0NDMsImlkIjoiNmI5NWQzNDAtMzBhNS00N2JkLWFjNTMtNDk1ODRlNWQ0ZGRmIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4YzEyNS0xLm1laXppYmE1NTY2LmNvbSIsInBhdGgiOiIvNmI5NWQzNDAiLCJob3N0IjoieGMxMjUtMS5tZWl6aWJhNTU2Ni5jb20ifQ==",
+    "protocol": "vmess",
+    "host": "xc125-1.meiziba5566.com",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://42808c59-4d9e-46ee-a9c4-33e7c31ce9e3@ipw.gfdv54cvghhgfhgj-njhgj64.info:443?path=%2Fyaqnnows&security=tls&encryption=none&host=638890561652286310.esfahan-prx-dnraaao.info&type=ws&sni=638890561652286310.esfahan-prx-dnraaao.info#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
+    "line": "🇧🇷",
+    "protocol": "unknown",
+    "host": "",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://MsV2ray-Telegram@www.speedtest.net:80?path=%2FMsV2ray%3Fed%3D80&security=none&encryption=none&host=http-fast-de-speedtest.xqfactor.ir.&type=httpupgrade#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://52adc6ba-b1c7-4541-a594-08fc698be640@grounded-brother.seotoolsforyou.co.uk:80?path=%2F&security=none&encryption=none&type=ws#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
-    "host": "www.speedtest.net",
+    "host": "grounded-brother.seotoolsforyou.co.uk",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://c8fae2e1-bffc-4e20-94f2-8bee7ba14ccd@meli_proxyy.vip-plan.org:54474?mode=auto&path=%2F&security=reality&encryption=none&pbk=mVptIpBcUtMqN2tfYE8eNwBrhqNdb0lWJoeRvYen8TY&host=fast.com&fp=random&spx=%2F&type=xhttp&sni=yahoo.com&sid=2cb4454d18#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@172.67.207.54:8880?path=%2F34COh9NCiin5SJMk%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
-    "host": "meli_proxyy.vip-plan.org",
-    "latency_ms": 803.07
+    "host": "172.67.207.54",
+    "latency_ms": Infinity
   },
   {
     "line": "vless://1d0dfde1-9f18-4557-9af8-4f3124ee5dcd@wild-bird.seotoolsforyou.co.uk:80?path=%2F&security=none&encryption=none&type=ws#%F0%9F%87%AC%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
@@ -432,27 +492,51 @@
     "latency_ms": Infinity
   },
   {
-    "line": "vless://19199927-fb46-4203-8872-672fd1daca14@54.38.214.56:37171?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@85.192.30.145:7021?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
     "protocol": "vless",
-    "host": "54.38.214.56",
+    "host": "85.192.30.145",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://decb4fce-bd8a-4d8b-a81f-2e393ee9ee02@162.19.250.162:24209?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%AC%F0%9F%87%A7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
-    "host": "162.19.250.162",
+    "host": "www.visa.com.sg",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://turboo-server@turbooserver.sadafspace.com:55990?security=reality&encryption=none&pbk=TbZDTzAIogOy-LWQjdqXElxPlUd6xdcwd9xxCqhbj04&headerType=none&fp=chrome&spx=%2F&type=tcp&sni=canva.com&sid=eebcfab3#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2F1ycR2zb3KeELWRha%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
-    "host": "turbooserver.sadafspace.com",
+    "host": "104.17.1.197",
     "latency_ms": Infinity
   },
   {
-    "line": "vless://decb4fce-bd8a-4d8b-a81f-2e393ee9ee02@162.19.250.162:24209?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%B0%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@172.67.65.158:8880?path=%2FEtb1L6YUdZFZuTOr%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
     "protocol": "vless",
-    "host": "162.19.250.162",
+    "host": "172.67.65.158",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇺🇸ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "🇩🇪",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://f353fbf3-b6a1-4524-b916-f65bc077511f@s5.1dnt.k-l.cloud:80?encryption=none&security=none&type=xhttp&path=%2F123&mode=auto#@iSeqaroکانفیگ #نیم_بهاتمامی ترافیک مصرفیتون داخلی حساب میشه📣 iSegaro",
+    "protocol": "vless",
+    "host": "s5.1dnt.k-l.cloud",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://2036e2c3-18a5-4eed-9db4-f91a7f02c7d5@104.21.112.1:80?path=%2F193.123.81.105%3D443&security=none&encryption=none&host=zoomgov.vipren.biz.id&type=ws#%F0%9F%87%B9%F0%9F%87%B4%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.21.112.1",
     "latency_ms": Infinity
   },
   {
@@ -462,153 +546,15 @@
     "latency_ms": Infinity
   },
   {
-    "line": "vless://decb4fce-bd8a-4d8b-a81f-2e393ee9ee02@162.19.250.162:24209?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "162.19.250.162",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://19199927-fb46-4203-8872-672fd1daca14@54.38.214.56:37171?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "54.38.214.56",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://54b4c039-7be6-448f-b704-820251b079db@5.75.197.120:2025?mode=gun&security=reality&encryption=none&pbk=AUNIYov4R2TvNmC0cF0NiKWYGqzikosOu4g2wcCALlw&fp=chrome&spx=%2F&type=grpc&serviceName=Telegram%20%3A%20%40PouRia_Cheat&sni=www.cloudflare.com&sid=8d9c20be72b4#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "vless",
-    "host": "5.75.197.120",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vless://f353fbf3-b6a1-4524-b916-f65bc077511f@s5.1dnt.k-l.cloud:80?encryption=none&security=none&type=xhttp&path=%2F123&mode=auto#@iSeqaro\u06a9\u0627\u0646\u0641\u06cc\u06af #\u0646\u06cc\u0645_\u0628\u0647\u0627\u062a\u0645\u0627\u0645\u06cc \u062a\u0631\u0627\u0641\u06cc\u06a9 \u0645\u0635\u0631\u0641\u06cc\u062a\u0648\u0646 \u062f\u0627\u062e\u0644\u06cc \u062d\u0633\u0627\u0628 \u0645\u06cc\u0634\u0647\ud83d\udce3 iSegaro",
-    "protocol": "vless",
-    "host": "s5.1dnt.k-l.cloud",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+Hq/Cfh7fms5Xlm70yIHwg4qyH77iPIDQuMU1CL3MiLCJhZGQiOiIxMDQuMTkuMzIuMCIsInBvcnQiOjQ0MywiaWQiOiI5M2VhNDg2YS1iYWRhLTQyYTQtYWMzOC1kMDg4YjMyMGZhMWUiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InhtaXZpZGVvLmNmZCIsInBhdGgiOiIvbGlua3dzIiwiaG9zdCI6InhtaXZpZGVvLmNmZCJ9",
-    "protocol": "vmess",
-    "host": "104.19.32.0",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HrfCfh7DpppnmuK8zIHwg4qyH77iPIDMuMU1CL3MiLCJhZGQiOiIxMDQuMTcuMTM3LjEyNyIsInBvcnQiOjQ0MywiaWQiOiI0N2VhYjBkZS05N2Y5LTQ5YmUtZjJmMy0yZTRlYjE3MjY4ZTYiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6ImhrLm5pc2tha293c2tpLmdnZmYubmV0IiwicGF0aCI6Ii9hYSIsImhvc3QiOiJoay5uaXNrYWtvd3NraS5nZ2ZmLm5ldCJ9",
-    "protocol": "vmess",
-    "host": "104.17.137.127",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMCB8IOKsh++4jyA0LjlNQi9zIiwiYWRkIjoid3d3LnduMDMuY2MiLCJwb3J0Ijo4MCwiaWQiOiIyZjM4Zjg0OC1hODk5LTRjODctOTgwNy0yMDdhNDE2MTVlM2MiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6IiIsInBhdGgiOiIvcm9uZ3NldmVuP2VkPTIwNDgiLCJob3N0IjoidXMuZnJlZXl5ZHMuZHBkbnMub3JnIn0=",
-    "protocol": "vmess",
-    "host": "www.wn03.cc",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuPCfh6zmlrDliqDlnaEyIHwg4qyH77iPIDEuN01CL3MiLCJhZGQiOiJhLjg4Njk2OC54eXoiLCJwb3J0IjoyMTM2OSwiaWQiOiIxNTExODdiMS1jOGYzLTRjMzItYWM3Mi0zNjc5ZTI2NGE3YTMiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6ImEuODg2OTY4Lnh5eiIsInBhdGgiOiIvd2ZkZWYiLCJob3N0IjoiYS44ODY5NjgueHl6In0=",
-    "protocol": "vmess",
-    "host": "a.886968.xyz",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yNiB8IOKsh++4jyAzLjJNQi9zIiwiYWRkIjoiZ3MwMy0xLmd1b3NoaTE1MjAuY29tIiwicG9ydCI6NDQzLCJpZCI6IjgyZmY2ZDMwLTI5MjAtNGViZC1iOTVjLWIwMTZlZGUxYTg0MSIsInR5cGUiOiIiLCJhaWQiOjAsIm5ldCI6IndzIiwidGxzIjoidGxzIiwic25pIjoiZ3MwMy0xLmd1b3NoaTE1MjAuY29tIiwicGF0aCI6Ii84MmZmNmQzMCIsImhvc3QiOiJnczAzLTEuZ3Vvc2hpMTUyMC5jb20ifQ==",
-    "protocol": "vmess",
-    "host": "gs03-1.guoshi1520.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yNCB8IOKsh++4jyAzLjRNQi9zIiwiYWRkIjoieGNmMDM3LmZhY2FpMjAyNC5jb20iLCJwb3J0Ijo0NDMsImlkIjoiZDk4NjMwMzctMDQ2My00NjE1LWU5NzItMzZiYTk2NjJkMWU5IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4Y2YwMzcuZmFjYWkyMDI0LmNvbSIsInBhdGgiOiIvZDk4NjMwMzciLCJob3N0IjoieGNmMDM3LmZhY2FpMjAyNC5jb20ifQ==",
-    "protocol": "vmess",
-    "host": "xcf037.facai2024.com",
-    "latency_ms": Infinity
-  },
-  {
     "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xNyB8IOKsh++4jyA0LjRNQi9zIiwiYWRkIjoieGMwMTEtMi5tZWl6aWJhNTU2Ni5jb20iLCJwb3J0Ijo0NDMsImlkIjoiNDI1NzZhMDQtNWE0ZC00YzdlLWZjYjQtYTg1ODJhYjQ2MDMxIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4YzAxMS0yLm1laXppYmE1NTY2LmNvbSIsInBhdGgiOiIveGMxMjM0IiwiaG9zdCI6InhjMDExLTIubWVpemliYTU1NjYuY29tIn0=",
     "protocol": "vmess",
     "host": "xc011-2.meiziba5566.com",
     "latency_ms": Infinity
   },
   {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMyB8IOKsh++4jyAxLjhNQi9zIiwiYWRkIjoieGMxMjUtMS5tZWl6aWJhNTU2Ni5jb20iLCJwb3J0Ijo0NDMsImlkIjoiNmI5NWQzNDAtMzBhNS00N2JkLWFjNTMtNDk1ODRlNWQ0ZGRmIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4YzEyNS0xLm1laXppYmE1NTY2LmNvbSIsInBhdGgiOiIvNmI5NWQzNDAiLCJob3N0IjoieGMxMjUtMS5tZWl6aWJhNTU2Ni5jb20ifQ==",
-    "protocol": "vmess",
-    "host": "xc125-1.meiziba5566.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMiB8IOKsh++4jyAzLjRNQi9zIiwiYWRkIjoieGNmMDI5LmZhY2FpMjAyNC5jb20iLCJwb3J0Ijo0NDMsImlkIjoiOWNlNDUyNmEtYzUwMC00YzY2LTk5YjAtMDQ4ZTRiNmI1NjYzIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4Y2YwMjkuZmFjYWkyMDI0LmNvbSIsInBhdGgiOiIvOWNlNDUyNmEiLCJob3N0IjoieGNmMDI5LmZhY2FpMjAyNC5jb20ifQ==",
-    "protocol": "vmess",
-    "host": "xcf029.facai2024.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yMCB8IOKsh++4jyAxLjhNQi9zIiwiYWRkIjoicmF5LnNreW1pcnJvci5jYyIsInBvcnQiOjQ0MywiaWQiOiJjOTk5MjllMS05YzgyLTRhMzMtZDExZS1mMTc3MjQ3YjhmNjMiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InJheS5za3ltaXJyb3IuY2MiLCJwYXRoIjoiLyJ9",
-    "protocol": "vmess",
-    "host": "ray.skymirror.cc",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HrfCfh7DpppnmuK8yIHwg4qyH77iPIDEuMk1CL3MiLCJhZGQiOiJoazIubHJ6ZHgudWsiLCJwb3J0Ijo0NDMsImlkIjoiZGI2OWQ1YmMtZDM2Yy00OTAzLWY0NzEtNzRiOThjNWNlZmU1IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJoazIubHJ6ZHgudWsiLCJwYXRoIjoiL3JlZ2lzdGVyIiwiaG9zdCI6ImhrMi5scnpkeC51ayJ9",
-    "protocol": "vmess",
-    "host": "hk2.lrzdx.uk",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xNCB8IOKsh++4jyAyLjJNQi9zIiwiYWRkIjoiM3NkZmd2Y3h4eC45MzgucHAudWEiLCJwb3J0Ijo0NDMsImlkIjoiMDIxMmZhYjUtZTkzYy00OTA0LWI3YTgtMTg3ZmQ1MzVmMzU0IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiIzc2RmZ3ZjeHh4LjkzOC5wcC51YSIsInBhdGgiOiIvUDg3OW10Q29IUXFhV082N3FFYU1JTloxIiwiaG9zdCI6IjNzZGZndmN4eHguOTM4LnBwLnVhIn0=",
-    "protocol": "vmess",
-    "host": "3sdfgvcxxx.938.pp.ua",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMSB8IOKsh++4jyAyLjhNQi9zIiwiYWRkIjoidTguaHV2aWNsb3VkLmNvbSIsInBvcnQiOjQ0MywiaWQiOiI2Nzk2NjExYi0yNjBlLTRkNjMtOTAxNi0yMGMyN2IxMmU0MjAiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InU4Lmh1dmljbG91ZC5jb20iLCJwYXRoIjoiLzY3OTY2MTFiLTI2MGUtNGQ2My05MDE2LTIwYzI3YjEyZTQyMCIsImhvc3QiOiJ1OC5odXZpY2xvdWQuY29tIn0=",
-    "protocol": "vmess",
-    "host": "u8.huvicloud.com",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HrfCfh7DpppnmuK80IHwg4qyH77iPIDEuMU1CL3MiLCJhZGQiOiJoazIubHJ6ZHgudWsiLCJwb3J0Ijo0NDMsImlkIjoiZGI2OWQ1YmMtZDM2Yy00OTAzLWY0NzEtNzRiOThjNWNlZmU1IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJoazIubHJ6ZHgudWsiLCJwYXRoIjoiL3JlZ2lzdGVyIn0=",
-    "protocol": "vmess",
-    "host": "hk2.lrzdx.uk",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+Hq/Cfh7fms5Xlm70xIHwg4qyH77iPIDIuM01CL3MiLCJhZGQiOiIxNzIuNjcuMTk4LjE4NyIsInBvcnQiOjQ0MywiaWQiOiI5M2VhNDg2YS1iYWRhLTQyYTQtYWMzOC1kMDg4YjMyMGZhMWUiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InhtaXZpZGVvLmNmZCIsInBhdGgiOiIvbGlua3dzIiwiaG9zdCI6InhtaXZpZGVvLmNmZCJ9",
-    "protocol": "vmess",
-    "host": "172.67.198.187",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yNyB8IOKsh++4jyAxLjRNQi9zIiwiYWRkIjoidGltZS5pcyIsInBvcnQiOjQ0MywiaWQiOiJiNTI2OTI2ZC0xNDc0LTRmNDEtOTg1ZS04Yjg3N2NiODQwY2QiLCJ0eXBlIjoiIiwiYWlkIjoiMCIsIm5ldCI6IndzIiwidGxzIjoidGxzIiwic25pIjoidGltZS5pcyIsInBhdGgiOiIvIiwiaG9zdCI6InNoczExMS5rZWppeGlhb3FpNjY2LnN0b3JlIn0=",
-    "protocol": "vmess",
-    "host": "time.is",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMDQgfCDirIfvuI8gMy4zTUIvcyIsImFkZCI6ImNsb3VkZ2V0c2VydmljZS5tY2xvdWRzZXJ2aWNlLnNpdGUiLCJwb3J0Ijo0NDMsImlkIjoiNTQyOGRjYzItOTk1MC00NDA0LWI4YTUtOWRhYzgyYWNiMjEwIiwidHlwZSI6IiIsImFpZCI6IjAiLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6ImNsb3VkZ2V0c2VydmljZS5tY2xvdWRzZXJ2aWNlLnNpdGUiLCJwYXRoIjoiL2xpbmt3cyIsImhvc3QiOiJtYVhORXRWSVAtdXNBLVZQMy5uRVRLSDMuU2lURSJ9",
-    "protocol": "vmess",
-    "host": "cloudgetservice.mcloudservice.site",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJhZGQiOiJwYW5lbDMuaXB5YXIub3JnIiwiYWlkIjoiMCIsImFscG4iOiIiLCJmcCI6IiIsImhvc3QiOiIiLCJpZCI6ImMwY2NkZWI5LTc4NGMtNGQ2Ny1iOTA0LTIwZGNhYWM5OTAyYSIsIm5ldCI6InRjcCIsInBhdGgiOiIiLCJwb3J0IjoiMzIwMTciLCJwcyI6IvCfh6/wn4e1QHZwbl9pb3NzIOKZu++4jyDYudi22Ygg2LTZiCIsInNjeSI6ImF1dG8iLCJzbmkiOiIiLCJ0bHMiOiIiLCJ0eXBlIjoibm9uZSIsInYiOiIyIn0=",
-    "protocol": "vmess",
-    "host": "panel3.ipyar.org",
-    "latency_ms": 679.48
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yMyB8IOKsh++4jyAxLjRNQi9zIiwiYWRkIjoidGsuaHpsdC50a2RkbnMueHl6IiwicG9ydCI6MjI2NDMsImlkIjoiOThlOTZjOWYtNGJiMy0zOWQ0LTlhMmMtZmFjMDQyNTdmN2M3IiwidHlwZSI6IiIsImFpZCI6MiwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ6eGpwLWMudGtvbmcuY2MiLCJwYXRoIjoiLyIsImhvc3QiOiJ6eGpwLWMudGtvbmcuY2MifQ==",
-    "protocol": "vmess",
-    "host": "tk.hzlt.tkddns.xyz",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJhZGQiOiIxODUuMTQyLjUzLjYzIiwiYWlkIjoiMCIsImFscG4iOiIiLCJmcCI6IiIsImhvc3QiOiIiLCJpZCI6IjJiYWJmMzRhLTE2ZjUtNGUzOC1hODg1LTczOGZkZmM4ZWFiZiIsIm5ldCI6InRjcCIsInBhdGgiOiIiLCJwb3J0IjoiNDM1ODUiLCJwcyI6IvCfh6zwn4exQHZwbl9pb3NzIOKZu++4jyDYudi22Ygg2LTZiCIsInNjeSI6ImF1dG8iLCJzbmkiOiIiLCJ0bHMiOiIiLCJ0eXBlIjoibm9uZSIsInYiOiIyIn0=",
-    "protocol": "vmess",
-    "host": "185.142.53.63",
-    "latency_ms": Infinity
-  },
-  {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yMSB8IOKsh++4jyAyLjJNQi9zIiwiYWRkIjoieGMxMTUtMS5tZWl6aWJhNTU2Ni5jb20iLCJwb3J0Ijo0NDMsImlkIjoiZjQwYThkNjUtYTlhYy00MmNlLWViY2MtOWU2NDQ3YTk4NjZkIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4YzExNS0xLm1laXppYmE1NTY2LmNvbSIsInBhdGgiOiIvZjQwYThkNjUifQ==",
-    "protocol": "vmess",
-    "host": "xc115-1.meiziba5566.com",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "45.85.119.151",
     "latency_ms": Infinity
   },
   {
@@ -618,27 +564,81 @@
     "latency_ms": Infinity
   },
   {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.25.131.154:8880?path=%2FC5itOz6YmbLanD7F%3Fed%3D2560&security=none&alpn=http%2F1.1&encryption=none&host=vngsupply.ip-ddns.com&fp=randomized&type=ws&sni=vngsUPPly.IP-DDnS.CoM#%F0%9F%87%AC%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.25.131.154",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2F1ycR2zb3KeELWRha%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.17.1.197",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "آموزش اشتراک‌گذاری اینترنت بدون فیلتر از نسخه ویندوز #oblivionDesktop، بر روی سایر دستگاه‌ها ...💡 telegra.ph/Enable-and-Share-VPN-Internet-from-Your-Laptop-06-21© Amirhossein.J🧑‍🦱 iSegaro",
+    "protocol": "unknown",
+    "host": "",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "www.visa.com.sg",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yMyB8IOKsh++4jyAxLjRNQi9zIiwiYWRkIjoidGsuaHpsdC50a2RkbnMueHl6IiwicG9ydCI6MjI2NDMsImlkIjoiOThlOTZjOWYtNGJiMy0zOWQ0LTlhMmMtZmFjMDQyNTdmN2M3IiwidHlwZSI6IiIsImFpZCI6MiwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ6eGpwLWMudGtvbmcuY2MiLCJwYXRoIjoiLyIsImhvc3QiOiJ6eGpwLWMudGtvbmcuY2MifQ==",
+    "protocol": "vmess",
+    "host": "tk.hzlt.tkddns.xyz",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "www.visa.com.sg",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yNyB8IOKsh++4jyAxLjRNQi9zIiwiYWRkIjoidGltZS5pcyIsInBvcnQiOjQ0MywiaWQiOiJiNTI2OTI2ZC0xNDc0LTRmNDEtOTg1ZS04Yjg3N2NiODQwY2QiLCJ0eXBlIjoiIiwiYWlkIjoiMCIsIm5ldCI6IndzIiwidGxzIjoidGxzIiwic25pIjoidGltZS5pcyIsInBhdGgiOiIvIiwiaG9zdCI6InNoczExMS5rZWppeGlhb3FpNjY2LnN0b3JlIn0=",
+    "protocol": "vmess",
+    "host": "time.is",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+Hq/Cfh7fms5Xlm70xIHwg4qyH77iPIDIuM01CL3MiLCJhZGQiOiIxNzIuNjcuMTk4LjE4NyIsInBvcnQiOjQ0MywiaWQiOiI5M2VhNDg2YS1iYWRhLTQyYTQtYWMzOC1kMDg4YjMyMGZhMWUiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InhtaXZpZGVvLmNmZCIsInBhdGgiOiIvbGlua3dzIiwiaG9zdCI6InhtaXZpZGVvLmNmZCJ9",
+    "protocol": "vmess",
+    "host": "172.67.198.187",
+    "latency_ms": Infinity
+  },
+  {
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B3%F0%9F%87%B1%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.86.73",
+    "latency_ms": Infinity
+  },
+  {
     "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xOCB8IOKsh++4jyAyLjNNQi9zIiwiYWRkIjoieGNtZzE5LmR0a2owMzI4LmNvbSIsInBvcnQiOjQ0MywiaWQiOiJiYzk0Zjc0Mi0wZTdiLTRjZjgtZTg5Ny02MjE0ZjliZWM4ZGEiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InhjbWcxOS5kdGtqMDMyOC5jb20iLCJwYXRoIjoiL3hjbWcxMjM0IiwiaG9zdCI6InhjbWcxOS5kdGtqMDMyOC5jb20ifQ==",
     "protocol": "vmess",
     "host": "xcmg19.dtkj0328.com",
     "latency_ms": Infinity
   },
   {
-    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xOSB8IOKsh++4jyAyLjFNQi9zIiwiYWRkIjoieGNmMDM2LmZhY2FpMjAyNC5jb20iLCJwb3J0Ijo0NDMsImlkIjoiOTZjNTg1ZGUtYzdlNC00MWNiLWEyMzItOWFiYTUzNWVhOWFjIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4Y2YwMzYuZmFjYWkyMDI0LmNvbSIsInBhdGgiOiIvOTZjNTg1ZGUifQ==",
-    "protocol": "vmess",
-    "host": "xcf036.facai2024.com",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "45.85.119.151",
     "latency_ms": Infinity
   },
   {
-    "line": "ss://MjAyMi1ibGFrZTMtYWVzLTI1Ni1nY206S3dJZWxYWk5adExKTWtKMlNRUm9EcXRmUytaditPdVN3cGRWekJMNlUvWT06bTZoWXB3eVlFQ0FKUHVzTWtFdXJvZFo5NjFBUVNiVU1rMFI3RGV6REdCbz0@51.161.80.44:13523?type=tcp#%F0%9F%87%A8%F0%9F%87%A6-ShatakVPN",
-    "protocol": "shadowsocks",
-    "host": "51.161.80.44",
+    "line": "vless://d196897a-006e-4454-9478-67b6fd8ce021@auto.lonup.org:55600?security=reality&encryption=none&pbk=jH08UU9id-Q8i17ltvHPO3sfGL6YTJIFveAJGgNjNl8&headerType=none&fp=firefox&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=190d32b118caf07f#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "auto.lonup.org",
     "latency_ms": Infinity
   },
   {
-    "line": "ss://MjAyMi1ibGFrZTMtYWVzLTI1Ni1nY206NW9FUHhFQk1Gd08ybitVa0JkeTdCWHRIU1I4VjllRUtQWDVkcmZmV25Hdz06VTJCQVVHQ1JEbERzcCswaTVlejk2cVpBQmN6MUVDQXlkZEhBVUpLNGlGZz0@91.99.210.3:31412?type=tcp#ShatakVPN-jqw019zm",
-    "protocol": "shadowsocks",
-    "host": "91.99.210.3",
+    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "public15v7.fastipsport.com",
     "latency_ms": Infinity
   },
   {
@@ -648,231 +648,231 @@
     "latency_ms": Infinity
   },
   {
-    "line": "Cgp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTMuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PSUyRiZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh6/wn4e1W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtSlAtMTExODkzMjQKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTIwLmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJmZwPWNocm9tZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZzaWQ9ZjUmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJmVuY3J5cHRpb249bm9uZSPwn4ev8J+HtVt3d3cudjJub2Rlcy5jb21dIHZsZXNzLUpQLTExMTg5MjA4CnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xNy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZmcD1jaHJvbWUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmc2lkPWY1JnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZlbmNyeXB0aW9uPW5vbmUj8J+Hr/Cfh7Vbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1KUC0xMTE4OTIwNQp2bGVzczovL2ZkM2UzNjBlLTgwNjItNDc0Yi04OWNmLTYwZTg5ZmU5ODc5MkBnb3phcmZyZWVib3QubmluaXdlYmxvZy5vcmc6MTUzMj9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9amU0dVlDcnROR1MzTEJKZmVuVHBVQ04wU1o2VFZGZlhMenZnemxmNVNGdyZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3Amc25pPXJlZmVyc2lvbi5jb20mc2lkPWM4NDg5MGEwZGJkMDRhYTkj8J+HuvCfh6Zbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1VQS0xMTE4OTIwMQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTUuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PSUyRiZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh6/wn4e1W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtSlAtMTExODkyMDAKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTQuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PS8mdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4ev8J+HtVt3d3cudjJub2Rlcy5jb21dIHZsZXNzLUpQLTExMTg5MTk5CnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xMy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh7Dwn4e3W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtS1ItMTExODkxOTgKdmxlc3M6Ly9iNWI2ODg3MS1kMDI2LTQzNzUtOGM5ZC00MDBhYjI4YTU4YTFAZ296YXJmcmVlYm90Lm5pbml3ZWJsb2cub3JnOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9azVnaENRamZ6SC12bzhkTmFqUWJhbDE3RTloenpuNFByY3JaRVNkMjN5NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3Amc25pPXJlZmVyc2lvbi5jb20mc2lkPTM3MmE5NGQyZjgwMDlhOTQj8J+HqfCfh6pbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1ERS0xMTE4OTE5NgpzczovL1kyaGhZMmhoTWpBdGFXVjBaaTF3YjJ4NU1UTXdOVHAwZGxneGRpTk9VMFpRWDB4SFgySktANjUuMjAuMTE1LjE5NDo4MDgj8J+HuPCfh6pbd3d3LnYybm9kZXMuY29tXSBzcy1TRS0xMTE4OTE5Mgp2bGVzczovL2JjNGY0OWRjLTJjNTAtNDlhYy1iOGZhLWQzMDIwYTVlNjVkZUA5MS45OS4yMTYuMjM1OjQ0Mz9zZWN1cml0eT1ub25lJmVuY3J5cHRpb249bm9uZSZob3N0PXp1bGEuaXImaGVhZGVyVHlwZT1odHRwJnR5cGU9dGNwI/Cfh6nwn4eqW3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtREUtMTExODkxOTEKdmxlc3M6Ly8xYTZmZTUwMC01OWRhLTQ1OTgtODU3Ni0yNTZmMDY3NjVmZmJAOTQuMjYuMjI4LjEwOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9Sl9qUXE5LVNXUVpqaU1odVBhRlY3VjJNYUo0cGtLZ1ZSYXo3eDZ0bXZ5OCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZzbmk9cnUuc2Zhc3RpLnJ1JnNpZD0xNjg5NTQ1OWEyYzc3NjhkI/Cfh7Pwn4exW3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtTkwtMTExODkxODQKdmxlc3M6Ly83Y2ZlZTEwYS01N2YyLTRlYjctYTE3Ni1iNGZhZWJkNDVjODNAcXAudnFwdi50b3A6MjA1Mj9zZWN1cml0eT1ub25lJmVuY3J5cHRpb249bm9uZSZoZWFkZXJUeXBlPW5vbmUmdHlwZT10Y3Aj8J+HqfCfh6pbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1ERS0xMTE4OTE4Mwp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTMuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mZnA9Y2hyb21lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JnNpZD1mNSZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mZW5jcnlwdGlvbj1ub25lI/Cfh7rwn4e4W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtLTExMTg5MDk4VVMKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTE1LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4ev8J+HtVt3d3cudjJub2Rlcy5jb21dIHZsZXNzLS0xMTE4OTA5M0pQCnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi00LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0vJnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZzaWQ9ZjUj8J+Hr/Cfh7Vbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1KUC0xMTE4OTA4OQp2bGVzczovLzRhZTFlZDkyLWU2NzYtNzZmMC1jZmUzLTJhNmU5NTUyNWMxZEBVc2EuYmF6aWlyLmlyOjQ0ND9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9QVVnMmgxNlg4eFA1czd0bmtjRHV5Zlg1Q0JWN1d2Q29ZNDhPS2hidFF5dyZoZWFkZXJUeXBlPW5vbmUmZnA9ZmlyZWZveCZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXRnanUub3JnJnNpZD04MjFiYmM0NGRkN2E0ZTE1I/Cfj7Nbd3d3LnYybm9kZXMuY29tXSB2bGVzcy0tMTExODkwNzYKc3M6Ly9ZV1Z6TFRJMU5pMW5ZMjA2TVRJNVptVXdPVFV0Tm1Fek15MDBPR0ZpTFdFeFpUSXRZVEl6WW1SbVpUa3lNekE0QDQ1LjEzNC4xMy43NTo0NDMj8J+Ht/Cfh7pbd3d3LnYybm9kZXMuY29tXSBzcy1SVS0xMTE4OTA3NQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tNC5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZzcHg9LyZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh6jwn4emW3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtQ0EtMTExODg5MzUKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTE1LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4e48J+HrFt3d3cudjJub2Rlcy5jb21dIHZsZXNzLVNHLTExMTg4OTI1CnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xNy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZmcD1jaHJvbWUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmc2lkPWY1JnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZlbmNyeXB0aW9uPW5vbmUj8J+Hr/Cfh7Vbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1KUC0xMTE4ODkxMQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tMTcuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mZnA9Y2hyb21lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JnNpZD1mNSZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mZW5jcnlwdGlvbj1ub25lI/Cfh7rwn4e4W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtLTExMTg4NjE2VVMKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTE1LmNyaXN0aWFuby5uYW1lLm5nOjQ0Mz9zZWN1cml0eT1yZWFsaXR5JmVuY3J5cHRpb249bm9uZSZwYms9VEdsUHRmVnpHSVZwTWF1UFJNR0pqMlV1NkdVaUNwdTVaaXpJSWp3LXd4NCZoZWFkZXJUeXBlPW5vbmUmZnA9Y2hyb21lJnNweD0lMkYmdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4e68J+HuFt3d3cudjJub2Rlcy5jb21dIHZsZXNzLS0xMTE4ODYxM1VTCnZsZXNzOi8vNGMyNmViYzMtNzc4NC00NmQ4LWI1MmEtN2IwY2NhZTZmNGI0QGFtYXpvbi0xMy5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZzcHg9JTJGJnR5cGU9dGNwJmZsb3c9eHRscy1ycHJ4LXZpc2lvbiZzbmk9c3RvcmUuc3RlYW1wb3dlcmVkLmNvbSZzaWQ9ZjUj8J+HuvCfh7hbd3d3LnYybm9kZXMuY29tXSB2bGVzcy1VUy0xMTE4ODYwNQp2bGVzczovLzRjMjZlYmMzLTc3ODQtNDZkOC1iNTJhLTdiMGNjYWU2ZjRiNEBhbWF6b24tNC5jcmlzdGlhbm8ubmFtZS5uZzo0NDM/c2VjdXJpdHk9cmVhbGl0eSZlbmNyeXB0aW9uPW5vbmUmcGJrPVRHbFB0ZlZ6R0lWcE1hdVBSTUdKajJVdTZHVWlDcHU1Wml6SUlqdy13eDQmaGVhZGVyVHlwZT1ub25lJmZwPWNocm9tZSZzcHg9LyZ0eXBlPXRjcCZmbG93PXh0bHMtcnByeC12aXNpb24mc25pPXN0b3JlLnN0ZWFtcG93ZXJlZC5jb20mc2lkPWY1I/Cfh7Dwn4e3W3d3dy52Mm5vZGVzLmNvbV0gdmxlc3MtS1ItMTExODg2MDQKdmxlc3M6Ly80YzI2ZWJjMy03Nzg0LTQ2ZDgtYjUyYS03YjBjY2FlNmY0YjRAYW1hem9uLTQuY3Jpc3RpYW5vLm5hbWUubmc6NDQzP3NlY3VyaXR5PXJlYWxpdHkmZW5jcnlwdGlvbj1ub25lJnBiaz1UR2xQdGZWekdJVnBNYXVQUk1HSmoyVXU2R1VpQ3B1NVppeklJanctd3g0JmhlYWRlclR5cGU9bm9uZSZmcD1jaHJvbWUmc3B4PS8mdHlwZT10Y3AmZmxvdz14dGxzLXJwcngtdmlzaW9uJnNuaT1zdG9yZS5zdGVhbXBvd2VyZWQuY29tJnNpZD1mNSPwn4ew8J+Ht1t3d3cudjJub2Rlcy5jb21dIHZsZXNzLS0xMTE4ODUxMktS",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@172.67.65.158:8880?path=%2FEtb1L6YUdZFZuTOr%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "172.67.65.158",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddef\ud83c\uddf5",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://decb4fce-bd8a-4d8b-a81f-2e393ee9ee02@162.19.250.162:24209?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%A6%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "162.19.250.162",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddfa\ud83c\uddf8",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://18ada603-dd03-4a0c-85e7-e63a09829766@91.99.210.3:47058?security=none&type=tcp&path=/Shatak/&headerType=http&host=soft98.ir&packetEncoding=xudp&encryption=none#ShatakVPN",
+    "protocol": "vless",
+    "host": "91.99.210.3",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddfa\ud83c\uddf2ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://2036e2c3-18a5-4eed-9db4-f91a7f02c7d5@104.21.112.1:80?path=%2F193.123.81.105%3D443&security=none&encryption=none&host=zoomgov.vipren.biz.id&type=ws#%F0%9F%87%AB%F0%9F%87%AE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.21.112.1",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde8\ud83c\uddf5",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://d196897a-006e-4454-9478-67b6fd8ce021@aiteam.lonup.org:55900?security=reality&encryption=none&pbk=jH08UU9id-Q8i17ltvHPO3sfGL6YTJIFveAJGgNjNl8&headerType=none&fp=edge&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=190d32b118caf07f#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "aiteam.lonup.org",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf0\ud83c\uddf7",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMCB8IOKsh++4jyA0LjlNQi9zIiwiYWRkIjoid3d3LnduMDMuY2MiLCJwb3J0Ijo4MCwiaWQiOiIyZjM4Zjg0OC1hODk5LTRjODctOTgwNy0yMDdhNDE2MTVlM2MiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6IiIsInBhdGgiOiIvcm9uZ3NldmVuP2VkPTIwNDgiLCJob3N0IjoidXMuZnJlZXl5ZHMuZHBkbnMub3JnIn0=",
+    "protocol": "vmess",
+    "host": "www.wn03.cc",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddec\ud83c\uddf8",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://42808c59-4d9e-46ee-a9c4-33e7c31ce9e3@ipw.gfdv54cvghhgfhgj-njhgj64.info:443?path=%2Fyaqnnows&security=tls&encryption=none&host=638890561652286310.esfahan-prx-dnraaao.info&type=ws&sni=638890561652286310.esfahan-prx-dnraaao.info#%F0%9F%87%AC%F0%9F%87%A7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf2\ud83c\udde9ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@45.87.175.65:8080#%F0%9F%87%A6%F0%9F%87%A9%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yMSB8IOKsh++4jyAyLjJNQi9zIiwiYWRkIjoieGMxMTUtMS5tZWl6aWJhNTU2Ni5jb20iLCJwb3J0Ijo0NDMsImlkIjoiZjQwYThkNjUtYTlhYy00MmNlLWViY2MtOWU2NDQ3YTk4NjZkIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4YzExNS0xLm1laXppYmE1NTY2LmNvbSIsInBhdGgiOiIvZjQwYThkNjUifQ==",
+    "protocol": "vmess",
+    "host": "xc115-1.meiziba5566.com",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf9\ud83c\uddf4",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HrfCfh7DpppnmuK8zIHwg4qyH77iPIDMuMU1CL3MiLCJhZGQiOiIxMDQuMTcuMTM3LjEyNyIsInBvcnQiOjQ0MywiaWQiOiI0N2VhYjBkZS05N2Y5LTQ5YmUtZjJmMy0yZTRlYjE3MjY4ZTYiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6ImhrLm5pc2tha293c2tpLmdnZmYubmV0IiwicGF0aCI6Ii9hYSIsImhvc3QiOiJoay5uaXNrYWtvd3NraS5nZ2ZmLm5ldCJ9",
+    "protocol": "vmess",
+    "host": "104.17.137.127",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf9\ud83c\uddf7ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%B9%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.69.162:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.69.162",
     "latency_ms": Infinity
   },
   {
-    "line": "\u0628\u0647 \u0646\u0638\u0631 \u0645\u06cc\u0631\u0633\u0647 \u062f\u0648\u0631\u0632\u062f\u0646 #\u0641\u06cc\u0644\u062a\u0631\u06cc\u0646\u06af \u0627\u0632 \u0637\u0631\u06cc\u0642 #oblivion \u0648 #oblivionDesktop \u062f\u0631 \u0628\u0631\u062e\u06cc \u0627\u0632 \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u200c\u0647\u0627\u06cc \u062b\u0627\u0628\u062a (\u0645\u062b\u0644 \u0645\u062e\u0627\u0628\u0631\u0627\u062a \u0648 \u0622\u0633\u06cc\u0627\u062a\u06a9) \u0628\u0627 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0627\u0632 \u0627\u0646\u062f\u067e\u0648\u06cc\u0646\u062a\u200c\u0647\u0627\u06cc \u0633\u0641\u0627\u0631\u0634\u06cc \u0627\u0645\u06a9\u0627\u0646\u200c\u067e\u0630\u06cc\u0631 \u0634\u062f\u0647.\ud83d\udc49  github.com/bepass-org/oblivion-desktop/releases\ud83d\udc49 play.google.com/store/apps/details?id=org.bepass.oblivion&hl=en\ud83d\udca1 ircfspace.github.io/endpoint\u25ab\ufe0f 188.114.98.224:3476\u25ab\ufe0f 188.114.98.224:500\u25ab\ufe0f 188.114.98.224:2371\u25ab\ufe0f 188.114.98.224:1070\u25ab\ufe0f 188.114.98.224:854\u25ab\ufe0f 188.114.98.224:864\u25ab\ufe0f 188.114.98.224:939\u25ab\ufe0f 188.114.98.224:2408\u25ab\ufe0f 188.114.98.224:908\u25ab\ufe0f 188.114.96.145:1074\ud83e\uddd1\u200d\ud83e\uddb1 iSegaro",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://19199927-fb46-4203-8872-672fd1daca14@54.38.214.56:37171?security=none&encryption=none&headerType=none&type=tcp#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "54.38.214.56",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddec\ud83c\udde7ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTozNjBlMjFkMjE5NzdkYzEx@45.139.24.24:57456#%F0%9F%87%AC%F0%9F%87%A7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HrfCfh7DpppnmuK80IHwg4qyH77iPIDEuMU1CL3MiLCJhZGQiOiJoazIubHJ6ZHgudWsiLCJwb3J0Ijo0NDMsImlkIjoiZGI2OWQ1YmMtZDM2Yy00OTAzLWY0NzEtNzRiOThjNWNlZmU1IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJoazIubHJ6ZHgudWsiLCJwYXRoIjoiL3JlZ2lzdGVyIn0=",
+    "protocol": "vmess",
+    "host": "hk2.lrzdx.uk",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde7\ud83c\uddfbss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo3anZISEY1U2FGb2I%3D@78.153.131.96:443#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@85.90.207.45:7021?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
+    "protocol": "vless",
+    "host": "85.90.207.45",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddec\ud83c\uddf8ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpjNDA2NDFjMWY4OWU3YWNi@147.45.178.200:57456#%F0%9F%87%AC%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMSB8IOKsh++4jyAyLjhNQi9zIiwiYWRkIjoidTguaHV2aWNsb3VkLmNvbSIsInBvcnQiOjQ0MywiaWQiOiI2Nzk2NjExYi0yNjBlLTRkNjMtOTAxNi0yMGMyN2IxMmU0MjAiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InU4Lmh1dmljbG91ZC5jb20iLCJwYXRoIjoiLzY3OTY2MTFiLTI2MGUtNGQ2My05MDE2LTIwYzI3YjEyZTQyMCIsImhvc3QiOiJ1OC5odXZpY2xvdWQuY29tIn0=",
+    "protocol": "vmess",
+    "host": "u8.huvicloud.com",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddfa\ud83c\uddf2",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://MsV2ray-Telegram@www.speedtest.net:80?path=%2FMsV2ray%3Fed%3D80&security=none&encryption=none&host=http-fast-de-speedtest.xqfactor.ir.&type=httpupgrade#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "www.speedtest.net",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde7\ud83c\uddf7ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5dHFoTWRJclRrZ1E0NlB2aHlBdE1I@switcher-nick-croquet.freesocks.work:443#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xMiB8IOKsh++4jyAzLjRNQi9zIiwiYWRkIjoieGNmMDI5LmZhY2FpMjAyNC5jb20iLCJwb3J0Ijo0NDMsImlkIjoiOWNlNDUyNmEtYzUwMC00YzY2LTk5YjAtMDQ4ZTRiNmI1NjYzIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4Y2YwMjkuZmFjYWkyMDI0LmNvbSIsInBhdGgiOiIvOWNlNDUyNmEiLCJob3N0IjoieGNmMDI5LmZhY2FpMjAyNC5jb20ifQ==",
+    "protocol": "vmess",
+    "host": "xcf029.facai2024.com",
     "latency_ms": Infinity
   },
   {
-    "line": "\u0633\u0644\u0627\u0645 \u0633\u0644\u0627\u0645 \u0639\u0632\u06cc\u0632\u0627\u06cc \u062f\u0644 \ud83d\ude4b\ud83c\udffb\u0635\u0628\u062d \u0632\u06cc\u0628\u0627\u062a\u0648\u0646 \u0628\u062e\u06cc\u0631 \ud83c\udf24\ufe0f@vpn_ioss@vpn_ioss",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e4824193-4f54-453b-d037-88368e85ef0e@public15v7.fastipsport.com:8880?mode=gun&security=none&encryption=none&type=grpc#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "public15v7.fastipsport.com",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde6\ud83c\udde9",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://f0050c31-06b1-4ebd-a10c-fe1e73632067@v05.vxlimir.com:1370?security=reality&encryption=none&pbk=_N3KecwB9Ck28IIMxIck00ivkq3_ZEUvU3KXELnfvHw&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=refersion.com&sid=e1afb93bfe75a34b#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "v05.vxlimir.com",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde6\ud83c\uddea",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@198.62.62.175:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "198.62.62.175",
     "latency_ms": Infinity
   },
   {
-    "line": "\u0639\u0634\u0642\u0627\u06cc \u062f\u0644\u0645 \u0633\u0631\u0648\u0631 \u0648 \u067e\u0631\u0648\u06a9\u0633\u06cc \u0647\u0627\u06cc \u0639\u0645\u0648\u0645\u06cc \u0631\u0648 \u0628\u0631\u0627\u062a\u0648\u0646 \u0628\u0627\u0631\u06af\u0630\u0627\u0631\u06cc \u06a9\u0631\u062f\u06cc\u0645\u2705\u062d\u062c\u0645 \u0647\u0631 \u06a9\u062f\u0648\u0645 \u0627\u0632 \u0633\u0631\u0648\u0631 \u0647\u0627 200 \u06af\u06cc\u06af \u0647\u0633\u062a\u0634\u267b\ufe0f\u0644\u0637\u0641\u0627 \u0627\u0632 \u062f\u0627\u0646\u0644\u0648\u062f \u06a9\u0631\u062f\u0646 \u062e\u0648\u062f\u062f\u0627\u0631\u06cc \u06a9\u0646\u06cc\u062f\u274c\u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0627\u0632 \u0645\u0627 \u062d\u0645\u0627\u06cc\u062a \u0648 \u0645\u0627 \u0631\u0648 \u0628\u0647 \u062f\u0648\u0633\u062a\u0627\u0646 \u062e\u0648\u062f \u0645\u0639\u0631\u0641\u06cc \u06a9\u0646\u06cc\u062f\ud83d\ude4f\ud83c\udd94@vpn_ioss\ud83c\udd94@vpn_ioss",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://54b4c039-7be6-448f-b704-820251b079db@5.75.197.120:2025?mode=gun&security=reality&encryption=none&pbk=AUNIYov4R2TvNmC0cF0NiKWYGqzikosOu4g2wcCALlw&fp=chrome&spx=%2F&type=grpc&serviceName=Telegram%20%3A%20%40PouRia_Cheat&sni=www.cloudflare.com&sid=8d9c20be72b4#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "5.75.197.120",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde9\ud83c\uddeass://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5dHFoTWRJclRrZ1E0NlB2aHlBdE1I@switcher-nick-croquet.freesocks.work:443#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://90c7ad5e-cd15-4314-b39b-aeabd397d592@www.visa.com.sg:2087?path=%2F%3Fed%3D2560&security=tls&encryption=none&host=vl.hongkong6.qzz.io&fp=random&type=ws&sni=vl.hongkong6.qzz.io#%F0%9F%87%BA%F0%9F%87%BE%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "www.visa.com.sg",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddec\ud83c\uddf1",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJhZGQiOiJwYW5lbDMuaXB5YXIub3JnIiwiYWlkIjoiMCIsImFscG4iOiIiLCJmcCI6IiIsImhvc3QiOiIiLCJpZCI6ImMwY2NkZWI5LTc4NGMtNGQ2Ny1iOTA0LTIwZGNhYWM5OTAyYSIsIm5ldCI6InRjcCIsInBhdGgiOiIiLCJwb3J0IjoiMzIwMTciLCJwcyI6IvCfh6/wn4e1QHZwbl9pb3NzIOKZu++4jyDYudi22Ygg2LTZiCIsInNjeSI6ImF1dG8iLCJzbmkiOiIiLCJ0bHMiOiIiLCJ0eXBlIjoibm9uZSIsInYiOiIyIn0=",
+    "protocol": "vmess",
+    "host": "panel3.ipyar.org",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde6\ud83c\uddf2",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xOSB8IOKsh++4jyAyLjFNQi9zIiwiYWRkIjoieGNmMDM2LmZhY2FpMjAyNC5jb20iLCJwb3J0Ijo0NDMsImlkIjoiOTZjNTg1ZGUtYzdlNC00MWNiLWEyMzItOWFiYTUzNWVhOWFjIiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiJ4Y2YwMzYuZmFjYWkyMDI0LmNvbSIsInBhdGgiOiIvOTZjNTg1ZGUifQ==",
+    "protocol": "vmess",
+    "host": "xcf036.facai2024.com",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddec\ud83c\udde7",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%B9%F0%9F%87%B4%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.86.73",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf2\ud83c\uddea",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@45.85.119.151:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A7%F0%9F%87%B7%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "45.85.119.151",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddfa\ud83c\uddfe",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@138.68.231.98:7020?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
+    "protocol": "vless",
+    "host": "138.68.231.98",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf2\ud83c\uddeass://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpjNDA2NDFjMWY4OWU3YWNi@tr.vpnsparta.pro:57456#%F0%9F%87%B2%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.86.73:8880?path=%2FJ5aLQOY1R9ONWYCM%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A7%F0%9F%87%BB%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.86.73",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde8\ud83c\udde6",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://42808c59-4d9e-46ee-a9c4-33e7c31ce9e3@ipw.gfdv54cvghhgfhgj-njhgj64.info:443?path=%2Fyaqnnows&security=tls&encryption=none&host=638890561652286310.esfahan-prx-dnraaao.info&type=ws&sni=638890561652286310.esfahan-prx-dnraaao.info#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "ipw.gfdv54cvghhgfhgj-njhgj64.info",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddeb\ud83c\uddee",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@142.132.183.149:7020?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
+    "protocol": "vless",
+    "host": "142.132.183.149",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf3\ud83c\uddf1",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://7b5f4468-74e1-4cee-be76-80a6316deec9@146.190.255.206:7020?security=reality&sni=journalofbigdata.springeropen.com&fp=firefox&pbk=TmD2tgPqVKs9s4FiP6qgaRR1vE03_l30_PKlljwkJiQ&sid=7fec3adb0c3aee58&type=tcp&flow=xtls-rprx-vision&packetEncoding=xudp&encryption=none#ShatakVPN",
+    "protocol": "vless",
+    "host": "146.190.255.206",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddf9\ud83c\uddf7",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70yMCB8IOKsh++4jyAxLjhNQi9zIiwiYWRkIjoicmF5LnNreW1pcnJvci5jYyIsInBvcnQiOjQ0MywiaWQiOiJjOTk5MjllMS05YzgyLTRhMzMtZDExZS1mMTc3MjQ3YjhmNjMiLCJ0eXBlIjoiIiwiYWlkIjowLCJuZXQiOiJ3cyIsInRscyI6InRscyIsInNuaSI6InJheS5za3ltaXJyb3IuY2MiLCJwYXRoIjoiLyJ9",
+    "protocol": "vmess",
+    "host": "ray.skymirror.cc",
     "latency_ms": Infinity
   },
   {
-    "line": "\u0646\u0633\u062e\u0647 \u06f2.\u06f4\u06f7 \u0627\u0632 \u0641\u06cc\u0644\u062a\u0631\u0634\u06a9\u0646 #oblivionDesktop \u0628\u0631\u0627\u06cc \u0633\u06cc\u0633\u062a\u0645\u200c\u0639\u0627\u0645\u0644\u200c\u0647\u0627\u06cc \u0648\u06cc\u0646\u062f\u0648\u0632\u060c \u0644\u06cc\u0646\u0648\u06a9\u0633 \u0648 \u0645\u06a9 \u0645\u0646\u062a\u0634\u0631 \u0634\u062f. \u0647\u0633\u062a\u0647 \u0648\u0627\u0631\u067e\u200c\u067e\u0644\u0627\u0633 \u062f\u0631 \u0627\u06cc\u0646\u200c\u0622\u067e\u062f\u06cc\u062a \u0628\u0647 \u0646\u06af\u0627\u0631\u0634 \u06f1.\u06f2.\u06f5 \u0622\u067e\u062f\u06cc\u062a \u0634\u062f\u0647\u060c \u062a\u0627 \u0645\u0634\u06a9\u0644 \u0627\u062a\u0635\u0627\u0644 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646 \u0628\u0631\u0637\u0631\u0641 \u0628\u0634\u0647. \ud83e\uddd1\u200d\ud83e\uddb1 github.com/bepass-org/oblivion-desktop/releases\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://fe837fd0-840d-4cee-9334-0dc6c2b15c1c@5.181.20.219:17422?security=reality&encryption=none&pbk=0r5rlmvACX09qUTPuxrbuKWSAn66NnNyHIfIMwalYAA&headerType=none&fp=chrome&type=tcp&sni=yahoo.com&sid=33#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "5.181.20.219",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde7\ud83c\uddfb",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2F1ycR2zb3KeELWRha%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-DdnS.com&type=ws#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.17.1.197",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde8\ud83c\udde6ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@45.87.175.22:8080#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.16.85.3:8880?path=%2F6TvG8D6HimXKgdp2%3Fed%3D2560&security=none&encryption=none&host=vngsupply.ip-ddns.com&type=ws#%F0%9F%87%A9%F0%9F%87%AA%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.16.85.3",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde7\ud83c\uddf7",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vmess://eyJ2IjoiMiIsInBzIjoi8J+HuvCfh7jnvo7lm70xNCB8IOKsh++4jyAyLjJNQi9zIiwiYWRkIjoiM3NkZmd2Y3h4eC45MzgucHAudWEiLCJwb3J0Ijo0NDMsImlkIjoiMDIxMmZhYjUtZTkzYy00OTA0LWI3YTgtMTg3ZmQ1MzVmMzU0IiwidHlwZSI6IiIsImFpZCI6MCwibmV0Ijoid3MiLCJ0bHMiOiJ0bHMiLCJzbmkiOiIzc2RmZ3ZjeHh4LjkzOC5wcC51YSIsInBhdGgiOiIvUDg3OW10Q29IUXFhV082N3FFYU1JTloxIiwiaG9zdCI6IjNzZGZndmN4eHguOTM4LnBwLnVhIn0=",
+    "protocol": "vmess",
+    "host": "3sdfgvcxxx.938.pp.ua",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\uddfa\ud83c\uddf8ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5UnZpTmE0dHNjamNtQ0I0MDh2TFNn@46.101.245.131:44354#%F0%9F%87%BA%F0%9F%87%B8%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.17.1.197:8880?path=%2FfgvtHUpS6R8Rv8s5%3Fed%3D2560&security=none&encryption=none&host=VngSuPpLY.IP-Ddns.com&type=ws#%F0%9F%87%A8%F0%9F%87%B5%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.17.1.197",
     "latency_ms": Infinity
   },
   {
-    "line": "\ud83c\udde9\ud83c\uddea",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://e9979910-79d1-4621-a93c-b2a579c44ba7@104.25.131.154:8880?path=%2FC5itOz6YmbLanD7F%3Fed%3D2560&security=none&alpn=http%2F1.1&encryption=none&host=vngsupply.ip-ddns.com&fp=randomized&type=ws&sni=vngsUPPly.IP-DDnS.CoM#%F0%9F%87%A8%F0%9F%87%A6%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "104.25.131.154",
     "latency_ms": Infinity
   },
   {
-    "line": "\u0622\u0645\u0648\u0632\u0634 \u0627\u0634\u062a\u0631\u0627\u06a9\u200c\u06af\u0630\u0627\u0631\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a \u0628\u062f\u0648\u0646 \u0641\u06cc\u0644\u062a\u0631 \u0627\u0632 \u0646\u0633\u062e\u0647 \u0648\u06cc\u0646\u062f\u0648\u0632 #oblivionDesktop\u060c \u0628\u0631 \u0631\u0648\u06cc \u0633\u0627\u06cc\u0631 \u062f\u0633\u062a\u06af\u0627\u0647\u200c\u0647\u0627 ...\ud83d\udca1 telegra.ph/Enable-and-Share-VPN-Internet-from-Your-Laptop-06-21\u00a9 Amirhossein.J\ud83e\uddd1\u200d\ud83e\uddb1 iSegaro",
-    "protocol": "unknown",
-    "host": "",
+    "line": "vless://c8fae2e1-bffc-4e20-94f2-8bee7ba14ccd@meli_proxyy.vip-plan.org:54474?mode=auto&path=%2F&security=reality&encryption=none&pbk=mVptIpBcUtMqN2tfYE8eNwBrhqNdb0lWJoeRvYen8TY&host=fast.com&fp=random&spx=%2F&type=xhttp&sni=yahoo.com&sid=2cb4454d18#%F0%9F%87%A6%F0%9F%87%B2%40vpn_ioss%20%E2%99%BB%EF%B8%8F%20%D8%B9%D8%B6%D9%88%20%D8%B4%D9%88",
+    "protocol": "vless",
+    "host": "meli_proxyy.vip-plan.org",
     "latency_ms": Infinity
   }
 ]
