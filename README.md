@@ -11,16 +11,19 @@
   <img src="https://img.shields.io/github/languages/top/ShatakVPN/ConfigForge?style=for-the-badge&color=purple" alt="Top Language" />
 </p>
 
+## 📂 Available Subscription Files
 
-| Name              | Description                | Link                                                                                                                |
-| ----------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `All`             | All combined configs       | [all.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/all.txt)                 |
-| `Light`           | Lightweight top 30 configs | [light.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/light.txt)             |
-| `Vless`           | VLESS protocol configs     | [vless.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/vless.txt)             |
-| `Vmess`           | VMess protocol configs     | [vmess.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/vmess.txt)             |
-| `Shadowsocks`     | Shadowsocks configs        | [shadowsocks.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/shadowsocks.txt) |
-| `Trojan`          | Trojan configs             | [trojan.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/trojan.txt)           |
-| `Unknown`         | Unknown or other configs   | [unknown.txt](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/unknown.txt)         |
+| File            | Description                   | Direct Link                                                                                                          |
+| -------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **all.txt**    | All combined configs         | [Download](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/all.txt)                 |
+| **light.txt**  | Lightweight top 30 configs   | [Download](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/light.txt)             |
+| **vless.txt**  | VLESS protocol configs       | [Download](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/vless.txt)             |
+| **vmess.txt**  | VMess protocol configs       | [Download](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/vmess.txt)             |
+| **shadowsocks.txt** | Shadowsocks configs        | [Download](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/shadowsocks.txt) |
+| **trojan.txt** | Trojan configs               | [Download](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/trojan.txt)           |
+| **unknown.txt**| Unknown or unsupported configs| [Download](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/unknown.txt)         |
+
+> ✅ Files are updated automatically via **GitHub Actions** every few hours.
 
 ---
 
