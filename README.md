@@ -28,7 +28,7 @@
 
 ## How to Use
 
-** ✅ Option 1: Run Locally **
+**✅ Option 1: Run Locally**
 
 Clone the repository:
 ```bash
@@ -48,7 +48,7 @@ python source/main.py
 
 ---
 
-** ✅ Option 2: Run Automatically on GitHub (No Server Needed) **
+**✅ Option 2: Run Automatically on GitHub (No Server Needed)**
 
 You can **fork this repository** and let **GitHub Actions** handle everything for you!  
 
