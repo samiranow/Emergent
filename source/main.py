@@ -28,7 +28,6 @@ URLS = [
     "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
     "https://www.v2nodes.com/subscriptions/country/all/?key=92E2CCF69B51739",
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
-    # ... Add more URLs here ...
 ]
 
 OUTPUT_DIR = "configs"
@@ -45,9 +44,10 @@ CHROME_UA = (
 
 CHECK_HOST_API = "https://check-host.net/check-ping"
 
-MAX_RETRIES = 3  # تعداد تلاش‌های مجدد
-TIMEOUT = 10     # Timeout هر درخواست
-MAX_LATENCY = 1000  # میلی‌ثانیه، لینک‌هایی بالاتر از این حذف یا پایین‌تر قرار می‌گیرن
+MAX_RETRIES = 3
+TIMEOUT = 10
+MAX_LATENCY = 500  # میلی‌ثانیه برای انتخاب بهترین لینک
+LIGHT_COUNT = 30   # تعداد لینک‌های بهترین در light.txt
 
 # ======= دانلود داده =========
 def fetch_data(url: str):
@@ -100,7 +100,7 @@ def extract_host(line: str, proto: str) -> str:
         pass
     return ""
 
-# ======= تست سرعت با Check-Host API با Retry =========
+# ======= تست سرعت با Retry =========
 def test_speed(host: str):
     if not host:
         return float('inf')
@@ -115,12 +115,12 @@ def test_speed(host: str):
                     return avg
         except Exception as e:
             logging.warning(f"Retry {attempt+1}/{MAX_RETRIES} failed for {host}: {e}")
-            time.sleep(0.5 + random.random())  # فاصله کوتاه قبل retry
+            time.sleep(0.5 + random.random())
     return float('inf')
 
 # ======= تابع اصلی =========
 async def main_async():
-    logging.info(f"[{timestamp}] Starting download and processing with advanced Check-Host API...")
+    logging.info(f"[{timestamp}] Starting advanced download and processing with best-link selection...")
     print(f"[{timestamp}] Starting download and processing...")
 
     all_lines = []
@@ -141,7 +141,7 @@ async def main_async():
             categorized[proto].append(line)
             all_lines.append(line)
 
-    sem = asyncio.Semaphore(50)  # تعداد همزمان تست‌ها
+    sem = asyncio.Semaphore(50)
 
     async def test_line(line, proto):
         async with sem:
@@ -155,35 +155,5 @@ async def main_async():
         if not lines:
             continue
         results = await asyncio.gather(*[test_line(line, proto) for line in lines])
-        # مرتب‌سازی: لینک‌هایی با پینگ بالا به انتها میرن
         results.sort(key=lambda x: x[0])
-        categorized[proto] = [line for latency, line, _ in results if latency <= MAX_LATENCY]
-        all_results.extend(results)
-
-    # مرتب سازی کلی
-    all_results.sort(key=lambda x: x[0])
-    all_sorted_lines = [line for latency, line, _ in all_results if latency <= MAX_LATENCY]
-
-    # ذخیره خروجی‌ها
-    for proto, lines in categorized.items():
-        path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
-        with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(lines))
-        logging.info(f"Saved: {path} | Lines: {len(lines)}")
-        print(f"Saved: {path} | Lines: {len(lines)}")
-
-    all_path = os.path.join(OUTPUT_DIR, "all.txt")
-    with open(all_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines))
-    logging.info(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
-    print(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
-
-    # نسخه light با بهترین لینک‌ها
-    light_path = os.path.join(OUTPUT_DIR, "light.txt")
-    with open(light_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines[:30]))
-    logging.info(f"Saved Light version with {min(len(all_sorted_lines), 30)} configs")
-    print(f"Saved Light version with {min(len(all_sorted_lines), 30)} configs")
-
-if __name__ == "__main__":
-    asyncio.run(main_async())
+        # لینک‌هایی که پینگ بالاتر از MAX
