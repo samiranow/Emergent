@@ -9,7 +9,6 @@ import zoneinfo
 import ssl
 from urllib.parse import urlparse
 import httpx
-import websockets
 from aioquic.asyncio import connect
 from aioquic.quic.configuration import QuicConfiguration
 
@@ -21,6 +20,7 @@ CONFIG = {
         "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
         "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
         "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
+        "https://www.v2nodes.com/subscriptions/country/all/?key=96C8FFB201A7745",
     ],
     "output_dir": "configs",
     "light_limit": 30,
@@ -36,12 +36,8 @@ CONFIG = {
     "tcp_retry": 2,
     "latency_tests": 3,
     "proxy": None,
-    "doh_resolver": "https://cloudflare-dns.com/dns-query",
 }
 
-# ---------------------------
-# Logging Setup
-# ---------------------------
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
 
@@ -51,24 +47,6 @@ def timestamp():
 # ---------------------------
 # Utilities
 # ---------------------------
-def maybe_base64_encode_if_needed(content: str) -> str:
-    """Check if the entire content is plain text but decodable, then encode it."""
-    try:
-        lines = content.strip().splitlines()
-        # Check if most lines are decodable Base64
-        encoded_lines = []
-        for line in lines:
-            line_strip = line.strip()
-            if not re.match(r'^[A-Za-z0-9+/=]+$', line_strip):
-                # Not base64-like, encode it
-                encoded_line = base64.b64encode(line_strip.encode()).decode()
-                encoded_lines.append(encoded_line)
-            else:
-                encoded_lines.append(line_strip)
-        return "\n".join(encoded_lines)
-    except Exception:
-        return content
-
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
@@ -94,19 +72,30 @@ def detect_protocol(line: str) -> str:
     else:
         return "unknown"
 
+def normalize_vmess(line: str) -> str:
+    try:
+        if not line.startswith("vmess://"):
+            return line.strip()
+        b64_part = line[8:]
+        padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
+        data = json.loads(base64.b64decode(padded).decode(errors="ignore"))
+        normalized = json.dumps(data, sort_keys=True)
+        return "vmess://" + base64.b64encode(normalized.encode()).decode()
+    except Exception:
+        return line.strip()
+
 def extract_host_port(line: str, proto: str) -> tuple[str, int]:
     try:
         if proto == "vmess":
             b64_part = line[8:]
             padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
-            decoded = base64.b64decode(padded).decode(errors="ignore")
-            data = json.loads(decoded)
+            data = json.loads(base64.b64decode(padded).decode(errors="ignore"))
             host = data.get("add", "")
             port = int(data.get("port", CONFIG["default_port"][proto]))
-            return host, port
+            return host.lower(), port
         elif proto == "vless":
             u = urlparse(line)
-            host = u.hostname or ""
+            host = (u.hostname or "").lower()
             port = u.port or CONFIG["default_port"][proto]
             return host, port
         elif proto == "shadowsocks":
@@ -114,14 +103,14 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
             if "@" in ss_part:
                 after_at = ss_part.rsplit("@", 1)[1]
                 host_port = after_at.split(":")
-                host = host_port[0]
+                host = host_port[0].lower()
                 port = int(host_port[1]) if len(host_port) > 1 else CONFIG["default_port"][proto]
                 return host, port
             else:
                 return "", CONFIG["default_port"][proto]
         elif proto == "trojan":
             u = urlparse(line)
-            host = u.hostname or ""
+            host = (u.hostname or "").lower()
             port = u.port or CONFIG["default_port"][proto]
             return host, port
     except Exception:
@@ -135,10 +124,11 @@ async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
     try:
         r = await session.get(url)
         r.raise_for_status()
-        content = maybe_base64_encode_if_needed(r.text)
-        lines = [maybe_base64_decode(line) for line in content.splitlines() if line.strip()]
-        logging.info(f"Downloaded {url} | Lines: {len(lines)}")
-        return lines
+        lines = [maybe_base64_decode(line) for line in r.text.splitlines() if line.strip()]
+        # Encode دوباره تمام محتوای دیکود شده
+        encoded_lines = [base64.b64encode(line.encode()).decode() if not re.match(r'^[A-Za-z0-9+/=]+$', line) else line for line in lines]
+        logging.info(f"Downloaded {url} | Lines: {len(encoded_lines)}")
+        return encoded_lines
     except Exception as e:
         logging.warning(f"⚠️ Error downloading {url}: {e}")
         return []
@@ -175,41 +165,12 @@ async def http_latency(host: str, port: int) -> float:
     except Exception:
         return float("inf")
 
-async def ws_latency(host: str, port: int) -> float:
-    if not host:
-        return float("inf")
-    url = f"wss://{host}:{port}/"
-    ssl_context = ssl.create_default_context()
-    try:
-        start = asyncio.get_event_loop().time()
-        async with websockets.connect(url, ssl=ssl_context, timeout=CONFIG["timeout"]):
-            end = asyncio.get_event_loop().time()
-            return end - start
-    except Exception:
-        return float("inf")
-
-async def quic_latency(host: str, port: int) -> float:
-    config = QuicConfiguration(is_client=True)
-    try:
-        async with connect(host, port, configuration=config, wait_connected=True) as protocol:
-            start = asyncio.get_event_loop().time()
-            # Send a simple ping or wait a moment
-            await asyncio.sleep(0.1)
-            end = asyncio.get_event_loop().time()
-            return end - start
-    except Exception:
-        return float("inf")
-
 async def measure_latency(host: str, port: int, proto: str) -> float:
     latencies = []
     for _ in range(CONFIG["latency_tests"]):
         latency = await tcp_latency(host, port)
         if latency == float("inf"):
             latency = await http_latency(host, port)
-        if latency == float("inf"):
-            latency = await ws_latency(host, port)
-        if proto in ["vless", "vmess"] and latency == float("inf"):
-            latency = await quic_latency(host, port)
         latencies.append(latency)
     return sum(latencies)/len(latencies)
 
@@ -218,10 +179,18 @@ async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphor
         async with sem:
             host, port = extract_host_port(line, proto)
             latency = await measure_latency(host, port, proto)
-            return latency, line
+            return latency, line, host, port
     results = await asyncio.gather(*[test_line(line) for line in lines])
-    results.sort(key=lambda x: x[0])
-    return [line for latency, line in results if latency < float("inf")]
+    # حذف تکراری‌ها بر اساس host + port + proto
+    seen = set()
+    unique_results = []
+    for latency, line, host, port in results:
+        key = (proto, host, port)
+        if key not in seen and latency < float("inf"):
+            seen.add(key)
+            unique_results.append((latency, line))
+    unique_results.sort(key=lambda x: x[0])
+    return [line for latency, line in unique_results]
 
 # ---------------------------
 # Main Workflow
@@ -230,35 +199,29 @@ async def main():
     os.makedirs(CONFIG["output_dir"], exist_ok=True)
     sem = asyncio.Semaphore(CONFIG["concurrent_requests"])
 
-    client_args = {"headers": {"User-Agent": CONFIG["user_agent"]}}
-    if CONFIG["proxy"]:
-        client_args["proxies"] = CONFIG["proxy"]
-
-    async with httpx.AsyncClient(**client_args) as client:
+    async with httpx.AsyncClient(headers={"User-Agent": CONFIG["user_agent"]}) as client:
         all_lines_nested = await asyncio.gather(*[fetch_url(client, url) for url in CONFIG["urls"]])
-        all_lines = [line for sublist in all_lines_nested for line in sublist]
+        all_lines = [normalize_vmess(line) if detect_protocol(line) == "vmess" else line.strip() for sublist in all_lines_nested for line in sublist]
 
-    all_lines = list(dict.fromkeys(all_lines))
-    logging.info(f"Total unique lines: {len(all_lines)}")
+    logging.info(f"Total lines before dedup: {len(all_lines)}")
 
     categorized = {}
     for line in all_lines:
         proto = detect_protocol(line)
         categorized.setdefault(proto, []).append(line)
 
+    all_sorted = []
     for proto, lines in categorized.items():
         if not lines:
             continue
         sorted_lines = await test_lines_latency(lines, proto, sem)
         categorized[proto] = sorted_lines
+        all_sorted.extend(sorted_lines)
 
-    all_sorted = []
-    for proto, lines in categorized.items():
         path = os.path.join(CONFIG["output_dir"], f"{proto}.txt")
         with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(lines))
-        logging.info(f"Saved {path} | Lines: {len(lines)}")
-        all_sorted.extend(lines)
+            f.write("\n".join(sorted_lines))
+        logging.info(f"Saved {path} | Lines: {len(sorted_lines)}")
 
     all_sorted = [line for line in all_sorted if line.strip()]
     all_path = os.path.join(CONFIG["output_dir"], "all.txt")
