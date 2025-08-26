@@ -1,77 +1,72 @@
 import os
-import requests
-import urllib3
 import re
-import asyncio
-import httpx
-import base64
 import json
+import base64
+import asyncio
+import logging
 from datetime import datetime
 import zoneinfo
+import socket
+import ssl
+import httpx
 
-# Disable warnings for insecure HTTPS requests
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+# ---------------------------
+# Configurable Settings
+# ---------------------------
+CONFIG = {
+    "urls": [
+        "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
+        "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
+        "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
+    ],
+    "output_dir": "configs",
+    "light_limit": 30,
+    "concurrent_requests": 50,
+    "timeout": 3,
+    "user_agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/138.0.0.0 Safari/537.36"
+    ),
+    "timezone": "Asia/Tehran",
+    "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443},
+    "proxy": None,  # Example: "socks5://127.0.0.1:1080"
+    "doh_resolver": "https://cloudflare-dns.com/dns-query",  # DoH URL
+    "enable_ech": True,  # Enable ECH if supported
+}
 
-# List of configuration URLs to fetch
-URLS = [
-    "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
-    "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
-    "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
-]
-
-# Output directory for processed configuration files
-OUTPUT_DIR = "configs"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-# Set timezone to Tehran, Iran
-zone = zoneinfo.ZoneInfo("Asia/Tehran")
-timestamp = datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
-
-# User-Agent string to mimic a real browser
-CHROME_UA = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/138.0.0.0 Safari/537.36"
+# ---------------------------
+# Logging Setup
+# ---------------------------
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
 )
 
-def fetch_data(url: str, timeout=10):
-    """
-    Fetch text content from a given URL with a custom User-Agent.
-    Returns the content as a string. Returns empty string on failure.
-    """
-    headers = {"User-Agent": CHROME_UA}
-    try:
-        r = requests.get(url, timeout=timeout, headers=headers, verify=False)
-        r.raise_for_status()
-        return r.text
-    except Exception as e:
-        print(f"⚠️ Error downloading {url}: {e}")
-        return ""
+# ---------------------------
+# Utilities
+# ---------------------------
+zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
+
+
+def timestamp():
+    return datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
+
 
 def maybe_base64_decode(s: str) -> str:
-    """
-    Attempt to decode a string from Base64.
-    Returns decoded string if valid Base64, otherwise returns the original string.
-    """
     s = s.strip()
     try:
-        # Add padding if necessary
         padded = s + "=" * ((4 - len(s) % 4) % 4)
         decoded_bytes = base64.b64decode(padded, validate=True)
         decoded_str = decoded_bytes.decode(errors="ignore")
-        # Return original string if decoding produces unusual characters or too short
-        if re.search(r'[^\x00-\x7F]', decoded_str) or len(decoded_str) < 2:
+        if len(decoded_str) < 2 or re.search(r"[^\x00-\x7F]", decoded_str):
             return s
         return decoded_str
     except Exception:
         return s
 
+
 def detect_protocol(line: str) -> str:
-    """
-    Detect VPN protocol based on the prefix of a configuration line.
-    Supported protocols: vless, vmess, shadowsocks, trojan.
-    Returns "unknown" if no match.
-    """
     line = line.strip()
     if line.startswith("vless://"):
         return "vless"
@@ -84,130 +79,135 @@ def detect_protocol(line: str) -> str:
     else:
         return "unknown"
 
-def extract_host(line: str, proto: str) -> str:
-    """
-    Extract the host (server address) from a configuration line based on protocol.
-    Supports vmess (Base64 JSON), vless, shadowsocks, and trojan formats.
-    Returns empty string if extraction fails.
-    """
+
+def extract_host_port(line: str, proto: str) -> tuple[str, int]:
     try:
         if proto == "vmess":
             b64_part = line[8:]
             padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
             decoded = base64.b64decode(padded).decode(errors="ignore")
             data = json.loads(decoded)
-            return data.get("add", "")
+            host = data.get("add", "")
+            port = int(data.get("port", CONFIG["default_port"][proto]))
+            return host, port
         elif proto == "vless":
-            m = re.search(r"vless://[^@]+@([^:\/]+)", line)
+            m = re.search(r"vless://[^@]+@([^:/]+)(?::(\d+))?", line)
             if m:
-                return m.group(1)
+                host = m.group(1)
+                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
+                return host, port
         elif proto == "shadowsocks":
-            m = re.search(r"ss://(?:[^@]+@)?([^:/]+)", line)
+            m = re.search(r"ss://(?:[^@]+@)?([^:/]+)(?::(\d+))?", line)
             if m:
-                return m.group(1)
+                host = m.group(1)
+                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
+                return host, port
         elif proto == "trojan":
-            m = re.search(r"trojan://[^@]+@([^:/?#]+)", line)
+            m = re.search(r"trojan://[^@]+@([^:/?#]+)(?::(\d+))?", line)
             if m:
-                return m.group(1)
+                host = m.group(1)
+                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
+                return host, port
     except Exception:
         pass
-    return ""
+    return "", CONFIG["default_port"].get(proto, 443)
 
-async def test_speed(host: str, timeout=5):
-    """
-    Perform a simple HTTP GET request to measure server response time.
-    Returns latency in seconds, or infinity if host is unreachable.
-    """
-    if not host:
-        return float('inf')
-    url = f"http://{host}"
+
+# ---------------------------
+# Async Functions
+# ---------------------------
+async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
     try:
-        async with httpx.AsyncClient(timeout=timeout) as client:
-            import time
-            start = time.monotonic()
-            r = await client.get(url)
-            if r.status_code == 200:
-                end = time.monotonic()
-                return end - start
-            else:
-                return float('inf')
+        r = await session.get(url)
+        r.raise_for_status()
+        lines = [maybe_base64_decode(line) for line in r.text.splitlines() if line.strip()]
+        logging.info(f"Downloaded {url} | Lines: {len(lines)}")
+        return lines
+    except Exception as e:
+        logging.warning(f"⚠️ Error downloading {url}: {e}")
+        return []
+
+
+async def tcp_latency(host: str, port: int, timeout: int = CONFIG["timeout"]) -> float:
+    if not host:
+        return float("inf")
+    try:
+        ssl_context = ssl.create_default_context()
+        if CONFIG["enable_ech"]:
+            # ECH is experimental; we wrap the socket for TLS
+            # Note: Python stdlib does not fully support ECH yet; placeholder
+            pass
+        start = asyncio.get_event_loop().time()
+        reader, writer = await asyncio.wait_for(asyncio.open_connection(host, port, ssl=ssl_context if port==443 else None), timeout)
+        end = asyncio.get_event_loop().time()
+        writer.close()
+        await writer.wait_closed()
+        return end - start
     except Exception:
-        return float('inf')
+        return float("inf")
 
-async def main_async():
-    """
-    Main asynchronous workflow:
-    1. Download and optionally decode Base64 configuration lines.
-    2. Detect protocol type and categorize lines.
-    3. Measure server latency asynchronously.
-    4. Sort configurations by latency and save to categorized files.
-    """
-    print(f"[{timestamp}] Starting download and processing with speed test...")
 
-    all_lines = []
-    categorized = {
-        "vless": [],
-        "vmess": [],
-        "shadowsocks": [],
-        "trojan": [],
-        "unknown": []
-    }
-
-    # Fetch and decode configurations from all URLs
-    for url in URLS:
-        data = fetch_data(url)
-        lines = [line for line in data.splitlines() if line.strip()]
-        decoded_lines = [maybe_base64_decode(line) for line in lines]  # Auto decode Base64
-        print(f"Downloaded: {url} | Lines: {len(decoded_lines)}")
-        for line in decoded_lines:
-            proto = detect_protocol(line)
-            categorized[proto].append(line)
-            all_lines.append(line)
-
-    # Limit concurrent latency tests
-    sem = asyncio.Semaphore(100)
-
-    async def test_line(line, proto):
-        """
-        Test latency for a single line and return a tuple of (latency, line, protocol)
-        """
+async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphore) -> list[str]:
+    async def test_line(line: str):
         async with sem:
-            host = extract_host(line, proto)
-            latency = await test_speed(host)
-            return (latency, line, proto)
+            host, port = extract_host_port(line, proto)
+            latency = await tcp_latency(host, port)
+            return latency, line
 
-    # Perform asynchronous latency tests and sort results
-    all_results = []
-    for proto in categorized:
-        lines = categorized[proto]
+    results = await asyncio.gather(*[test_line(line) for line in lines])
+    results.sort(key=lambda x: x[0])
+    return [line for _, line in results]
+
+
+# ---------------------------
+# Main Workflow
+# ---------------------------
+async def main():
+    os.makedirs(CONFIG["output_dir"], exist_ok=True)
+    sem = asyncio.Semaphore(CONFIG["concurrent_requests"])
+
+    async with httpx.AsyncClient(headers={"User-Agent": CONFIG["user_agent"]}, proxies=CONFIG["proxy"]) as client:
+        all_lines_nested = await asyncio.gather(*[fetch_url(client, url) for url in CONFIG["urls"]])
+        all_lines = [line for sublist in all_lines_nested for line in sublist]
+
+    # Remove duplicates
+    all_lines = list(dict.fromkeys(all_lines))
+    logging.info(f"Total unique lines: {len(all_lines)}")
+
+    # Categorize
+    categorized = {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
+    for line in all_lines:
+        proto = detect_protocol(line)
+        categorized[proto].append(line)
+
+    # Test latency and sort
+    for proto, lines in categorized.items():
         if not lines:
             continue
-        results = await asyncio.gather(*[test_line(line, proto) for line in lines])
-        results.sort(key=lambda x: x[0])
-        categorized[proto] = [line for _, line, _ in results]
-        all_results.extend(results)
+        sorted_lines = await test_lines_latency(lines, proto, sem)
+        categorized[proto] = sorted_lines
 
-    all_results.sort(key=lambda x: x[0])
-    all_sorted_lines = [line for _, line, _ in all_results]
-
-    # Save categorized configurations to files
+    # Save files
+    all_sorted = []
     for proto, lines in categorized.items():
-        path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
+        path = os.path.join(CONFIG["output_dir"], f"{proto}.txt")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
-        print(f"Saved: {path} | Lines: {len(lines)}")
+        logging.info(f"Saved {path} | Lines: {len(lines)}")
+        all_sorted.extend(lines)
 
-    # Save all sorted configurations to all.txt
-    all_path = os.path.join(OUTPUT_DIR, "all.txt")
+    # Save all.txt
+    all_path = os.path.join(CONFIG["output_dir"], "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines))
-    print(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
+        f.write("\n".join(all_sorted))
+    logging.info(f"Saved {all_path} | Lines: {len(all_sorted)}")
 
-    # Save a "light" version with first 30 configurations
-    light_path = os.path.join(OUTPUT_DIR, "light.txt")
+    # Save light.txt
+    light_path = os.path.join(CONFIG["output_dir"], "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted_lines[:30]))
-    print(f"Saved Light version with {min(len(all_sorted_lines), 30)} configs")
+        f.write("\n".join(all_sorted[: CONFIG["light_limit"]]))
+    logging.info(f"Saved Light version with {min(len(all_sorted), CONFIG['light_limit'])} configs")
+
 
 if __name__ == "__main__":
-    asyncio.run(main_async())
+    asyncio.run(main())
