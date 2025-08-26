@@ -4,4 +4,5 @@ urllib3
 httpx
 websockets
 aioquic
+aiofiles
 
