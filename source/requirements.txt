@@ -2,4 +2,6 @@ requests
 PyGithub
 urllib3
 httpx
+websockets
+aioquic
 
