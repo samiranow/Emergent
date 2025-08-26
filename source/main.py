@@ -9,8 +9,6 @@ import zoneinfo
 import ssl
 from urllib.parse import urlparse
 import httpx
-from aioquic.asyncio import connect
-from aioquic.quic.configuration import QuicConfiguration
 
 # ---------------------------
 # Configurable Settings
@@ -20,7 +18,6 @@ CONFIG = {
         "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
         "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
         "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
-        "https://www.v2nodes.com/subscriptions/country/all/?key=96C8FFB201A7745",
     ],
     "output_dir": "configs",
     "light_limit": 30,
@@ -34,8 +31,7 @@ CONFIG = {
     "timezone": "Asia/Tehran",
     "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443, "unknown": 443},
     "tcp_retry": 2,
-    "latency_tests": 3,
-    "proxy": None,
+    "latency_tests": 2,
 }
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -90,9 +86,9 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
             b64_part = line[8:]
             padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
             data = json.loads(base64.b64decode(padded).decode(errors="ignore"))
-            host = data.get("add", "")
+            host = data.get("add", "").lower()
             port = int(data.get("port", CONFIG["default_port"][proto]))
-            return host.lower(), port
+            return host, port
         elif proto == "vless":
             u = urlparse(line)
             host = (u.hostname or "").lower()
@@ -125,7 +121,7 @@ async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
         r = await session.get(url)
         r.raise_for_status()
         lines = [maybe_base64_decode(line) for line in r.text.splitlines() if line.strip()]
-        # Encode دوباره تمام محتوای دیکود شده
+        # Encode دوباره تمام محتوای دیکود شده برای استفاده در فایل‌ها
         encoded_lines = [base64.b64encode(line.encode()).decode() if not re.match(r'^[A-Za-z0-9+/=]+$', line) else line for line in lines]
         logging.info(f"Downloaded {url} | Lines: {len(encoded_lines)}")
         return encoded_lines
@@ -181,16 +177,21 @@ async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphor
             latency = await measure_latency(host, port, proto)
             return latency, line, host, port
     results = await asyncio.gather(*[test_line(line) for line in lines])
-    # حذف تکراری‌ها بر اساس host + port + proto
+
     seen = set()
     unique_results = []
+    unknown_lines = []
     for latency, line, host, port in results:
+        if not host or not port or latency == float("inf"):
+            unknown_lines.append(line)
+            continue
         key = (proto, host, port)
-        if key not in seen and latency < float("inf"):
+        if key not in seen:
             seen.add(key)
             unique_results.append((latency, line))
+
     unique_results.sort(key=lambda x: x[0])
-    return [line for latency, line in unique_results]
+    return [line for latency, line in unique_results] + unknown_lines
 
 # ---------------------------
 # Main Workflow
@@ -223,12 +224,13 @@ async def main():
             f.write("\n".join(sorted_lines))
         logging.info(f"Saved {path} | Lines: {len(sorted_lines)}")
 
-    all_sorted = [line for line in all_sorted if line.strip()]
+    # all.txt
     all_path = os.path.join(CONFIG["output_dir"], "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted))
     logging.info(f"Saved {all_path} | Lines: {len(all_sorted)}")
 
+    # light.txt
     light_path = os.path.join(CONFIG["output_dir"], "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted[: CONFIG["light_limit"]]))
