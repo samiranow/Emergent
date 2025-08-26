@@ -15,7 +15,7 @@ MAX_PARALLEL = 20  # تعداد کانکشن موازی
 
 CONFIG_URLS = [
     "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
-    "https://github.com/ebrasha/free-v2ray-public-list/raw/refs/heads/main/V2Ray-Config-By-EbraSha-All-Type.txt",
+    "https://github.com/ebrasha/free-v2ray-public-list/raw/refs/heads/main/vless_configs.txt",
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
     "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt"
 ]
