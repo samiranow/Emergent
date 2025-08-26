@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 import zoneinfo
 import ssl
-import socket
+from urllib.parse import urlparse
 import httpx
 
 # ---------------------------
@@ -22,7 +22,7 @@ CONFIG = {
     "output_dir": "configs",
     "light_limit": 30,
     "concurrent_requests": 50,
-    "timeout": 3,
+    "timeout": 5,
     "user_agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -31,21 +31,19 @@ CONFIG = {
     "timezone": "Asia/Tehran",
     "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443},
     "proxy": None,  # Example: "socks5://127.0.0.1:1080"
-    "doh_resolver": "https://cloudflare-dns.com/dns-query",
-    "enable_ech": True,
-    "tcp_retry": 2,  # تعداد تلاش دوباره TCP
+    "tcp_retry": 2,
+    "latency_tests": 3,  # تعداد دفعات تست latency برای میانگین گیری
 }
 
 # ---------------------------
 # Logging Setup
 # ---------------------------
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
 
 # ---------------------------
 # Utilities
 # ---------------------------
-zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
-
 def timestamp():
     return datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
 
@@ -84,24 +82,29 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
             host = data.get("add", "")
             port = int(data.get("port", CONFIG["default_port"][proto]))
             return host, port
+
         elif proto == "vless":
-            m = re.search(r"vless://[^@]+@([^:/]+)(?::(\d+))?", line)
-            if m:
-                host = m.group(1)
-                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
-                return host, port
+            u = urlparse(line)
+            host = u.hostname or ""
+            port = u.port or CONFIG["default_port"][proto]
+            return host, port
+
         elif proto == "shadowsocks":
-            m = re.search(r"ss://(?:[^@]+@)?([^:/]+)(?::(\d+))?", line)
-            if m:
-                host = m.group(1)
-                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
+            ss_part = line[5:]
+            if "@" in ss_part:
+                after_at = ss_part.rsplit("@", 1)[1]
+                host_port = after_at.split(":")
+                host = host_port[0]
+                port = int(host_port[1]) if len(host_port) > 1 else CONFIG["default_port"][proto]
                 return host, port
+            else:
+                return "", CONFIG["default_port"][proto]
+
         elif proto == "trojan":
-            m = re.search(r"trojan://[^@]+@([^:/?#]+)(?::(\d+))?", line)
-            if m:
-                host = m.group(1)
-                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
-                return host, port
+            u = urlparse(line)
+            host = u.hostname or ""
+            port = u.port or CONFIG["default_port"][proto]
+            return host, port
     except Exception:
         pass
     return "", CONFIG["default_port"].get(proto, 443)
@@ -153,11 +156,14 @@ async def http_latency(host: str, port: int) -> float:
         return float("inf")
 
 async def measure_latency(host: str, port: int) -> float:
-    """Fallback: TCP → HTTP → WS (simplified for speed)"""
-    latency = await tcp_latency(host, port)
-    if latency == float("inf"):
-        latency = await http_latency(host, port)
-    return latency
+    latencies = []
+    for _ in range(CONFIG["latency_tests"]):
+        latency = await tcp_latency(host, port)
+        if latency == float("inf"):
+            latency = await http_latency(host, port)
+        latencies.append(latency)
+    avg_latency = sum(latencies) / len(latencies)
+    return avg_latency
 
 async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphore) -> list[str]:
     async def test_line(line: str):
@@ -184,24 +190,20 @@ async def main():
         all_lines_nested = await asyncio.gather(*[fetch_url(client, url) for url in CONFIG["urls"]])
         all_lines = [line for sublist in all_lines_nested for line in sublist]
 
-    # Remove duplicates
     all_lines = list(dict.fromkeys(all_lines))
     logging.info(f"Total unique lines: {len(all_lines)}")
 
-    # Categorize
     categorized = {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
     for line in all_lines:
         proto = detect_protocol(line)
         categorized[proto].append(line)
 
-    # Test latency and sort
     for proto, lines in categorized.items():
         if not lines:
             continue
         sorted_lines = await test_lines_latency(lines, proto, sem)
         categorized[proto] = sorted_lines
 
-    # Save files
     all_sorted = []
     for proto, lines in categorized.items():
         path = os.path.join(CONFIG["output_dir"], f"{proto}.txt")
@@ -210,13 +212,12 @@ async def main():
         logging.info(f"Saved {path} | Lines: {len(lines)}")
         all_sorted.extend(lines)
 
-    # Save all.txt
+    all_sorted = [line for line in all_sorted if line.strip()]
     all_path = os.path.join(CONFIG["output_dir"], "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted))
     logging.info(f"Saved {all_path} | Lines: {len(all_sorted)}")
 
-    # Save light.txt
     light_path = os.path.join(CONFIG["output_dir"], "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted[: CONFIG["light_limit"]]))
