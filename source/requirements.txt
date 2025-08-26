@@ -6,4 +6,4 @@ websockets
 aioquic
 aiofiles
 pyyaml
-
+python-magic
