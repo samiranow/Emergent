@@ -1,3 +1,7 @@
+# ---------------------------
+# Rapid VPN Config Tester
+# ---------------------------
+
 import os
 import re
 import json
@@ -10,9 +14,6 @@ import ssl
 from urllib.parse import urlparse
 import httpx
 
-# ---------------------------
-# Configurable Settings
-# ---------------------------
 CONFIG = {
     "urls": [
         "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
@@ -21,7 +22,7 @@ CONFIG = {
     ],
     "output_dir": "configs",
     "light_limit": 30,
-    "concurrent_requests": 50,
+    "concurrent_requests": 200,
     "timeout": 5,
     "user_agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -31,7 +32,7 @@ CONFIG = {
     "timezone": "Asia/Tehran",
     "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443, "unknown": 443},
     "tcp_retry": 2,
-    "latency_tests": 2,
+    "latency_tests": 1,
 }
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -40,9 +41,6 @@ zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
 def timestamp():
     return datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
 
-# ---------------------------
-# Utilities
-# ---------------------------
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
@@ -81,6 +79,7 @@ def normalize_vmess(line: str) -> str:
         return line.strip()
 
 def extract_host_port(line: str, proto: str) -> tuple[str, int]:
+    line = line.strip()
     try:
         if proto == "vmess":
             b64_part = line[8:]
@@ -95,15 +94,21 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
             port = u.port or CONFIG["default_port"][proto]
             return host, port
         elif proto == "shadowsocks":
-            ss_part = line[5:]
-            if "@" in ss_part:
-                after_at = ss_part.rsplit("@", 1)[1]
-                host_port = after_at.split(":")
-                host = host_port[0].lower()
-                port = int(host_port[1]) if len(host_port) > 1 else CONFIG["default_port"][proto]
-                return host, port
-            else:
-                return "", CONFIG["default_port"][proto]
+            ss_line = line[5:]
+            if ss_line.startswith("ey"):
+                try:
+                    decoded = base64.b64decode(ss_line + "=" * ((4 - len(ss_line) % 4) % 4)).decode()
+                    m = re.match(r".+@(.+):(\d+)", decoded)
+                    if m:
+                        return m.group(1).lower(), int(m.group(2))
+                except Exception:
+                    pass
+            if "@" in ss_line:
+                after_at = ss_line.rsplit("@", 1)[1]
+                parts = after_at.split(":")
+                if len(parts) == 2:
+                    return parts[0].lower(), int(parts[1])
+            return "", CONFIG["default_port"][proto]
         elif proto == "trojan":
             u = urlparse(line)
             host = (u.hostname or "").lower()
@@ -113,18 +118,13 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
         pass
     return "", CONFIG["default_port"].get(proto, 443)
 
-# ---------------------------
-# Async Functions
-# ---------------------------
 async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
     try:
         r = await session.get(url)
         r.raise_for_status()
         lines = [maybe_base64_decode(line) for line in r.text.splitlines() if line.strip()]
-        # Encode دوباره تمام محتوای دیکود شده برای استفاده در فایل‌ها
-        encoded_lines = [base64.b64encode(line.encode()).decode() if not re.match(r'^[A-Za-z0-9+/=]+$', line) else line for line in lines]
-        logging.info(f"Downloaded {url} | Lines: {len(encoded_lines)}")
-        return encoded_lines
+        logging.info(f"Downloaded {url} | Lines: {len(lines)}")
+        return lines
     except Exception as e:
         logging.warning(f"⚠️ Error downloading {url}: {e}")
         return []
@@ -182,7 +182,7 @@ async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphor
     unique_results = []
     unknown_lines = []
     for latency, line, host, port in results:
-        if not host or not port or latency == float("inf"):
+        if not host or not port:
             unknown_lines.append(line)
             continue
         key = (proto, host, port)
@@ -193,25 +193,23 @@ async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphor
     unique_results.sort(key=lambda x: x[0])
     return [line for latency, line in unique_results] + unknown_lines
 
-# ---------------------------
-# Main Workflow
-# ---------------------------
 async def main():
     os.makedirs(CONFIG["output_dir"], exist_ok=True)
     sem = asyncio.Semaphore(CONFIG["concurrent_requests"])
 
     async with httpx.AsyncClient(headers={"User-Agent": CONFIG["user_agent"]}) as client:
         all_lines_nested = await asyncio.gather(*[fetch_url(client, url) for url in CONFIG["urls"]])
-        all_lines = [normalize_vmess(line) if detect_protocol(line) == "vmess" else line.strip() for sublist in all_lines_nested for line in sublist]
+        all_lines = [normalize_vmess(line) if detect_protocol(line)=="vmess" else line.strip() for sublist in all_lines_nested for line in sublist]
 
     logging.info(f"Total lines before dedup: {len(all_lines)}")
 
-    categorized = {}
+    categorized = {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
     for line in all_lines:
         proto = detect_protocol(line)
-        categorized.setdefault(proto, []).append(line)
+        categorized[proto].append(line)
 
     all_sorted = []
+
     for proto, lines in categorized.items():
         if not lines:
             continue
@@ -219,18 +217,17 @@ async def main():
         categorized[proto] = sorted_lines
         all_sorted.extend(sorted_lines)
 
+    for proto, lines in categorized.items():
         path = os.path.join(CONFIG["output_dir"], f"{proto}.txt")
         with open(path, "w", encoding="utf-8") as f:
-            f.write("\n".join(sorted_lines))
-        logging.info(f"Saved {path} | Lines: {len(sorted_lines)}")
+            f.write("\n".join(lines))
+        logging.info(f"Saved {path} | Lines: {len(lines)}")
 
-    # all.txt
     all_path = os.path.join(CONFIG["output_dir"], "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted))
     logging.info(f"Saved {all_path} | Lines: {len(all_sorted)}")
 
-    # light.txt
     light_path = os.path.join(CONFIG["output_dir"], "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted[: CONFIG["light_limit"]]))
