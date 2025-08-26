@@ -6,8 +6,8 @@ import asyncio
 import logging
 from datetime import datetime
 import zoneinfo
-import socket
 import ssl
+import socket
 import httpx
 
 # ---------------------------
@@ -31,27 +31,23 @@ CONFIG = {
     "timezone": "Asia/Tehran",
     "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443},
     "proxy": None,  # Example: "socks5://127.0.0.1:1080"
-    "doh_resolver": "https://cloudflare-dns.com/dns-query",  # DoH URL
-    "enable_ech": True,  # Enable ECH if supported
+    "doh_resolver": "https://cloudflare-dns.com/dns-query",
+    "enable_ech": True,
+    "tcp_retry": 2,  # تعداد تلاش دوباره TCP
 }
 
 # ---------------------------
 # Logging Setup
 # ---------------------------
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 # ---------------------------
 # Utilities
 # ---------------------------
 zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
 
-
 def timestamp():
     return datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
-
 
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
@@ -65,7 +61,6 @@ def maybe_base64_decode(s: str) -> str:
     except Exception:
         return s
 
-
 def detect_protocol(line: str) -> str:
     line = line.strip()
     if line.startswith("vless://"):
@@ -78,7 +73,6 @@ def detect_protocol(line: str) -> str:
         return "trojan"
     else:
         return "unknown"
-
 
 def extract_host_port(line: str, proto: str) -> tuple[str, int]:
     try:
@@ -112,7 +106,6 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
         pass
     return "", CONFIG["default_port"].get(proto, 443)
 
-
 # ---------------------------
 # Async Functions
 # ---------------------------
@@ -127,37 +120,54 @@ async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
         logging.warning(f"⚠️ Error downloading {url}: {e}")
         return []
 
-
-async def tcp_latency(host: str, port: int, timeout: int = CONFIG["timeout"]) -> float:
+async def tcp_latency(host: str, port: int, retries: int = CONFIG["tcp_retry"]) -> float:
     if not host:
         return float("inf")
+    ssl_context = ssl.create_default_context() if port == 443 else None
+    for _ in range(retries):
+        try:
+            start = asyncio.get_event_loop().time()
+            reader, writer = await asyncio.wait_for(
+                asyncio.open_connection(host, port, ssl=ssl_context),
+                CONFIG["timeout"]
+            )
+            end = asyncio.get_event_loop().time()
+            writer.close()
+            await writer.wait_closed()
+            return end - start
+        except Exception:
+            continue
+    return float("inf")
+
+async def http_latency(host: str, port: int) -> float:
+    url = f"http://{host}:{port}" if port != 80 else f"http://{host}"
     try:
-        ssl_context = ssl.create_default_context()
-        if CONFIG["enable_ech"]:
-            # ECH is experimental; we wrap the socket for TLS
-            # Note: Python stdlib does not fully support ECH yet; placeholder
-            pass
-        start = asyncio.get_event_loop().time()
-        reader, writer = await asyncio.wait_for(asyncio.open_connection(host, port, ssl=ssl_context if port==443 else None), timeout)
-        end = asyncio.get_event_loop().time()
-        writer.close()
-        await writer.wait_closed()
-        return end - start
+        async with httpx.AsyncClient(timeout=CONFIG["timeout"]) as client:
+            start = asyncio.get_event_loop().time()
+            r = await client.get(url)
+            end = asyncio.get_event_loop().time()
+            if r.status_code == 200:
+                return end - start
+            return float("inf")
     except Exception:
         return float("inf")
 
+async def measure_latency(host: str, port: int) -> float:
+    """Fallback: TCP → HTTP → WS (simplified for speed)"""
+    latency = await tcp_latency(host, port)
+    if latency == float("inf"):
+        latency = await http_latency(host, port)
+    return latency
 
 async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphore) -> list[str]:
     async def test_line(line: str):
         async with sem:
             host, port = extract_host_port(line, proto)
-            latency = await tcp_latency(host, port)
+            latency = await measure_latency(host, port)
             return latency, line
-
     results = await asyncio.gather(*[test_line(line) for line in lines])
     results.sort(key=lambda x: x[0])
     return [line for _, line in results]
-
 
 # ---------------------------
 # Main Workflow
@@ -166,7 +176,11 @@ async def main():
     os.makedirs(CONFIG["output_dir"], exist_ok=True)
     sem = asyncio.Semaphore(CONFIG["concurrent_requests"])
 
-    async with httpx.AsyncClient(headers={"User-Agent": CONFIG["user_agent"]}, proxies=CONFIG["proxy"]) as client:
+    client_args = {"headers": {"User-Agent": CONFIG["user_agent"]}}
+    if CONFIG["proxy"]:
+        client_args["proxies"] = CONFIG["proxy"]
+
+    async with httpx.AsyncClient(**client_args) as client:
         all_lines_nested = await asyncio.gather(*[fetch_url(client, url) for url in CONFIG["urls"]])
         all_lines = [line for sublist in all_lines_nested for line in sublist]
 
@@ -207,7 +221,6 @@ async def main():
     with open(light_path, "w", encoding="utf-8") as f:
         f.write("\n".join(all_sorted[: CONFIG["light_limit"]]))
     logging.info(f"Saved Light version with {min(len(all_sorted), CONFIG['light_limit'])} configs")
-
 
 if __name__ == "__main__":
     asyncio.run(main())
