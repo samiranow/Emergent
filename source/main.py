@@ -10,7 +10,8 @@ import ssl
 from urllib.parse import urlparse
 import httpx
 import websockets
-import socket
+from aioquic.asyncio import connect
+from aioquic.quic.configuration import QuicConfiguration
 
 # ---------------------------
 # Configurable Settings
@@ -31,10 +32,11 @@ CONFIG = {
         "Chrome/138.0.0.0 Safari/537.36"
     ),
     "timezone": "Asia/Tehran",
-    "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443},
-    "proxy": None,
+    "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443, "unknown": 443},
     "tcp_retry": 2,
-    "latency_tests": 3,  # تعداد دفعات تست latency برای میانگین گیری
+    "latency_tests": 3,
+    "proxy": None,
+    "doh_resolver": "https://cloudflare-dns.com/dns-query",
 }
 
 # ---------------------------
@@ -43,11 +45,29 @@ CONFIG = {
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
 
+def timestamp():
+    return datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
+
 # ---------------------------
 # Utilities
 # ---------------------------
-def timestamp():
-    return datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
+def maybe_base64_encode_if_needed(content: str) -> str:
+    """Check if the entire content is plain text but decodable, then encode it."""
+    try:
+        lines = content.strip().splitlines()
+        # Check if most lines are decodable Base64
+        encoded_lines = []
+        for line in lines:
+            line_strip = line.strip()
+            if not re.match(r'^[A-Za-z0-9+/=]+$', line_strip):
+                # Not base64-like, encode it
+                encoded_line = base64.b64encode(line_strip.encode()).decode()
+                encoded_lines.append(encoded_line)
+            else:
+                encoded_lines.append(line_strip)
+        return "\n".join(encoded_lines)
+    except Exception:
+        return content
 
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
@@ -84,13 +104,11 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
             host = data.get("add", "")
             port = int(data.get("port", CONFIG["default_port"][proto]))
             return host, port
-
         elif proto == "vless":
             u = urlparse(line)
             host = u.hostname or ""
             port = u.port or CONFIG["default_port"][proto]
             return host, port
-
         elif proto == "shadowsocks":
             ss_part = line[5:]
             if "@" in ss_part:
@@ -101,7 +119,6 @@ def extract_host_port(line: str, proto: str) -> tuple[str, int]:
                 return host, port
             else:
                 return "", CONFIG["default_port"][proto]
-
         elif proto == "trojan":
             u = urlparse(line)
             host = u.hostname or ""
@@ -118,18 +135,19 @@ async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
     try:
         r = await session.get(url)
         r.raise_for_status()
-        lines = [maybe_base64_decode(line) for line in r.text.splitlines() if line.strip()]
+        content = maybe_base64_encode_if_needed(r.text)
+        lines = [maybe_base64_decode(line) for line in content.splitlines() if line.strip()]
         logging.info(f"Downloaded {url} | Lines: {len(lines)}")
         return lines
     except Exception as e:
         logging.warning(f"⚠️ Error downloading {url}: {e}")
         return []
 
-async def tcp_latency(host: str, port: int, retries: int = CONFIG["tcp_retry"]) -> float:
+async def tcp_latency(host: str, port: int) -> float:
     if not host:
         return float("inf")
     ssl_context = ssl.create_default_context() if port == 443 else None
-    for _ in range(retries):
+    for _ in range(CONFIG["tcp_retry"]):
         try:
             start = asyncio.get_event_loop().time()
             reader, writer = await asyncio.wait_for(
@@ -170,7 +188,19 @@ async def ws_latency(host: str, port: int) -> float:
     except Exception:
         return float("inf")
 
-async def measure_latency(host: str, port: int) -> float:
+async def quic_latency(host: str, port: int) -> float:
+    config = QuicConfiguration(is_client=True)
+    try:
+        async with connect(host, port, configuration=config, wait_connected=True) as protocol:
+            start = asyncio.get_event_loop().time()
+            # Send a simple ping or wait a moment
+            await asyncio.sleep(0.1)
+            end = asyncio.get_event_loop().time()
+            return end - start
+    except Exception:
+        return float("inf")
+
+async def measure_latency(host: str, port: int, proto: str) -> float:
     latencies = []
     for _ in range(CONFIG["latency_tests"]):
         latency = await tcp_latency(host, port)
@@ -178,19 +208,20 @@ async def measure_latency(host: str, port: int) -> float:
             latency = await http_latency(host, port)
         if latency == float("inf"):
             latency = await ws_latency(host, port)
+        if proto in ["vless", "vmess"] and latency == float("inf"):
+            latency = await quic_latency(host, port)
         latencies.append(latency)
-    avg_latency = sum(latencies) / len(latencies)
-    return avg_latency
+    return sum(latencies)/len(latencies)
 
 async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphore) -> list[str]:
     async def test_line(line: str):
         async with sem:
             host, port = extract_host_port(line, proto)
-            latency = await measure_latency(host, port)
+            latency = await measure_latency(host, port, proto)
             return latency, line
     results = await asyncio.gather(*[test_line(line) for line in lines])
     results.sort(key=lambda x: x[0])
-    return [line for _, line in results]
+    return [line for latency, line in results if latency < float("inf")]
 
 # ---------------------------
 # Main Workflow
@@ -210,10 +241,10 @@ async def main():
     all_lines = list(dict.fromkeys(all_lines))
     logging.info(f"Total unique lines: {len(all_lines)}")
 
-    categorized = {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
+    categorized = {}
     for line in all_lines:
         proto = detect_protocol(line)
-        categorized[proto].append(line)
+        categorized.setdefault(proto, []).append(line)
 
     for proto, lines in categorized.items():
         if not lines:
