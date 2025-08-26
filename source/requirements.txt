@@ -1,10 +1,2 @@
-requests
-PyGithub
-urllib3
-httpx
-websockets
-aioquic
-aiofiles
-pyyaml
-python-magic
-python-dotenv
+requests>=2.30
+httpx>=0.24
