@@ -1,138 +1,213 @@
+import os
+import requests
+import urllib3
+import re
 import asyncio
 import httpx
-import aiofiles
-import os
-import zipfile
+import base64
 import json
-from pathlib import Path
-from urllib.parse import urlparse, quote_plus
+from datetime import datetime
+import zoneinfo
 
-XRayPath = "/tmp/xray/xray"
-CONFIG_DIR = "configs"
-LIGHT_COUNT = 30
-TEST_TIMEOUT = 5  # seconds
-MAX_PARALLEL = 20  # تعداد کانکشن موازی
+# Disable warnings for insecure HTTPS requests
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-CONFIG_URLS = [
+# List of configuration URLs to fetch
+URLS = [
     "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
-    "https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/main/vless_configs.txt",
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
-    "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt"
+    "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
 ]
 
-async def download_file(url, filename):
-    async with httpx.AsyncClient(timeout=30) as client:
-        r = await client.get(url)
-        r.raise_for_status()
-        async with aiofiles.open(filename, "w") as f:
-            await f.write(r.text)
+# Output directory for processed configuration files
+OUTPUT_DIR = "configs"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-async def download_xray():
-    url = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
-    zip_path = "/tmp/xray.zip"
-    async with httpx.AsyncClient(follow_redirects=True) as client:
-        r = await client.get(url)
-        r.raise_for_status()
-        async with aiofiles.open(zip_path, "wb") as f:
-            await f.write(r.content)
-    # Extract
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall("/tmp/xray")
-    os.chmod(XRayPath, 0o755)
-    return XRayPath
+# Set timezone to Tehran, Iran
+zone = zoneinfo.ZoneInfo("Asia/Tehran")
+timestamp = datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
 
-def parse_config_line(line):
-    line = line.strip()
-    if line.startswith("vmess://"):
-        b64 = line[8:]
-        try:
-            return json.loads(httpx._models.decode_base64(b64))
-        except:
-            return None
-    elif line.startswith("vless://"):
-        return {"raw": line}
-    elif line.startswith("ss://") or line.startswith("trojan://"):
-        return {"raw": line}
-    return None
+# User-Agent string to mimic a real browser
+CHROME_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/138.0.0.0 Safari/537.36"
+)
 
-async def test_config(config):
+def fetch_data(url: str, timeout=10):
     """
-    تست کانفیگ با Xray. اگر موفق شد True برمیگرداند.
+    Fetch text content from a given URL with a custom User-Agent.
+    Returns the content as a string. Returns empty string on failure.
     """
-    # فقط نمونه JSON V2Ray کانفیگ، برای simplicity
-    test_json = {}
-    if "raw" in config:
-        test_json = {"inbounds": [{"port": 1080, "protocol": "socks"}], "outbounds": [{"protocol": "freedom"}]}
-    else:
-        test_json = config
-
-    config_path = "/tmp/test.json"
-    async with aiofiles.open(config_path, "w") as f:
-        await f.write(json.dumps(test_json))
-
-    proc = await asyncio.create_subprocess_exec(
-        XRayPath, "-test", "-config", config_path,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE
-    )
+    headers = {"User-Agent": CHROME_UA}
     try:
-        await asyncio.wait_for(proc.communicate(), timeout=TEST_TIMEOUT)
-        return True
-    except asyncio.TimeoutError:
-        proc.kill()
-        return False
+        r = requests.get(url, timeout=timeout, headers=headers, verify=False)
+        r.raise_for_status()
+        return r.text
+    except Exception as e:
+        print(f"⚠️ Error downloading {url}: {e}")
+        return ""
 
-async def main():
-    Path(CONFIG_DIR).mkdir(exist_ok=True)
-    all_lines = set()
-    # دانلود همه فایل‌ها
-    for url in CONFIG_URLS:
-        fname = "/tmp/" + os.path.basename(urlparse(url).path)
-        await download_file(url, fname)
-        async with aiofiles.open(fname, "r") as f:
-            content = await f.read()
-        for line in content.splitlines():
-            all_lines.add(line.strip())
+def maybe_base64_decode(s: str) -> str:
+    """
+    Attempt to decode a string from Base64.
+    Returns decoded string if valid Base64, otherwise returns the original string.
+    """
+    s = s.strip()
+    try:
+        # Add padding if necessary
+        padded = s + "=" * ((4 - len(s) % 4) % 4)
+        decoded_bytes = base64.b64decode(padded, validate=True)
+        decoded_str = decoded_bytes.decode(errors="ignore")
+        # Return original string if decoding produces unusual characters or too short
+        if re.search(r'[^\x00-\x7F]', decoded_str) or len(decoded_str) < 2:
+            return s
+        return decoded_str
+    except Exception:
+        return s
 
-    print(f"Total unique lines: {len(all_lines)}")
-    await download_xray()
+def detect_protocol(line: str) -> str:
+    """
+    Detect VPN protocol based on the prefix of a configuration line.
+    Supported protocols: vless, vmess, shadowsocks, trojan.
+    Returns "unknown" if no match.
+    """
+    line = line.strip()
+    if line.startswith("vless://"):
+        return "vless"
+    elif line.startswith("vmess://"):
+        return "vmess"
+    elif line.startswith("ss://"):
+        return "shadowsocks"
+    elif line.startswith("trojan://"):
+        return "trojan"
+    else:
+        return "unknown"
 
-    # parse configs
-    configs = [parse_config_line(line) for line in all_lines]
-    configs = [c for c in configs if c]
+def extract_host(line: str, proto: str) -> str:
+    """
+    Extract the host (server address) from a configuration line based on protocol.
+    Supports vmess (Base64 JSON), vless, shadowsocks, and trojan formats.
+    Returns empty string if extraction fails.
+    """
+    try:
+        if proto == "vmess":
+            b64_part = line[8:]
+            padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
+            decoded = base64.b64decode(padded).decode(errors="ignore")
+            data = json.loads(decoded)
+            return data.get("add", "")
+        elif proto == "vless":
+            m = re.search(r"vless://[^@]+@([^:\/]+)", line)
+            if m:
+                return m.group(1)
+        elif proto == "shadowsocks":
+            m = re.search(r"ss://(?:[^@]+@)?([^:/]+)", line)
+            if m:
+                return m.group(1)
+        elif proto == "trojan":
+            m = re.search(r"trojan://[^@]+@([^:/?#]+)", line)
+            if m:
+                return m.group(1)
+    except Exception:
+        pass
+    return ""
 
-    # تست موازی
-    semaphore = asyncio.Semaphore(MAX_PARALLEL)
-    results = []
-    async def sem_test(c):
-        async with semaphore:
-            ok = await test_config(c)
-            results.append((c, ok))
+async def test_speed(host: str, timeout=5):
+    """
+    Perform a simple HTTP GET request to measure server response time.
+    Returns latency in seconds, or infinity if host is unreachable.
+    """
+    if not host:
+        return float('inf')
+    url = f"http://{host}"
+    try:
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            import time
+            start = time.monotonic()
+            r = await client.get(url)
+            if r.status_code == 200:
+                end = time.monotonic()
+                return end - start
+            else:
+                return float('inf')
+    except Exception:
+        return float('inf')
 
-    await asyncio.gather(*[sem_test(c) for c in configs])
+async def main_async():
+    """
+    Main asynchronous workflow:
+    1. Download and optionally decode Base64 configuration lines.
+    2. Detect protocol type and categorize lines.
+    3. Measure server latency asynchronously.
+    4. Sort configurations by latency and save to categorized files.
+    """
+    print(f"[{timestamp}] Starting download and processing with speed test...")
 
-    # ذخیره فایل‌ها
-    for protocol in ["vless", "vmess", "shadowsocks", "trojan"]:
-        lst = [c for c, ok in results if ok and c.get("raw", "").startswith(protocol)]
-        async with aiofiles.open(f"{CONFIG_DIR}/{protocol}.txt", "w") as f:
-            await f.write("\n".join(c.get("raw", json.dumps(c)) for c in lst))
+    all_lines = []
+    categorized = {
+        "vless": [],
+        "vmess": [],
+        "shadowsocks": [],
+        "trojan": [],
+        "unknown": []
+    }
 
-    # unknown
-    unknown = [c for c, ok in results if not ok]
-    async with aiofiles.open(f"{CONFIG_DIR}/unknown.txt", "w") as f:
-        await f.write("\n".join(c.get("raw", json.dumps(c)) for c in unknown))
+    # Fetch and decode configurations from all URLs
+    for url in URLS:
+        data = fetch_data(url)
+        lines = [line for line in data.splitlines() if line.strip()]
+        decoded_lines = [maybe_base64_decode(line) for line in lines]  # Auto decode Base64
+        print(f"Downloaded: {url} | Lines: {len(decoded_lines)}")
+        for line in decoded_lines:
+            proto = detect_protocol(line)
+            categorized[proto].append(line)
+            all_lines.append(line)
 
-    # all
-    all_ok = [c for c, ok in results if ok]
-    async with aiofiles.open(f"{CONFIG_DIR}/all.txt", "w") as f:
-        await f.write("\n".join(c.get("raw", json.dumps(c)) for c in all_ok))
+    # Limit concurrent latency tests
+    sem = asyncio.Semaphore(100)
 
-    # light
-    light = all_ok[:LIGHT_COUNT]
-    async with aiofiles.open(f"{CONFIG_DIR}/light.txt", "w") as f:
-        await f.write("\n".join(c.get("raw", json.dumps(c)) for c in light))
+    async def test_line(line, proto):
+        """
+        Test latency for a single line and return a tuple of (latency, line, protocol)
+        """
+        async with sem:
+            host = extract_host(line, proto)
+            latency = await test_speed(host)
+            return (latency, line, proto)
 
-    print(f"Saved {len(all_ok)} working configs | Light: {len(light)}")
+    # Perform asynchronous latency tests and sort results
+    all_results = []
+    for proto in categorized:
+        lines = categorized[proto]
+        if not lines:
+            continue
+        results = await asyncio.gather(*[test_line(line, proto) for line in lines])
+        results.sort(key=lambda x: x[0])
+        categorized[proto] = [line for _, line, _ in results]
+        all_results.extend(results)
+
+    all_results.sort(key=lambda x: x[0])
+    all_sorted_lines = [line for _, line, _ in all_results]
+
+    # Save categorized configurations to files
+    for proto, lines in categorized.items():
+        path = os.path.join(OUTPUT_DIR, f"{proto}.txt")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+        print(f"Saved: {path} | Lines: {len(lines)}")
+
+    # Save all sorted configurations to all.txt
+    all_path = os.path.join(OUTPUT_DIR, "all.txt")
+    with open(all_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(all_sorted_lines))
+    print(f"Saved: {all_path} | Lines: {len(all_sorted_lines)}")
+
+    # Save a "light" version with first 30 configurations
+    light_path = os.path.join(OUTPUT_DIR, "light.txt")
+    with open(light_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(all_sorted_lines[:30]))
+    print(f"Saved Light version with {min(len(all_sorted_lines), 30)} configs")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main_async())
