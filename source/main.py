@@ -9,6 +9,8 @@ import zoneinfo
 import ssl
 from urllib.parse import urlparse
 import httpx
+import websockets
+import socket
 
 # ---------------------------
 # Configurable Settings
@@ -18,7 +20,6 @@ CONFIG = {
         "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
         "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
         "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
-        "https://www.v2nodes.com/subscriptions/country/all/?key=96C8FFB201A7745",
     ],
     "output_dir": "configs",
     "light_limit": 30,
@@ -31,7 +32,7 @@ CONFIG = {
     ),
     "timezone": "Asia/Tehran",
     "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443},
-    "proxy": None,  # Example: "socks5://127.0.0.1:1080"
+    "proxy": None,
     "tcp_retry": 2,
     "latency_tests": 3,  # تعداد دفعات تست latency برای میانگین گیری
 }
@@ -156,12 +157,27 @@ async def http_latency(host: str, port: int) -> float:
     except Exception:
         return float("inf")
 
+async def ws_latency(host: str, port: int) -> float:
+    if not host:
+        return float("inf")
+    url = f"wss://{host}:{port}/"
+    ssl_context = ssl.create_default_context()
+    try:
+        start = asyncio.get_event_loop().time()
+        async with websockets.connect(url, ssl=ssl_context, timeout=CONFIG["timeout"]):
+            end = asyncio.get_event_loop().time()
+            return end - start
+    except Exception:
+        return float("inf")
+
 async def measure_latency(host: str, port: int) -> float:
     latencies = []
     for _ in range(CONFIG["latency_tests"]):
         latency = await tcp_latency(host, port)
         if latency == float("inf"):
             latency = await http_latency(host, port)
+        if latency == float("inf"):
+            latency = await ws_latency(host, port)
         latencies.append(latency)
     avg_latency = sum(latencies) / len(latencies)
     return avg_latency
