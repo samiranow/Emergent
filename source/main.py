@@ -1,126 +1,137 @@
 import asyncio
 import httpx
+import aiofiles
 import os
-import subprocess
-from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor
-import base64
-import re
-import tempfile
 import zipfile
+import json
+from pathlib import Path
+from urllib.parse import urlparse, quote_plus
 
-# مسیر ذخیره کانفیگ‌ها
-CONFIG_DIR = Path("configs")
-CONFIG_DIR.mkdir(exist_ok=True)
+XRayPath = "/tmp/xray/xray"
+CONFIG_DIR = "configs"
+LIGHT_COUNT = 30
+TEST_TIMEOUT = 5  # seconds
+MAX_PARALLEL = 20  # تعداد کانکشن موازی
 
-# URL های ورودی
-URLS = [
+CONFIG_URLS = [
     "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
     "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt"
 ]
 
-# مسیر Xray
-XRAY_DIR = Path(tempfile.gettempdir()) / "xray"
-XRAY_PATH = XRAY_DIR / "xray"
-
-# دانلود Xray
-async def download_xray():
-    if XRAY_PATH.exists():
-        return XRAY_PATH
-    XRAY_DIR.mkdir(parents=True, exist_ok=True)
-    async with httpx.AsyncClient(follow_redirects=True) as client:
-        url = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
+async def download_file(url, filename):
+    async with httpx.AsyncClient(timeout=30) as client:
         r = await client.get(url)
-        zip_path = XRAY_DIR / "xray.zip"
-        zip_path.write_bytes(r.content)
-        with zipfile.ZipFile(zip_path, "r") as zip_ref:
-            zip_ref.extractall(XRAY_DIR)
-    XRAY_PATH.chmod(0o755)
-    return XRAY_PATH
+        r.raise_for_status()
+        async with aiofiles.open(filename, "w") as f:
+            await f.write(r.text)
 
-# شناسایی پروتکل از URL یا لینک
-def identify_protocol(link):
-    link = link.strip()
-    if link.startswith("vmess://"):
-        return "vmess"
-    elif link.startswith("vless://"):
-        return "vless"
-    elif link.startswith("ss://"):
-        return "shadowsocks"
-    elif link.startswith("trojan://"):
-        return "trojan"
-    else:
-        return "unknown"
+async def download_xray():
+    url = "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
+    zip_path = "/tmp/xray.zip"
+    async with httpx.AsyncClient(follow_redirects=True) as client:
+        r = await client.get(url)
+        r.raise_for_status()
+        async with aiofiles.open(zip_path, "wb") as f:
+            await f.write(r.content)
+    # Extract
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall("/tmp/xray")
+    os.chmod(XRayPath, 0o755)
+    return XRayPath
 
-# دیکد Base64 اگر لازم بود
-def decode_base64_if_needed(link):
-    try:
-        if re.match(r"^[A-Za-z0-9+/=]+$", link.strip()):
-            return base64.b64decode(link.strip()).decode("utf-8")
-    except Exception:
-        return link
-    return link
-
-# تست کانفیگ با Xray
-def test_config(protocol, config):
-    try:
-        # ایجاد فایل موقت برای کانفیگ
-        with tempfile.NamedTemporaryFile("w+", delete=False) as tmp:
-            tmp.write(config)
-            tmp.flush()
-            # هر کانفیگ با timeout 2 ثانیه
-            result = subprocess.run([str(XRAY_PATH), "-c", tmp.name],
-                                    capture_output=True, timeout=2)
-            return result.returncode == 0
-    except subprocess.TimeoutExpired:
-        return False
-    finally:
+def parse_config_line(line):
+    line = line.strip()
+    if line.startswith("vmess://"):
+        b64 = line[8:]
         try:
-            os.remove(tmp.name)
+            return json.loads(httpx._models.decode_base64(b64))
         except:
-            pass
+            return None
+    elif line.startswith("vless://"):
+        return {"raw": line}
+    elif line.startswith("ss://") or line.startswith("trojan://"):
+        return {"raw": line}
+    return None
+
+async def test_config(config):
+    """
+    تست کانفیگ با Xray. اگر موفق شد True برمیگرداند.
+    """
+    # فقط نمونه JSON V2Ray کانفیگ، برای simplicity
+    test_json = {}
+    if "raw" in config:
+        test_json = {"inbounds": [{"port": 1080, "protocol": "socks"}], "outbounds": [{"protocol": "freedom"}]}
+    else:
+        test_json = config
+
+    config_path = "/tmp/test.json"
+    async with aiofiles.open(config_path, "w") as f:
+        await f.write(json.dumps(test_json))
+
+    proc = await asyncio.create_subprocess_exec(
+        XRayPath, "-test", "-config", config_path,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    )
+    try:
+        await asyncio.wait_for(proc.communicate(), timeout=TEST_TIMEOUT)
+        return True
+    except asyncio.TimeoutError:
+        proc.kill()
+        return False
 
 async def main():
-    xray_path = await download_xray()
-    configs = {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
-
+    Path(CONFIG_DIR).mkdir(exist_ok=True)
+    all_lines = set()
     # دانلود همه فایل‌ها
-    async with httpx.AsyncClient() as client:
-        tasks = [client.get(url) for url in URLS]
-        responses = await asyncio.gather(*tasks)
-        for r in responses:
-            lines = r.text.splitlines()
-            for line in lines:
-                line = decode_base64_if_needed(line)
-                proto = identify_protocol(line)
-                configs.setdefault(proto, []).append(line)
+    for url in CONFIG_URLS:
+        fname = "/tmp/" + os.path.basename(urlparse(url).path)
+        await download_file(url, fname)
+        async with aiofiles.open(fname, "r") as f:
+            content = await f.read()
+        for line in content.splitlines():
+            all_lines.add(line.strip())
 
-    # حذف تکراری‌ها
-    for proto in configs:
-        configs[proto] = list(dict.fromkeys(configs[proto]))
+    print(f"Total unique lines: {len(all_lines)}")
+    await download_xray()
 
-    # تست کانفیگ‌ها موازی
-    loop = asyncio.get_running_loop()
-    with ThreadPoolExecutor(max_workers=20) as executor:
-        for proto, conf_list in configs.items():
-            if proto != "unknown":
-                futures = [loop.run_in_executor(executor, test_config, proto, c) for c in conf_list]
-                results = await asyncio.gather(*futures)
-                configs[proto] = [c for c, ok in zip(conf_list, results) if ok]
+    # parse configs
+    configs = [parse_config_line(line) for line in all_lines]
+    configs = [c for c in configs if c]
+
+    # تست موازی
+    semaphore = asyncio.Semaphore(MAX_PARALLEL)
+    results = []
+    async def sem_test(c):
+        async with semaphore:
+            ok = await test_config(c)
+            results.append((c, ok))
+
+    await asyncio.gather(*[sem_test(c) for c in configs])
 
     # ذخیره فایل‌ها
-    for proto, conf_list in configs.items():
-        (CONFIG_DIR / f"{proto}.txt").write_text("\n".join(conf_list))
+    for protocol in ["vless", "vmess", "shadowsocks", "trojan"]:
+        lst = [c for c, ok in results if ok and c.get("raw", "").startswith(protocol)]
+        async with aiofiles.open(f"{CONFIG_DIR}/{protocol}.txt", "w") as f:
+            await f.write("\n".join(c.get("raw", json.dumps(c)) for c in lst))
 
-    # همه کانفیگ‌ها بدون unknown
-    all_configs = [c for proto, cl in configs.items() if proto != "unknown" for c in cl]
-    (CONFIG_DIR / "all.txt").write_text("\n".join(all_configs))
+    # unknown
+    unknown = [c for c, ok in results if not ok]
+    async with aiofiles.open(f"{CONFIG_DIR}/unknown.txt", "w") as f:
+        await f.write("\n".join(c.get("raw", json.dumps(c)) for c in unknown))
 
-    # Light version: سریع‌ترین 30 کانفیگ
-    (CONFIG_DIR / "light.txt").write_text("\n".join(all_configs[:30]))
+    # all
+    all_ok = [c for c, ok in results if ok]
+    async with aiofiles.open(f"{CONFIG_DIR}/all.txt", "w") as f:
+        await f.write("\n".join(c.get("raw", json.dumps(c)) for c in all_ok))
 
-    print(f"Saved {sum(len(cl) for cl in configs.values())} working configs | Light: {min(len(all_configs),30)}")
+    # light
+    light = all_ok[:LIGHT_COUNT]
+    async with aiofiles.open(f"{CONFIG_DIR}/light.txt", "w") as f:
+        await f.write("\n".join(c.get("raw", json.dumps(c)) for c in light))
+
+    print(f"Saved {len(all_ok)} working configs | Light: {len(light)}")
 
 if __name__ == "__main__":
     asyncio.run(main())
