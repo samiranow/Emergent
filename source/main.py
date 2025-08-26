@@ -18,6 +18,7 @@ CONFIG = {
         "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
         "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
         "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
+        "https://www.v2nodes.com/subscriptions/country/all/?key=96C8FFB201A7745",
     ],
     "output_dir": "configs",
     "light_limit": 30,
