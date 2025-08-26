@@ -1,16 +1,16 @@
 import os
-import re
 import json
 import base64
 import asyncio
 import logging
+import tempfile
+import subprocess
 from datetime import datetime
 import zoneinfo
-import ssl
 import httpx
 
 # ---------------------------
-# Configurable Settings
+# تنظیمات
 # ---------------------------
 CONFIG = {
     "urls": [
@@ -19,40 +19,37 @@ CONFIG = {
         "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
     ],
     "output_dir": "configs",
-    "light_total": 30,  # تعداد کل کانفیگ‌ها در light.txt
+    "light_limit": 30,
     "concurrent_requests": 50,
-    "timeout": 3,
-    "user_agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/138.0.0.0 Safari/537.36"
-    ),
+    "timeout": 5,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
     "timezone": "Asia/Tehran",
-    "default_port": {"vless": 443, "vmess": 443, "shadowsocks": 8388, "trojan": 443},
+    "xray_url": "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
 }
 
 # ---------------------------
-# Logging Setup
+# Logging
 # ---------------------------
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 # ---------------------------
-# Utilities
+# زمان
 # ---------------------------
 zone = zoneinfo.ZoneInfo(CONFIG["timezone"])
-
 def timestamp():
     return datetime.now(zone).strftime("%Y-%m-%d %H:%M:%S")
 
+# ---------------------------
+# کمکی‌ها
+# ---------------------------
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
         padded = s + "=" * ((4 - len(s) % 4) % 4)
-        decoded_bytes = base64.b64decode(padded, validate=True)
-        decoded_str = decoded_bytes.decode(errors="ignore")
-        if len(decoded_str) < 2 or re.search(r"[^\x00-\x7F]", decoded_str):
+        decoded = base64.b64decode(padded).decode(errors="ignore")
+        if len(decoded) < 2:
             return s
-        return decoded_str
+        return decoded
     except Exception:
         return s
 
@@ -69,40 +66,8 @@ def detect_protocol(line: str) -> str:
     else:
         return "unknown"
 
-def extract_host_port(line: str, proto: str) -> tuple[str, int]:
-    try:
-        if proto == "vmess":
-            b64_part = line[8:]
-            padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
-            decoded = base64.b64decode(padded).decode(errors="ignore")
-            data = json.loads(decoded)
-            host = data.get("add", "")
-            port = int(data.get("port", CONFIG["default_port"][proto]))
-            return host, port
-        elif proto == "vless":
-            m = re.search(r"vless://[^@]+@([^:/]+)(?::(\d+))?", line)
-            if m:
-                host = m.group(1)
-                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
-                return host, port
-        elif proto == "shadowsocks":
-            m = re.search(r"ss://(?:[^@]+@)?([^:/]+)(?::(\d+))?", line)
-            if m:
-                host = m.group(1)
-                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
-                return host, port
-        elif proto == "trojan":
-            m = re.search(r"trojan://[^@]+@([^:/?#]+)(?::(\d+))?", line)
-            if m:
-                host = m.group(1)
-                port = int(m.group(2)) if m.group(2) else CONFIG["default_port"][proto]
-                return host, port
-    except Exception:
-        pass
-    return "", CONFIG["default_port"].get(proto, 443)
-
 # ---------------------------
-# Async Functions
+# دانلود لینک‌ها
 # ---------------------------
 async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
     try:
@@ -115,106 +80,136 @@ async def fetch_url(session: httpx.AsyncClient, url: str) -> list[str]:
         logging.warning(f"⚠️ Error downloading {url}: {e}")
         return []
 
-async def tcp_latency(host: str, port: int) -> float:
-    if not host:
-        return float("inf")
-    ssl_context = ssl.create_default_context() if port == 443 else None
-    try:
-        start = asyncio.get_event_loop().time()
-        reader, writer = await asyncio.wait_for(
-            asyncio.open_connection(host, port, ssl=ssl_context),
-            CONFIG["timeout"]
-        )
-        end = asyncio.get_event_loop().time()
-        writer.close()
-        await writer.wait_closed()
-        return end - start
-    except Exception:
-        return float("inf")
-
-async def measure_latency(host: str, port: int) -> float:
-    return await tcp_latency(host, port)
-
-async def test_lines_latency(lines: list[str], proto: str, sem: asyncio.Semaphore) -> list[str]:
-    async def test_line(line: str):
-        async with sem:
-            host, port = extract_host_port(line, proto)
-            latency = await measure_latency(host, port)
-            return latency, line, host, port
-
-    results = await asyncio.gather(*[test_line(line) for line in lines])
-    # حذف تکراری‌ها بر اساس (proto, host, port)
-    seen = set()
-    unique_results = []
-    for latency, line, host, port in results:
-        key = (proto, host, port)
-        if key not in seen:
-            seen.add(key)
-            unique_results.append((latency, line))
-    unique_results.sort(key=lambda x: x[0])
-    return [line for _, line in unique_results]
+# ---------------------------
+# نصب Xray (GitHub Actions)
+# ---------------------------
+def install_xray() -> str:
+    import zipfile, urllib.request
+    xray_dir = os.path.join(tempfile.gettempdir(), "xray")
+    os.makedirs(xray_dir, exist_ok=True)
+    zip_path = os.path.join(xray_dir, "xray.zip")
+    logging.info("Downloading Xray...")
+    urllib.request.urlretrieve(CONFIG["xray_url"], zip_path)
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(xray_dir)
+    xray_path = os.path.join(xray_dir, "xray")
+    os.chmod(xray_path, 0o755)
+    logging.info(f"Xray installed at {xray_path}")
+    return xray_path
 
 # ---------------------------
-# Main Workflow
+# ساخت کانفیگ موقت برای Xray
+# ---------------------------
+def create_xray_config(line: str, proto: str) -> str:
+    cfg = {"inbounds": [{"port": 1080, "protocol": "socks", "settings": {"auth": "noauth"}}],
+           "outbounds": []}
+    if proto == "vless":
+        cfg["outbounds"].append({
+            "protocol": "vless",
+            "settings": {"vnext": [{"address": line.split('@')[1].split(':')[0], "port": int(line.split(':')[-1].split('?')[0]), "users": [{"id": "00000000-0000-0000-0000-000000000000"}]}]}
+        })
+    elif proto == "vmess":
+        b64 = line[8:]
+        padded = b64 + "=" * ((4 - len(b64) % 4) % 4)
+        data = json.loads(base64.b64decode(padded).decode(errors="ignore"))
+        cfg["outbounds"].append({
+            "protocol": "vmess",
+            "settings": {"vnext": [{"address": data["add"], "port": int(data.get("port", 443)), "users": [{"id": data.get("id","00000000-0000-0000-0000-000000000000") }]}]}
+        })
+    elif proto == "shadowsocks":
+        import re
+        m = re.search(r"ss://(?:[^@]+@)?([^:/]+):(\d+)", line)
+        if m:
+            cfg["outbounds"].append({
+                "protocol": "shadowsocks",
+                "settings": {"servers": [{"address": m.group(1), "port": int(m.group(2)), "method": "aes-128-gcm", "password": "x"}]}
+            })
+    elif proto == "trojan":
+        import re
+        m = re.search(r"trojan://[^@]+@([^:/]+):(\d+)", line)
+        if m:
+            cfg["outbounds"].append({
+                "protocol": "trojan",
+                "settings": {"servers": [{"address": m.group(1), "port": int(m.group(2)), "password": "x"}]}
+            })
+    fd, path = tempfile.mkstemp(suffix=".json")
+    with os.fdopen(fd, 'w', encoding='utf-8') as f:
+        json.dump(cfg, f)
+    return path
+
+# ---------------------------
+# تست لینک با Xray
+# ---------------------------
+async def test_latency(xray_path: str, line: str, proto: str) -> tuple[float, str]:
+    cfg_path = create_xray_config(line, proto)
+    try:
+        result = subprocess.run([xray_path, "run", "-test", "-c", cfg_path], capture_output=True, timeout=10)
+        output = result.stdout.decode()
+        if "OK" in output or "connected" in output.lower():
+            latency = float(result.stderr.decode().split()[0]) if result.stderr else 0.0
+            return latency, line
+    except Exception:
+        pass
+    finally:
+        os.remove(cfg_path)
+    return float('inf'), line
+
+# ---------------------------
+# جریان اصلی
 # ---------------------------
 async def main():
     os.makedirs(CONFIG["output_dir"], exist_ok=True)
     sem = asyncio.Semaphore(CONFIG["concurrent_requests"])
 
-    async with httpx.AsyncClient(headers={"User-Agent": CONFIG["user_agent"]}) as client:
+    # دانلود لینک‌ها
+    async with httpx.AsyncClient(timeout=CONFIG["timeout"], headers={"User-Agent": CONFIG["user_agent"]}) as client:
         all_lines_nested = await asyncio.gather(*[fetch_url(client, url) for url in CONFIG["urls"]])
-        all_lines = [line for sublist in all_lines_nested for line in sublist]
+    all_lines = [line for sublist in all_lines_nested for line in sublist]
+    all_lines = list(dict.fromkeys(all_lines))
+    logging.info(f"Total unique lines: {len(all_lines)}")
 
-    logging.info(f"Total lines before dedup: {len(all_lines)}")
-
-    # دسته‌بندی اولیه
+    # دسته‌بندی پروتکل‌ها
     categorized = {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
     for line in all_lines:
         proto = detect_protocol(line)
         categorized[proto].append(line)
 
-    # تست latency و مرتب‌سازی
-    sorted_per_proto = {}
-    for proto, lines in categorized.items():
-        if not lines or proto == "unknown":
-            continue
-        sorted_lines = await test_lines_latency(lines, proto, sem)
-        sorted_per_proto[proto] = sorted_lines
+    # نصب Xray
+    xray_path = install_xray()
 
-    # ذخیره فایل‌های پروتکل
-    all_sorted = []
-    for proto, lines in sorted_per_proto.items():
+    # تست سرعت همه پروتکل‌ها (ناشناخته‌ها حذف میشن)
+    results = []
+    for proto, lines in categorized.items():
+        if proto == "unknown" or not lines:
+            continue
+        async def sem_test(line=line, proto=proto):
+            async with sem:
+                return await test_latency(xray_path, line, proto)
+        proto_results = await asyncio.gather(*[sem_test(line) for line in lines])
+        results.extend(proto_results)
+
+    # مرتب‌سازی بر اساس latency واقعی
+    results = sorted(results, key=lambda x: x[0])
+    valid_results = [line for latency, line in results if latency < float('inf')]
+
+    # ذخیره فایل‌ها
+    for proto, lines in categorized.items():
         path = os.path.join(CONFIG["output_dir"], f"{proto}.txt")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
         logging.info(f"Saved {path} | Lines: {len(lines)}")
-        all_sorted.extend(lines)
 
-    # ذخیره all.txt شامل تمام پروتکل‌ها به جز unknown
+    # ذخیره all.txt
     all_path = os.path.join(CONFIG["output_dir"], "all.txt")
     with open(all_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(all_sorted))
-    logging.info(f"Saved {all_path} | Lines: {len(all_sorted)}")
+        f.write("\n".join(valid_results))
+    logging.info(f"Saved {all_path} | Lines: {len(valid_results)}")
 
-    # ساخت light.txt متوازن و دقیقاً 30 کانفیگ
-    light_lines = []
-    proto_keys = list(sorted_per_proto.keys())
-    per_proto_quota = CONFIG["light_total"] // len(proto_keys)
-    extra = CONFIG["light_total"] % len(proto_keys)
-
-    for proto in proto_keys:
-        count = per_proto_quota + (1 if extra > 0 else 0)
-        extra -= 1 if extra > 0 else 0
-        lines = sorted_per_proto[proto][:count]
-        light_lines.extend(lines)
-
-    # اطمینان از اینکه دقیقاً 30 کانفیگ داریم
-    light_lines = light_lines[:CONFIG["light_total"]]
-
+    # ذخیره light.txt (۳۰ سریع‌ترین)
     light_path = os.path.join(CONFIG["output_dir"], "light.txt")
     with open(light_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(light_lines))
-    logging.info(f"Saved Light version with {len(light_lines)} configs")
+        f.write("\n".join(valid_results[:CONFIG["light_limit"]]))
+    logging.info(f"Saved Light version with {min(len(valid_results), CONFIG['light_limit'])} configs")
 
 if __name__ == "__main__":
     asyncio.run(main())
