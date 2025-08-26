@@ -4,15 +4,11 @@ import json
 import base64
 import asyncio
 import logging
-import aiofiles
+import subprocess
+from datetime import datetime
 import httpx
-import zipfile
-import tempfile
-from pathlib import Path
+import aiofiles
 
-# ---------------------------
-# Config
-# ---------------------------
 CONFIG = {
     "urls": [
         "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/refs/heads/main/source/local-config.txt",
@@ -21,23 +17,17 @@ CONFIG = {
     ],
     "output_dir": "configs",
     "light_limit": 30,
-    "concurrent_requests": 50,
-    "timeout": 2,  # timeout for each Xray test
-    "user_agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/138.0.0.0 Safari/537.36"
-    ),
-    "proxy": None,
-    "xray_url": "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip",
+    "timeout": 2,  # Timeout for each connection test
+    "xray_path": "/tmp/xray/xray",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/138.0.0.0 Safari/537.36",
 }
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-os.makedirs(CONFIG["output_dir"], exist_ok=True)
 
-# ---------------------------
-# Utilities
-# ---------------------------
+# ------------------------------
+# Helper Functions
+# ------------------------------
+
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
@@ -47,6 +37,7 @@ def maybe_base64_decode(s: str) -> str:
         return s
 
 def detect_protocol(line: str) -> str:
+    line = line.strip()
     if line.startswith("vless://"):
         return "vless"
     elif line.startswith("vmess://"):
@@ -58,44 +49,65 @@ def detect_protocol(line: str) -> str:
     else:
         return "unknown"
 
-# ---------------------------
-# Xray Handling
-# ---------------------------
-async def download_xray():
-    tmp_dir = Path(tempfile.gettempdir()) / "xray"
-    tmp_dir.mkdir(parents=True, exist_ok=True)
-    xray_path = tmp_dir / "xray"
-    if xray_path.exists():
-        return str(xray_path)
+def extract_host_port(line: str, proto: str):
+    try:
+        if proto == "vless":
+            m = re.search(r"vless://[^@]+@([^:/]+)(?::(\d+))?", line)
+            if m:
+                host = m.group(1)
+                port = int(m.group(2)) if m.group(2) else 443
+                return host, port
+        elif proto == "vmess":
+            data = json.loads(base64.b64decode(line[8:] + "==").decode())
+            return data.get("add", ""), int(data.get("port", 443))
+        elif proto == "shadowsocks":
+            m = re.search(r"ss://(?:[^@]+@)?([^:/]+):?(\d+)?", line)
+            if m:
+                host = m.group(1)
+                port = int(m.group(2)) if m.group(2) else 8388
+                return host, port
+        elif proto == "trojan":
+            m = re.search(r"trojan://[^@]+@([^:/]+)(?::(\d+))?", line)
+            if m:
+                host = m.group(1)
+                port = int(m.group(2)) if m.group(2) else 443
+                return host, port
+    except Exception:
+        pass
+    return "", 0
 
-    logging.info("Downloading Xray...")
-    async with httpx.AsyncClient(follow_redirects=True) as client:
-        r = await client.get(CONFIG["xray_url"])
+async def fetch_url(client: httpx.AsyncClient, url: str):
+    try:
+        r = await client.get(url)
         r.raise_for_status()
-        zip_path = tmp_dir / "xray.zip"
-        async with aiofiles.open(zip_path, "wb") as f:
-            await f.write(r.content)
+        lines = [maybe_base64_decode(l) for l in r.text.splitlines() if l.strip()]
+        logging.info(f"Downloaded {url} | Lines: {len(lines)}")
+        return lines
+    except Exception as e:
+        logging.warning(f"Error downloading {url}: {e}")
+        return []
 
-    with zipfile.ZipFile(zip_path, "r") as zip_ref:
-        zip_ref.extractall(tmp_dir)
-    xray_path.chmod(0o755)
-    logging.info(f"Xray installed at {xray_path}")
-    return str(xray_path)
+# ------------------------------
+# Xray Test
+# ------------------------------
 
-async def test_with_xray(xray_path: str, cfg: dict) -> bool:
-    """Run Xray with given config JSON, return True if connection success"""
-    import subprocess
-    import json as js
+async def test_with_xray(line: str, proto: str):
+    host, port = extract_host_port(line, proto)
+    if not host or port == 0:
+        return False
 
-    with tempfile.NamedTemporaryFile("w+", delete=False) as tmp:
-        json.dump(cfg, tmp)
-        tmp.flush()
-        tmp_path = tmp.name
+    config = {
+        "inbounds": [],
+        "outbounds": [{"protocol": proto, "settings": {"vnext":[{"address": host, "port": port, "users":[{"id":"00000000-0000-0000-0000-000000000000"}]}]}}]
+    }
+    cfg_path = f"/tmp/{proto}_test.json"
+    async with aiofiles.open(cfg_path, "w") as f:
+        await f.write(json.dumps(config))
+
     try:
         proc = await asyncio.create_subprocess_exec(
-            xray_path, "-test", "-config", tmp_path,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            CONFIG["xray_path"], "-test", "-c", cfg_path,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )
         try:
             await asyncio.wait_for(proc.communicate(), timeout=CONFIG["timeout"])
@@ -103,80 +115,63 @@ async def test_with_xray(xray_path: str, cfg: dict) -> bool:
             proc.kill()
             return False
         return proc.returncode == 0
-    finally:
-        os.unlink(tmp_path)
+    except Exception:
+        return False
 
-# ---------------------------
-# Fetch & Parse
-# ---------------------------
-async def fetch_lines(session: httpx.AsyncClient, url: str) -> list[str]:
-    try:
-        r = await session.get(url)
-        r.raise_for_status()
-        lines = [maybe_base64_decode(l) for l in r.text.splitlines() if l.strip()]
-        logging.info(f"Downloaded {url} | Lines: {len(lines)}")
-        return lines
-    except Exception as e:
-        logging.warning(f"⚠️ Error fetching {url}: {e}")
-        return []
+async def test_all(lines: list[str]):
+    sem = asyncio.Semaphore(50)
+    results = []
 
-# ---------------------------
-# Main
-# ---------------------------
-async def main():
-    xray_path = await download_xray()
-    async with httpx.AsyncClient(headers={"User-Agent": CONFIG["user_agent"]}) as session:
-        all_lines_nested = await asyncio.gather(*[fetch_lines(session, u) for u in CONFIG["urls"]])
-    all_lines = list(dict.fromkeys([l for sub in all_lines_nested for l in sub]))
-
-    logging.info(f"Total unique lines: {len(all_lines)}")
-
-    # Prepare results
-    success_lines = []
-    unknown_lines = []
-
-    sem = asyncio.Semaphore(CONFIG["concurrent_requests"])
-
-    async def test_line(line: str):
+    async def test_line(line):
         proto = detect_protocol(line)
         if proto == "unknown":
-            unknown_lines.append(line)
-            return
+            return None
         async with sem:
-            cfg_json = {"inbounds": [], "outbounds": [{"protocol": proto, "settings": {}}]}  # simplified test
-            ok = await test_with_xray(xray_path, cfg_json)
+            ok = await test_with_xray(line, proto)
             if ok:
-                success_lines.append(line)
-            else:
-                unknown_lines.append(line)
+                return line
+        return None
 
-    await asyncio.gather(*[test_line(l) for l in all_lines])
+    tasks = [test_line(l) for l in lines]
+    for future in asyncio.as_completed(tasks):
+        res = await future
+        if res:
+            results.append(res)
+    return results
 
-    # Save files
-    for proto in ["vless", "vmess", "shadowsocks", "trojan"]:
-        lines = [l for l in success_lines if detect_protocol(l) == proto]
-        path = os.path.join(CONFIG["output_dir"], f"{proto}.txt")
-        async with aiofiles.open(path, "w", encoding="utf-8") as f:
-            await f.write("\n".join(lines))
-        logging.info(f"Saved {path} | Lines: {len(lines)}")
+# ------------------------------
+# Main Workflow
+# ------------------------------
 
-    # All.txt
-    path_all = os.path.join(CONFIG["output_dir"], "all.txt")
-    async with aiofiles.open(path_all, "w", encoding="utf-8") as f:
-        await f.write("\n".join(success_lines))
-    logging.info(f"Saved {path_all} | Lines: {len(success_lines)}")
+async def main():
+    os.makedirs(CONFIG["output_dir"], exist_ok=True)
+    async with httpx.AsyncClient(headers={"User-Agent": CONFIG["user_agent"]}) as client:
+        all_lines_nested = await asyncio.gather(*[fetch_url(client, u) for u in CONFIG["urls"]])
+    all_lines = list(dict.fromkeys([l for sub in all_lines_nested for l in sub]))
+    logging.info(f"Total unique lines: {len(all_lines)}")
 
-    # Light.txt
-    path_light = os.path.join(CONFIG["output_dir"], "light.txt")
-    async with aiofiles.open(path_light, "w", encoding="utf-8") as f:
-        await f.write("\n".join(success_lines[:CONFIG["light_limit"]]))
-    logging.info(f"Saved Light version with {min(CONFIG['light_limit'], len(success_lines))} configs")
+    tested = await test_all(all_lines)
+    logging.info(f"Total tested and OK: {len(tested)}")
 
-    # Unknown.txt
-    path_unknown = os.path.join(CONFIG["output_dir"], "unknown.txt")
-    async with aiofiles.open(path_unknown, "w", encoding="utf-8") as f:
-        await f.write("\n".join(unknown_lines))
-    logging.info(f"Saved {path_unknown} | Lines: {len(unknown_lines)}")
+    # Save all.txt
+    all_path = os.path.join(CONFIG["output_dir"], "all.txt")
+    async with aiofiles.open(all_path, "w") as f:
+        await f.write("\n".join(tested))
+
+    # Save light.txt
+    light_path = os.path.join(CONFIG["output_dir"], "light.txt")
+    async with aiofiles.open(light_path, "w") as f:
+        await f.write("\n".join(tested[:CONFIG["light_limit"]]))
+
+    # Save unknown.txt
+    unknowns = [l for l in all_lines if l not in tested]
+    unknown_path = os.path.join(CONFIG["output_dir"], "unknown.txt")
+    async with aiofiles.open(unknown_path, "w") as f:
+        await f.write("\n".join(unknowns))
+
+    logging.info(f"Saved all.txt | Lines: {len(tested)}")
+    logging.info(f"Saved light.txt | Lines: {min(len(tested), CONFIG['light_limit'])}")
+    logging.info(f"Saved unknown.txt | Lines: {len(unknowns)}")
 
 if __name__ == "__main__":
     asyncio.run(main())
