@@ -1,4 +1,4 @@
-<h1>ConfigForge 🚀</h1>
+<h1>ConfigForge V2Ray 🚀</h1>
 <p>
   <b>VPN Config Collector & Organizer</b>
 </p>
@@ -15,7 +15,7 @@
 | **trojan.txt** | Trojan configs               | [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/trojan.txt)           |
 | **unknown.txt**| Unknown or unsupported configs| [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/unknown.txt)         |
 
-✅ Files are updated automatically via **GitHub Actions** every 6 hours.
+✅ Files are updated automatically via **GitHub Actions** every 30 minutes.
 
 ---
 
