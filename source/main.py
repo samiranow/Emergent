@@ -1,30 +1,76 @@
 import asyncio
 import re
 import os
+import random
+import socket
+import requests
+
 from config import URLS, TIMESTAMP, OUTPUT_DIR
 from fetcher import fetch_data, maybe_base64_decode
 from parser import detect_protocol, extract_host
 from tester import test_speed, get_nodes_by_country
 from output import save_to_file
 
+def rename_line(line: str) -> str:
+    proto = detect_protocol(line)
+    host = extract_host(line, proto)
+
+    # Resolve host if it's a domain
+    try:
+        ip_addr = socket.gethostbyname(host)
+    except Exception:
+        ip_addr = host  # fallback if DNS fails
+
+    # Try to get country code via free API
+    try:
+        resp = requests.get(f"https://ipapi.co/{ip_addr}/country/", timeout=5)
+        if resp.status_code == 200:
+            country_code = resp.text.strip().lower()
+        else:
+            country_code = ip_addr  # fallback to IP if API fails
+    except Exception:
+        country_code = ip_addr
+
+    rand_num = random.randint(100000, 999999)
+    display_name = f"[{country_code}]::ConfigForge-V2Ray-{rand_num}"
+
+    # Replace host/domain in the config line with IP
+    if proto == "vmess":
+        import base64, json
+        try:
+            b64_part = line[8:]
+            padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
+            data = json.loads(base64.b64decode(padded).decode(errors="ignore"))
+            data["add"] = ip_addr
+            new_b64 = base64.b64encode(json.dumps(data).encode()).decode()
+            line = "vmess://" + new_b64
+        except Exception:
+            pass
+    elif proto == "vless":
+        line = re.sub(r"(vless://[^@]+@)([^:/]+)", rf"\1{ip_addr}", line)
+    elif proto == "trojan":
+        line = re.sub(r"(trojan://[^@]+@)([^:/?#]+)", rf"\1{ip_addr}", line)
+    elif proto == "shadowsocks":
+        line = re.sub(r"(ss://(?:[^@]+@)?)([^:/]+)", rf"\1{ip_addr}", line)
+
+    # Prepend display name
+    return f"{display_name} {line}"
+
+# Extract VPN configs from raw text
 def extract_configs(data: str) -> list[str]:
-    """
-    Extract VPN configurations from raw text.
-    Supports vless, vmess, trojan, and ss.
-    """
     pattern = r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)"
     return re.findall(pattern, data)
 
+# Main async function
 async def main_async():
     print(f"[{TIMESTAMP}] Starting download and processing with country-based speed test...")
 
-    # دریافت نودها بر اساس کشور
+    # Get nodes grouped by country
     country_nodes_dict = await get_nodes_by_country()
 
-    # دیکشنری برای ذخیره کانفیگ‌ها بر اساس کشور
     categorized_per_country = {}  # {"us": {"vless": [], ...}, ...}
 
-    # دریافت و پردازش کانفیگ‌ها از URL‌ها
+    # Fetch and process configs from URLs
     for url in URLS:
         raw_data = fetch_data(url)
         decoded_text = maybe_base64_decode(raw_data)
@@ -37,7 +83,7 @@ async def main_async():
             if not host:
                 continue
 
-            # اضافه کردن کانفیگ به کشورهایی که نود دارند
+            # Add config to all countries with nodes
             for country_code in country_nodes_dict.keys():
                 categorized_per_country.setdefault(
                     country_code,
@@ -45,7 +91,7 @@ async def main_async():
                 )
                 categorized_per_country[country_code][proto].append((line, host))
 
-    # محدودیت همزمانی تست‌ها
+    # Limit concurrency for speed tests
     sem = asyncio.Semaphore(50)
 
     async def test_line_country(line_host, country_code):
@@ -60,7 +106,7 @@ async def main_async():
             latency = await test_speed(host, country_nodes=nodes)
             return latency, line, country_code
 
-    # تست سرعت و مرتب‌سازی کانفیگ‌ها
+    # Test speed and sort configs
     for country_code, categorized in categorized_per_country.items():
         print(f"Processing country: {country_code}")
         all_results = []
@@ -78,11 +124,16 @@ async def main_async():
         all_results.sort(key=lambda x: x[0])
         sorted_lines = [line for _, line, _ in all_results]
 
-        # ساخت فولدر کشور
+        # Rename lines with display names and replace host with IP
+        sorted_lines = [rename_line(line) for line in sorted_lines]
+        for proto, lines in categorized.items():
+            categorized[proto] = [rename_line(line) for line in lines]
+
+        # Create country folder
         country_dir = os.path.join(OUTPUT_DIR, country_code)
         os.makedirs(country_dir, exist_ok=True)
 
-        # ذخیره فایل‌ها
+        # Save files
         for proto, lines in categorized.items():
             save_to_file(os.path.join(country_dir, f"{proto}.txt"), lines)
         save_to_file(os.path.join(country_dir, "all.txt"), sorted_lines)
