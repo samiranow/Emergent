@@ -1,42 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConfigForge Frontend</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 2rem; }
-        h1 { color: #2c3e50; }
-        input, button { padding: 0.5rem; margin: 0.2rem; }
-        pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConfigForge VPN</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --secondary: #1f2937;
+      --bg: #f9fafb;
+      --text: #111827;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 600;
+    }
+    header p {
+      margin-top: 0.5rem;
+      font-weight: 400;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    label, select, input, button {
+      display: block;
+      margin: 0.5rem 0;
+    }
+    input, select {
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #4338ca;
+    }
+    pre {
+      background: #e5e7eb;
+      padding: 1rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border-radius: 4px;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: var(--secondary);
+      color: white;
+      font-size: 0.875rem;
+    }
+    .language-switch {
+      margin: 1rem 0;
+    }
+  </style>
 </head>
 <body>
-    <h1>ConfigForge VPN Links</h1>
-    <label for="country">Enter country code:</label>
+  <header>
+    <h1 id="title">ConfigForge VPN</h1>
+    <p id="description">Get the fastest V2Ray configuration for your country with our service.</p>
+  </header>
+
+  <main>
+    <div class="language-switch">
+      <label for="lang-select">Language / زبان:</label>
+      <select id="lang-select" onchange="changeLanguage()">
+        <option value="auto">Auto</option>
+        <option value="en">English</option>
+        <option value="fa">فارسی</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+
+    <label for="country">Select country code / انتخاب کشور:</label>
     <input type="text" id="country" placeholder="us, jp, fr...">
     <button onclick="fetchConfigs()">Get Configs</button>
 
-    <h2>Results:</h2>
+    <h2 id="results-title">Results:</h2>
     <pre id="output"></pre>
+  </main>
 
-    <script>
-        async function fetchConfigs() {
-            const country = document.getElementById('country').value.trim().toLowerCase();
-            const output = document.getElementById('output');
-            if (!country) return alert("Enter a country code");
+  <footer>
+    Built with ❤️ by <a href="https://github.com/ShatakVPN" target="_blank" style="color:white;">ShatakVPN</a> | Powered by <a href="https://github.com" target="_blank" style="color:white;">GitHub</a> + <a href="https://check-host.net" target="_blank" style="color:white;">Check-Host</a>
+  </footer>
 
-            try {
-                // مسیر فایل های خروجی روی GitHub Pages
-                const url = `configs/configs/${country}/all.txt`;
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Configs not found");
-                const text = await response.text();
-                output.textContent = text;
-            } catch (err) {
-                output.textContent = err;
-            }
-        }
-    </script>
+  <script>
+    const texts = {
+      en: {
+        title: "ConfigForge VPN",
+        description: "Get the fastest V2Ray configuration for your country with our service.",
+        resultsTitle: "Results:"
+      },
+      fa: {
+        title: "کانفیگ فورج وی‌پی‌ان",
+        description: "سریع‌ترین کانفیگ V2Ray برای کشوری که به اینترنت متصل هستید با سرویس ما دریافت کنید.",
+        resultsTitle: "نتایج:"
+      },
+      es: {
+        title: "ConfigForge VPN",
+        description: "Obtén la configuración V2Ray más rápida para tu país con nuestro servicio.",
+        resultsTitle: "Resultados:"
+      }
+    };
+
+    const langSelect = document.getElementById('lang-select');
+
+    function detectBrowserLanguage() {
+      const browserLang = navigator.language.slice(0,2);
+      if (texts[browserLang]) return browserLang;
+      return 'en';
+    }
+
+    function changeLanguage() {
+      let lang = langSelect.value;
+      if (lang === 'auto') lang = detectBrowserLanguage();
+      document.getElementById('title').textContent = texts[lang].title;
+      document.getElementById('description').textContent = texts[lang].description;
+      document.getElementById('results-title').textContent = texts[lang].resultsTitle;
+    }
+
+    changeLanguage();
+
+    async function fetchConfigs() {
+      const country = document.getElementById('country').value.trim().toLowerCase();
+      const output = document.getElementById('output');
+      if (!country) return alert("Enter a country code");
+
+      try {
+        const url = `configs/configs/${country}/all.txt`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Configs not found");
+        const text = await response.text();
+        output.textContent = text;
+      } catch(err) {
+        output.textContent = err;
+      }
+    }
+  </script>
 </body>
 </html>
