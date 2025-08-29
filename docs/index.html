@@ -5,66 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ConfigForge V2Ray</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Emoji&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            background: linear-gradient(180deg, rgba(10, 25, 47, 0.95), rgba(30, 41, 59, 0.95)), url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="none" stroke="%23ffffff" stroke-opacity="0.1" stroke-width="2" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,213.3C960,224,1056,192,1152,176C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E');
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-family: 'Poppins', sans-serif;
-            color: #333;
+            justify-content: space-between;
+            font-family: 'Inter', sans-serif;
+            color: #e2e8f0;
+            padding: 4rem 1rem;
         }
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            animation: fadeIn 0.5s ease-in-out;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
+            from { opacity: 0; transform: translateY(-50px); }
             to { opacity: 1; transform: translateY(0); }
         }
         h1 {
             text-align: center;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            color: #1a1a1a;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
         }
         .description {
             text-align: center;
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-            color: #555;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            opacity: 0.9;
+            line-height: 1.6;
         }
         .form-select, .btn {
             border-radius: 10px;
             transition: all 0.3s ease;
+            font-family: 'Inter', 'Noto Emoji', sans-serif;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem;
+            font-size: 1rem;
         }
         .form-select:hover, .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
         .btn-primary {
-            background: linear-gradient(90deg, #6e8efb, #a777e3);
+            background: linear-gradient(90deg, #3b82f6, #7c3aed);
             border: none;
             width: 100%;
-        }
-        .btn-success, .btn-info {
-            width: 100%;
-            margin-top: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.9rem;
         }
         #configs-list {
-            margin-top: 1.5rem;
+            margin-top: 2rem;
             padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 15px;
-            max-height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            max-height: 350px;
             overflow-y: auto;
         }
         ul {
@@ -74,56 +90,89 @@
         li {
             display: flex;
             align-items: center;
-            padding: 0.75rem;
-            background: white;
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            transition: transform 0.2s;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.75rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         li:hover {
             transform: scale(1.02);
-            background: #e9ecef;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         li span {
             flex-grow: 1;
             font-weight: 500;
+            color: #e2e8f0;
+            font-size: 1rem;
         }
         li button {
             margin-left: 1rem;
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
+            font-family: 'Noto Emoji', sans-serif;
+            color: #e2e8f0;
+            transition: transform 0.2s;
+        }
+        li button:hover {
+            transform: scale(1.2);
         }
         [dir="rtl"] {
             text-align: right;
         }
         .error-message {
-            color: #dc3545;
+            color: #f87171;
             text-align: center;
             font-weight: 500;
         }
-        footer {
-            margin-top: auto;
-            padding: 1rem;
+        .loading-spinner {
             text-align: center;
-            color: white;
-            font-size: 0.8rem;
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
         footer a {
-            color: white;
+            color: #93c5fd;
             text-decoration: none;
             font-weight: 600;
         }
         footer a:hover {
             text-decoration: underline;
+            color: #fff;
         }
         select option {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', 'Noto Emoji', sans-serif;
+            color: #333;
+        }
+        /* Particle animation for cosmic effect */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
         }
     </style>
 </head>
 <body>
+    <canvas id="particles"></canvas>
     <div class="container">
         <h1 id="title">VPN Config Selector</h1>
         <p class="description" id="description">با انتخاب کشور خود، می‌توانید به پرسرعت‌ترین کانفیگ‌های V2Ray رایگان دسترسی داشته باشید.</p>
@@ -146,197 +195,208 @@
         </select>
         <select id="country-select" class="form-select mb-3">
             <option value="">Select Country</option>
-            <option value="us">🇺🇸 United States</option>
-            <option value="ir">🇮🇷 Iran</option>
-            <option value="cn">🇨🇳 China</option>
-            <option value="gb">🇬🇧 United Kingdom</option>
-            <option value="de">🇩🇪 Germany</option>
-            <option value="fr">🇫🇷 France</option>
-            <option value="jp">🇯🇵 Japan</option>
-            <option value="ca">🇨🇦 Canada</option>
-            <option value="ru">🇷🇺 Russia</option>
-            <option value="in">🇮🇳 India</option>
-            <option value="br">🇧🇷 Brazil</option>
-            <option value="au">🇦🇺 Australia</option>
-            <option value="tr">🇹🇷 Turkey</option>
-            <option value="nl">🇳🇱 Netherlands</option>
-            <option value="es">🇪🇸 Spain</option>
+            <option value="at">🇦🇹 (AT) Austria</option>
+            <option value="au">🇦🇺 (AU) Australia</option>
+            <option value="bg">🇧🇬 (BG) Bulgaria</option>
+            <option value="br">🇧🇷 (BR) Brazil</option>
+            <option value="ca">🇨🇦 (CA) Canada</option>
+            <option value="ch">🇨🇭 (CH) Switzerland</option>
+            <option value="cz">🇨🇿 (CZ) Czech Republic</option>
+            <option value="de">🇩🇪 (DE) Germany</option>
+            <option value="es">🇪🇸 (ES) Spain</option>
+            <option value="fi">🇫🇮 (FI) Finland</option>
+            <option value="fr">🇫🇷 (FR) France</option>
+            <option value="gb">🇬🇧 (GB) United Kingdom</option>
+            <option value="hk">🇭🇰 (HK) Hong Kong</option>
+            <option value="hu">🇭🇺 (HU) Hungary</option>
+            <option value="id">🇮🇩 (ID) Indonesia</option>
+            <option value="il">🇮🇱 (IL) Israel</option>
+            <option value="in">🇮🇳 (IN) India</option>
+            <option value="ir">🇮🇷 (IR) Iran</option>
+            <option value="it">🇮🇹 (IT) Italy</option>
+            <option value="jp">🇯🇵 (JP) Japan</option>
+            <option value="kr">🇰🇷 (KR) South Korea</option>
+            <option value="kz">🇰🇿 (KZ) Kazakhstan</option>
+            <option value="lt">🇱🇹 (LT) Lithuania</option>
+            <option value="md">🇲🇩 (MD) Moldova</option>
+            <option value="nl">🇳🇱 (NL) Netherlands</option>
+            <option value="pl">🇵🇱 (PL) Poland</option>
+            <option value="pt">🇵🇹 (PT) Portugal</option>
+            <option value="rs">🇷🇸 (RS) Serbia</option>
+            <option value="ru">🇷🇺 (RU) Russia</option>
+            <option value="se">🇸🇪 (SE) Sweden</option>
+            <option value="sg">🇸🇬 (SG) Singapore</option>
+            <option value="si">🇸🇮 (SI) Slovenia</option>
+            <option value="tr">🇹🇷 (TR) Turkey</option>
+            <option value="ua">🇺🇦 (UA) Ukraine</option>
+            <option value="us">🇺🇸 (US) United States</option>
+            <option value="vn">🇻🇳 (VN) Vietnam</option>
         </select>
         <button id="get-configs" class="btn btn-primary mb-3">Get Configs</button>
         <div id="configs-list"></div>
-        <button id="copy-all" class="btn btn-success mt-3" style="display: none;">Copy All to Clipboard</button>
-        <button id="download-sub" class="btn btn-info mt-3" style="display: none;">Download Configs File</button>
     </div>
-    <footer>
-        ساخته شده با عشق توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از گیت‌هاب و چک هاست
+    <footer id="footer">
+        ساخته شده با عشق توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از <a href="https://github.com" target="_blank">گیت‌هاب</a> و <a href="https://check-host.net" target="_blank">چک هاست</a>
     </footer>
 
     <script>
+        // Initialize Twemoji for flag emoji rendering
+        twemoji.parse(document.body, {
+            folder: 'svg',
+            ext: '.svg',
+            base: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/2/'
+        });
+
         const translations = {
             en: {
                 title: 'VPN Config Selector',
                 getBtns: 'Get Configs',
-                copyAll: 'Copy All to Clipboard',
-                download: 'Download Configs File',
                 noConfigs: 'No configs found for this country.',
                 configsFound: '{count} config files available:',
                 selectCountry: 'Select Country',
                 error: 'Error fetching configs. Please try again later.',
-                description: 'By selecting your country, you can access the fastest free V2Ray configs.'
+                description: 'By selecting your country, you can access the fastest free V2Ray configs.',
+                footer: 'Built with love by <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Powered by <a href="https://github.com" target="_blank">GitHub</a> and <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             fa: {
                 title: 'انتخاب کننده کانفیگ VPN',
                 getBtns: 'دریافت کانفیگ‌ها',
-                copyAll: 'کپی همه به کلیپ‌بورد',
-                download: 'دانلود فایل کانفیگ‌ها',
                 noConfigs: 'هیچ کانفیگی برای این کشور یافت نشد.',
                 configsFound: '{count} فایل کانفیگ در دسترس است:',
                 selectCountry: 'انتخاب کشور',
                 error: 'خطا در دریافت کانفیگ‌ها. لطفاً بعداً امتحان کنید.',
-                description: 'با انتخاب کشور خود، می‌توانید به پرسرعت‌ترین کانفیگ‌های V2Ray رایگان دسترسی داشته باشید.'
+                description: 'با انتخاب کشور خود، می‌توانید به پرسرعت‌ترین کانفیگ‌های V2Ray رایگان دسترسی داشته باشید.',
+                footer: 'ساخته شده با عشق توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از <a href="https://github.com" target="_blank">گیت‌هاب</a> و <a href="https://check-host.net" target="_blank">چک هاست</a>'
             },
             zh: {
                 title: 'VPN 配置选择器',
                 getBtns: '获取配置',
-                copyAll: '复制所有到剪贴板',
-                download: '下载配置文件',
                 noConfigs: '未找到此国家的配置。',
                 configsFound: '找到 {count} 个配置文件：',
                 selectCountry: '选择国家',
                 error: '获取配置时出错。请稍后再试。',
-                description: '通过选择您的国家，您可以访问最快的免费 V2Ray 配置。'
+                description: '通过选择您的国家，您可以访问最快的免费 V2Ray 配置。',
+                footer: '由 <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> 倾情打造 | 由 <a href="https://github.com" target="_blank">GitHub</a> 和 <a href="https://check-host.net" target="_blank">Check-Host</a> 提供支持'
             },
             es: {
                 title: 'Selector de Configuración VPN',
                 getBtns: 'Obtener Configuraciones',
-                copyAll: 'Copiar Todo al Portapapeles',
-                download: 'Descargar Archivo de Configuraciones',
                 noConfigs: 'No se encontraron configuraciones para este país.',
                 configsFound: '{count} archivos de configuración disponibles:',
                 selectCountry: 'Seleccionar País',
                 error: 'Error al obtener configuraciones. Intenta de nuevo más tarde。',
-                description: 'Al seleccionar su país, puede acceder a las configuraciones V2Ray gratuitas más rápidas.'
+                description: 'Al seleccionar su país, puede acceder a las configuraciones V2Ray gratuitas más rápidas.',
+                footer: 'Construido con amor por <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Impulsado por <a href="https://github.com" target="_blank">GitHub</a> y <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             fr: {
                 title: 'Sélecteur de Configuration VPN',
                 getBtns: 'Obtenir les Configurations',
-                copyAll: 'Copier Tout dans le Presse-papiers',
-                download: 'Télécharger le Fichier de Configurations',
                 noConfigs: 'Aucune configuration trouvée pour ce pays.',
                 configsFound: '{count} fichiers de configuration disponibles :',
                 selectCountry: 'Sélectionner le Pays',
                 error: 'Erreur lors de la récupération des configurations. Réessayez plus tard.',
-                description: 'En sélectionnant votre pays, vous pouvez accéder aux configurations V2Ray gratuites les plus rapides.'
+                description: 'En sélectionnant votre pays, vous pouvez accéder aux configurations V2Ray gratuites les plus rapides.',
+                footer: 'Construit avec amour par <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Propulsé par <a href="https://github.com" target="_blank">GitHub</a> et <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             de: {
                 title: 'VPN-Konfigurationsauswahl',
                 getBtns: 'Konfigurationen Abrufen',
-                copyAll: 'Alle in die Zwischenablage Kopieren',
-                download: 'Konfigurationsdatei Herunterladen',
                 noConfigs: 'Keine Konfigurationen für dieses Land gefunden.',
                 configsFound: '{count} Konfigurationsdateien verfügbar:',
                 selectCountry: 'Land Auswählen',
                 error: 'Fehler beim Abrufen der Konfigurationen. Bitte später erneut versuchen.',
-                description: 'Durch Auswahl Ihres Landes können Sie auf die schnellsten kostenlosen V2Ray-Konfigurationen zugreifen.'
+                description: 'Durch Auswahl Ihres Landes können Sie auf die schnellsten kostenlosen V2Ray-Konfigurationen zugreifen.',
+                footer: 'Mit Liebe gebaut von <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Unterstützt von <a href="https://github.com" target="_blank">GitHub</a> und <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             ru: {
                 title: 'Селектор Конфигураций VPN',
                 getBtns: 'Получить Конфигурации',
-                copyAll: 'Скопировать Все в Буфер Обмена',
-                download: 'Скачать Файл Конфигураций',
                 noConfigs: 'Конфигурации для этой страны не найдены.',
                 configsFound: 'Доступно {count} файлов конфигурации:',
                 selectCountry: 'Выбрать Страну',
                 error: 'Ошибка при получении конфигураций. Попробуйте позже.',
-                description: 'Выбрав свою страну, вы можете получить доступ к самым быстрым бесплатным конфигурациям V2Ray.'
+                description: 'Выбрав свою страну, вы можете получить доступ к самым быстрым бесплатным конфигурациям V2Ray.',
+                footer: 'Создано с любовью <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | При поддержке <a href="https://github.com" target="_blank">GitHub</a> и <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             ar: {
                 title: 'محدد تكوين VPN',
                 getBtns: 'الحصول على التكوينات',
-                copyAll: 'نسخ الكل إلى الحافظة',
-                download: 'تنزيل ملف التكوينات',
                 noConfigs: 'لم يتم العثور على تكوينات لهذا البلد.',
                 configsFound: '{count} ملفات تكوين متاحة:',
                 selectCountry: 'اختر البلد',
                 error: 'خطأ في جلب التكوينات. حاول مرة أخرى لاحقًا.',
-                description: 'باختيار بلدك، يمكنك الوصول إلى أسرع تكوينات V2Ray المجانية.'
+                description: 'باختيار بلدك، يمكنك الوصول إلى أسرع تكوينات V2Ray المجانية.',
+                footer: 'تم إنشاؤه بحب بواسطة <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | مدعوم من <a href="https://github.com" target="_blank">GitHub</a> و <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             ja: {
                 title: 'VPN 設定セレクター',
                 getBtns: '設定を取得',
-                copyAll: 'すべてをクリップボードにコピー',
-                download: '設定ファイルをダウンロード',
                 noConfigs: 'この国に対する設定が見つかりませんでした。',
                 configsFound: '{count} 個の設定ファイルが利用可能です：',
                 selectCountry: '国を選択',
                 error: '設定の取得中にエラーが発生しました。後で再試行してください。',
-                description: '自分の国を選択することで、最速の無料 V2Ray 設定にアクセスできます。'
+                description: '自分の国を選択することで、最速の無料 V2Ray 設定にアクセスできます。',
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> によって愛を込めて作られました | <a href="https://github.com" target="_blank">GitHub</a> と <a href="https://check-host.net" target="_blank">Check-Host</a> によって提供されています'
             },
             ko: {
                 title: 'VPN 구성 선택기',
                 getBtns: '구성 가져오기',
-                copyAll: '모두 클립보드에 복사',
-                download: '구성 파일 다운로드',
                 noConfigs: '이 국가에 대한 구성이 없습니다.',
                 configsFound: '{count} 개의 구성 파일 사용 가능:',
                 selectCountry: '국가 선택',
                 error: '구성 가져오기 오류. 나중에 다시 시도하십시오.',
-                description: '자신의 국가를 선택하여 가장 빠른 무료 V2Ray 구성에 액세스할 수 있습니다.'
+                description: '자신의 국가를 선택하여 가장 빠른 무료 V2Ray 구성에 액세스할 수 있습니다.',
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a>이 사랑으로 제작 | <a href="https://github.com" target="_blank">GitHub</a> 및 <a href="https://check-host.net" target="_blank">Check-Host</a> 제공'
             },
             hi: {
                 title: 'VPN कॉन्फ़िग चयनकर्ता',
                 getBtns: 'कॉन्फ़िग प्राप्त करें',
-                copyAll: 'सभी को क्लिपबोर्ड पर कॉपी करें',
-                download: 'कॉन्फ़िग फ़ाइल डाउनलोड करें',
                 noConfigs: 'इस देश के लिए कोई कॉन्फ़िग नहीं मिला।',
                 configsFound: '{count} कॉन्फ़िग फाइलें उपलब्ध हैं:',
                 selectCountry: 'देश चुनें',
                 error: 'कॉन्फ़िग प्राप्त करने में त्रुटि। कृपया बाद में पुनः प्रयास करें।',
-                description: 'अपने देश का चयन करके, आप सबसे तेज़ मुफ्त V2Ray कॉन्फ़िग तक पहुँच सकते हैं।'
+                description: 'अपने देश का चयन करके, आप सबसे तेज़ मुफ्त V2Ray कॉन्फ़िग तक पहुँच सकते हैं।',
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> द्वारा प्यार से बनाया गया | <a href="https://github.com" target="_blank">GitHub</a> और <a href="https://check-host.net" target="_blank">Check-Host</a> द्वारा संचालित'
             },
             pt: {
                 title: 'Seletor de Configuração VPN',
                 getBtns: 'Obter Configurações',
-                copyAll: 'Copiar Tudo para a Área de Transferência',
-                download: 'Baixar Arquivo de Configurações',
                 noConfigs: 'Nenhuma configuração encontrada para este país.',
                 configsFound: '{count} arquivos de configuração disponíveis:',
                 selectCountry: 'Selecionar País',
                 error: 'Erro ao obter configurações. Tente novamente mais tarde.',
-                description: 'Ao selecionar seu país, você pode acessar as configurações V2Ray gratuitas mais rápidas.'
+                description: 'Ao selecionar seu país, você pode acessar as configurações V2Ray gratuitas mais rápidas.',
+                footer: 'Construído com amor por <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Impulsado por <a href="https://github.com" target="_blank">GitHub</a> e <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             it: {
                 title: 'Selettore Configurazione VPN',
                 getBtns: 'Ottieni Configurazioni',
-                copyAll: 'Copia Tutto negli Appunti',
-                download: 'Scarica File di Configurazioni',
                 noConfigs: 'Nessuna configurazione trovata per questo paese.',
                 configsFound: '{count} file di configurazione disponibili:',
                 selectCountry: 'Seleziona Paese',
                 error: 'Errore durante il recupero delle configurazioni. Riprova più tardi.',
-                description: 'Selezionando il tuo paese, puoi accedere alle configurazioni V2Ray gratuite più veloci.'
+                description: 'Selezionando il tuo paese, puoi accedere alle configurazioni V2Ray gratuite più veloci.',
+                footer: 'Costruito con amore da <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Alimentato da <a href="https://github.com" target="_blank">GitHub</a> e <a href="https://check-host.net" target="_blank">Check-Host</a>'
             },
             tr: {
                 title: 'VPN Yapılandırma Seçici',
                 getBtns: 'Yapılandırmaları Al',
-                copyAll: 'Tümünü Panoya Kopyala',
-                download: 'Yapılandırma Dosyasını İndir',
                 noConfigs: 'Bu ülke için yapılandırma bulunamadı.',
                 configsFound: '{count} yapılandırma dosyası mevcut:',
                 selectCountry: 'Ülke Seç',
                 error: 'Yapılandırmalar alınırken hata oluştu. Lütfen daha sonra tekrar deneyin.',
-                description: 'Ülkenizi seçerek en hızlı ücretsiz V2Ray yapılandırmalarına erişebilirsiniz.'
+                description: 'Ülkenizi seçerek en hızlı ücretsiz V2Ray yapılandırmalarına erişebilirsiniz.',
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> tarafından sevgiyle yapıldı | <a href="https://github.com" target="_blank">GitHub</a> ve <a href="https://check-host.net" target="_blank">Check-Host</a> tarafından desteklenmektedir'
             },
             nl: {
                 title: 'VPN Config Selector',
                 getBtns: 'Configs Ophalen',
-                copyAll: 'Alles Kopiëren naar Klembord',
-                download: 'Configs Bestand Downloaden',
                 noConfigs: 'Geen configs gevonden voor dit land.',
                 configsFound: '{count} config bestanden beschikbaar:',
                 selectCountry: 'Selecteer Land',
                 error: 'Fout bij het ophalen van configs. Probeer het later opnieuw.',
-                description: 'Door uw land te selecteren, kunt u toegang krijgen tot de snelste gratis V2Ray-configs.'
+                description: 'Door uw land te selecteren, kunt u toegang krijgen tot de snelste gratis V2Ray-configs.',
+                footer: 'Gebouwd met liefde door <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Aangedreven door <a href="https://github.com" target="_blank">GitHub</a> en <a href="https://check-host.net" target="_blank">Check-Host</a>'
             }
         };
 
@@ -350,10 +410,10 @@
             document.documentElement.dir = rtlLanguages.includes(lang) ? 'rtl' : 'ltr';
             document.getElementById('title').textContent = translations[lang].title;
             document.getElementById('get-configs').textContent = translations[lang].getBtns;
-            document.getElementById('copy-all').textContent = translations[lang].copyAll;
-            document.getElementById('download-sub').textContent = translations[lang].download;
             document.getElementById('country-select').options[0].textContent = translations[lang].selectCountry;
             document.getElementById('description').textContent = translations[lang].description;
+            document.getElementById('footer').innerHTML = translations[lang].footer;
+            twemoji.parse(document.body);
         }
 
         updateLanguage(currentLang);
@@ -373,14 +433,9 @@
             }
 
             const listDiv = document.getElementById('configs-list');
-            listDiv.innerHTML = '<p>Loading...</p>';
-            const copyBtn = document.getElementById('copy-all');
-            const downloadBtn = document.getElementById('download-sub');
-            copyBtn.style.display = 'none';
-            downloadBtn.style.display = 'none';
+            listDiv.innerHTML = '<p class="loading-spinner">⏳</p>';
 
             let availableFiles = [];
-            let allConfigs = [];
 
             try {
                 for (const file of configFiles) {
@@ -392,9 +447,6 @@
                             continue;
                         }
                         availableFiles.push({ file, url });
-                        const text = await response.text();
-                        const lines = text.split('\n').filter(line => line.trim() !== '');
-                        allConfigs.push(...lines);
                     } catch (e) {
                         console.warn(`Failed to fetch ${file}:`, e);
                         continue;
@@ -413,7 +465,7 @@
                         span.textContent = file;
                         const copyIcon = document.createElement('button');
                         copyIcon.innerHTML = '📋';
-                        copyIcon.onclick = () => {
+                        li.onclick = () => {
                             navigator.clipboard.writeText(url).then(() => {
                                 alert('URL copied to clipboard! Paste it into your V2Ray client for always up-to-date configs.');
                             });
@@ -423,23 +475,7 @@
                         ul.appendChild(li);
                     });
                     listDiv.appendChild(ul);
-
-                    copyBtn.style.display = 'block';
-                    downloadBtn.style.display = 'block';
-                    copyBtn.onclick = () => {
-                        navigator.clipboard.writeText(allConfigs.join('\n')).then(() => {
-                            alert('Copied to clipboard! Paste into your V2Ray client.');
-                        });
-                    };
-                    downloadBtn.onclick = () => {
-                        const blob = new Blob([allConfigs.join('\n')], { type: 'text/plain' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `${countryCode}_v2ray_configs.txt`;
-                        a.click();
-                        URL.revokeObjectURL(url);
-                    };
+                    twemoji.parse(listDiv);
                 }
             } catch (err) {
                 console.error(err);
@@ -458,6 +494,64 @@
                 }
             })
             .catch(() => {});
+
+        // Particle animation (inspired by Grok's cosmic theme)
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particlesArray = [];
+        const numberOfParticles = 50;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.size > 0.2) this.size -= 0.01;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                if (particlesArray[i].size <= 0.2) {
+                    particlesArray.splice(i, 1);
+                    i--;
+                    particlesArray.push(new Particle());
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
