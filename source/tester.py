@@ -22,7 +22,7 @@ async def test_speed(host: str, country_nodes: list[str] = None, timeout=10) -> 
                 return float('inf')
 
             # 2️⃣ Wait a few seconds for nodes to finish
-            await asyncio.sleep(10)
+            await asyncio.sleep(5)
 
             # 3️⃣ Get results
             r2 = await client.get(f"{base_url}/check-result/{request_id}", headers={"Accept": "application/json"})
