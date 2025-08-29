@@ -26,10 +26,11 @@
             padding: 3rem;
             border-radius: 16px;
             box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
-            max-width: 700px;
+            max-width: 900px;
             width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.1);
             animation: fadeIn 0.8s ease-out;
+            position: relative;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-50px); }
@@ -77,50 +78,30 @@
         }
         #configs-list {
             margin-top: 2rem;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            max-height: 350px;
-            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
+        .config-card {
             background: rgba(255, 255, 255, 0.1);
-            margin-bottom: 0.75rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
             cursor: pointer;
+            transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: #e2e8f0;
         }
-        li:hover {
-            transform: scale(1.02);
+        .config-card:hover {
+            transform: scale(1.05);
             background: rgba(255, 255, 255, 0.2);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        li span {
-            flex-grow: 1;
-            font-weight: 500;
-            color: #e2e8f0;
-            font-size: 1rem;
-        }
-        li button {
-            margin-left: 1rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.4rem;
-            font-family: 'Noto Emoji', sans-serif;
-            color: #e2e8f0;
-            transition: transform 0.2s;
-        }
-        li button:hover {
-            transform: scale(1.2);
+        .config-card::after {
+            content: '📋';
+            margin-left: 0.5rem;
+            font-size: 1.2rem;
         }
         [dir="rtl"] {
             text-align: right;
@@ -169,14 +150,239 @@
             z-index: -1;
             opacity: 0.3;
         }
+        .nav-tabs {
+            border-bottom: none;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .nav-tabs .nav-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: none;
+            margin: 0 0.5rem;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+        }
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .tab-content {
+            animation: fadeInTab 0.5s ease;
+        }
+        @keyframes fadeInTab {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        #language-select {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 120px;
+            font-size: 0.9rem;
+        }
+        .platform-section {
+            margin-bottom: 2rem;
+        }
+        .platform-section h3 {
+            color: #fff;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        .app-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .app-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            border-radius: 50%;
+        }
+        .app-card a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .app-card a:hover {
+            text-decoration: underline;
+        }
+        .contact-info {
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .contact-info a {
+            color: #93c5fd;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
     <canvas id="particles"></canvas>
     <div class="container">
-        <h1 id="title">VPN Config Selector</h1>
-        <p class="description" id="description">با انتخاب کشور خود، می‌توانید به پرسرعت‌ترین کانفیگ‌های V2Ray رایگان دسترسی داشته باشید.</p>
-        <select id="language-select" class="form-select mb-3">
+        <h1 id="title">ConfigForge V2Ray</h1>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="configs-tab" data-bs-toggle="tab" data-bs-target="#configs" type="button" role="tab" aria-controls="configs" aria-selected="true">Get Configs</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="howto-tab" data-bs-toggle="tab" data-bs-target="#howto" type="button" role="tab" aria-controls="howto" aria-selected="false">How to Use</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact Us</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="configs" role="tabpanel" aria-labelledby="configs-tab">
+                <p class="description" id="description">By selecting your country, you can access the fastest free V2Ray configs.</p>
+                <select id="country-select" class="form-select mb-3">
+                    <option value="">Select Country</option>
+                    <option value="at">🇦🇹 (AT) Austria</option>
+                    <option value="au">🇦🇺 (AU) Australia</option>
+                    <option value="bg">🇧🇬 (BG) Bulgaria</option>
+                    <option value="br">🇧🇷 (BR) Brazil</option>
+                    <option value="ca">🇨🇦 (CA) Canada</option>
+                    <option value="ch">🇨🇭 (CH) Switzerland</option>
+                    <option value="cz">🇨🇿 (CZ) Czech Republic</option>
+                    <option value="de">🇩🇪 (DE) Germany</option>
+                    <option value="es">🇪🇸 (ES) Spain</option>
+                    <option value="fi">🇫🇮 (FI) Finland</option>
+                    <option value="fr">🇫🇷 (FR) France</option>
+                    <option value="gb">🇬🇧 (GB) United Kingdom</option>
+                    <option value="hk">🇭🇰 (HK) Hong Kong</option>
+                    <option value="hu">🇭🇺 (HU) Hungary</option>
+                    <option value="id">🇮🇩 (ID) Indonesia</option>
+                    <option value="il">🇮🇱 (IL) Israel</option>
+                    <option value="in">🇮🇳 (IN) India</option>
+                    <option value="ir">🇮🇷 (IR) Iran</option>
+                    <option value="it">🇮🇹 (IT) Italy</option>
+                    <option value="jp">🇯🇵 (JP) Japan</option>
+                    <option value="kr">🇰🇷 (KR) South Korea</option>
+                    <option value="kz">🇰🇿 (KZ) Kazakhstan</option>
+                    <option value="lt">🇱🇹 (LT) Lithuania</option>
+                    <option value="md">🇲🇩 (MD) Moldova</option>
+                    <option value="nl">🇳🇱 (NL) Netherlands</option>
+                    <option value="pl">🇵🇱 (PL) Poland</option>
+                    <option value="pt">🇵🇹 (PT) Portugal</option>
+                    <option value="rs">🇷🇸 (RS) Serbia</option>
+                    <option value="ru">🇷🇺 (RU) Russia</option>
+                    <option value="se">🇸🇪 (SE) Sweden</option>
+                    <option value="sg">🇸🇬 (SG) Singapore</option>
+                    <option value="si">🇸🇮 (SI) Slovenia</option>
+                    <option value="tr">🇹🇷 (TR) Turkey</option>
+                    <option value="ua">🇺🇦 (UA) Ukraine</option>
+                    <option value="us">🇺🇸 (US) United States</option>
+                    <option value="vn">🇻🇳 (VN) Vietnam</option>
+                </select>
+                <button id="get-configs" class="btn btn-primary mb-3">Get Configs</button>
+                <div id="configs-list"></div>
+            </div>
+            <div class="tab-pane fade" id="howto" role="tabpanel" aria-labelledby="howto-tab">
+                <div class="platform-section">
+                    <h3>Android</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/2dust/v2rayNG/raw/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="v2rayNG">
+                                <p><a href="https://github.com/2dust/v2rayNG" target="_blank">v2rayNG</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/MatsuriDayo/NekoBoxForAndroid/raw/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Nekobox">
+                                <p><a href="https://github.com/MatsuriDayo/NekoBoxForAndroid" target="_blank">Nekobox</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="platform-section">
+                    <h3>iOS</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3b/7f/57/3b7f57b6-2f4a-6a1a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a.png/460x0w.png" alt="Shadowrocket">
+                                <p><a href="https://apps.apple.com/us/app/shadowrocket/id932747118" target="_blank">Shadowrocket</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/3b/7f/57/3b7f57b6-2f4a-6a1a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a-3a4a.png/460x0w.png" alt="Quantumult X">
+                                <p><a href="https://apps.apple.com/us/app/quantumult-x/id1443988620" target="_blank">Quantumult X</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="platform-section">
+                    <h3>Windows</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/2dust/v2rayN/raw/master/V2rayN/Resources/icon.png" alt="V2RayN">
+                                <p><a href="https://github.com/2dust/v2rayN" target="_blank">V2RayN</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/Qv2ray/Qv2ray/Qv2ray/raw/develop/icons/qv2ray.png" alt="Qv2ray">
+                                <p><a href="https://github.com/Qv2ray/Qv2ray" target="_blank">Qv2ray</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="platform-section">
+                    <h3>Linux</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/Qv2ray/Qv2ray/Qv2ray/raw/develop/icons/qv2ray.png" alt="Qv2ray">
+                                <p><a href="https://github.com/Qv2ray/Qv2ray" target="_blank">Qv2ray</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/v2rayA/v2rayA/raw/master/gui/public/img/icon.png" alt="v2rayA">
+                                <p><a href="https://github.com/v2rayA/v2rayA" target="_blank">v2rayA</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="platform-section">
+                    <h3>Mac</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/yanue/V2rayU/raw/master/V2rayU/Images.xcassets/AppIcon.appiconset/icon_512x512.png" alt="V2RayU">
+                                <p><a href="https://github.com/yanue/V2rayU" target="_blank">V2RayU</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="app-card">
+                                <img src="https://github.com/Cenmrev/Qv2ray/Qv2ray/raw/develop/icons/qv2ray.png" alt="ClashX">
+                                <p><a href="https://github.com/yichengchen/clashX" target="_blank">ClashX</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="contact-info">
+                    <p>To contact us, you can reach out via GitHub.</p>
+                    <p><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a></p>
+                    <p>Or email: shatakvpn@example.com</p>
+                </div>
+            </div>
+        </div>
+        <select id="language-select" class="form-select">
             <option value="en">English</option>
             <option value="fa">فارسی</option>
             <option value="zh">中文 (简体)</option>
@@ -193,52 +399,10 @@
             <option value="tr">Türkçe</option>
             <option value="nl">Nederlands</option>
         </select>
-        <select id="country-select" class="form-select mb-3">
-            <option value="">Select Country</option>
-            <option value="at">🇦🇹 (AT) Austria</option>
-            <option value="au">🇦🇺 (AU) Australia</option>
-            <option value="bg">🇧🇬 (BG) Bulgaria</option>
-            <option value="br">🇧🇷 (BR) Brazil</option>
-            <option value="ca">🇨🇦 (CA) Canada</option>
-            <option value="ch">🇨🇭 (CH) Switzerland</option>
-            <option value="cz">🇨🇿 (CZ) Czech Republic</option>
-            <option value="de">🇩🇪 (DE) Germany</option>
-            <option value="es">🇪🇸 (ES) Spain</option>
-            <option value="fi">🇫🇮 (FI) Finland</option>
-            <option value="fr">🇫🇷 (FR) France</option>
-            <option value="gb">🇬🇧 (GB) United Kingdom</option>
-            <option value="hk">🇭🇰 (HK) Hong Kong</option>
-            <option value="hu">🇭🇺 (HU) Hungary</option>
-            <option value="id">🇮🇩 (ID) Indonesia</option>
-            <option value="il">🇮🇱 (IL) Israel</option>
-            <option value="in">🇮🇳 (IN) India</option>
-            <option value="ir">🇮🇷 (IR) Iran</option>
-            <option value="it">🇮🇹 (IT) Italy</option>
-            <option value="jp">🇯🇵 (JP) Japan</option>
-            <option value="kr">🇰🇷 (KR) South Korea</option>
-            <option value="kz">🇰🇿 (KZ) Kazakhstan</option>
-            <option value="lt">🇱🇹 (LT) Lithuania</option>
-            <option value="md">🇲🇩 (MD) Moldova</option>
-            <option value="nl">🇳🇱 (NL) Netherlands</option>
-            <option value="pl">🇵🇱 (PL) Poland</option>
-            <option value="pt">🇵🇹 (PT) Portugal</option>
-            <option value="rs">🇷🇸 (RS) Serbia</option>
-            <option value="ru">🇷🇺 (RU) Russia</option>
-            <option value="se">🇸🇪 (SE) Sweden</option>
-            <option value="sg">🇸🇬 (SG) Singapore</option>
-            <option value="si">🇸🇮 (SI) Slovenia</option>
-            <option value="tr">🇹🇷 (TR) Turkey</option>
-            <option value="ua">🇺🇦 (UA) Ukraine</option>
-            <option value="us">🇺🇸 (US) United States</option>
-            <option value="vn">🇻🇳 (VN) Vietnam</option>
-        </select>
-        <button id="get-configs" class="btn btn-primary mb-3">Get Configs</button>
-        <div id="configs-list"></div>
     </div>
     <footer id="footer">
-        ساخته شده با عشق توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از <a href="https://github.com" target="_blank">گیت‌هاب</a> و <a href="https://check-host.net" target="_blank">چک هاست</a>
+        Built with ❤️ by <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Powered by <a href="https://github.com" target="_blank">GitHub</a> and <a href="https://check-host.net" target="_blank">Check-Host</a>
     </footer>
-
     <script>
         // Initialize Twemoji for flag emoji rendering
         twemoji.parse(document.body, {
@@ -246,163 +410,235 @@
             ext: '.svg',
             base: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/2/'
         });
-
         const translations = {
             en: {
-                title: 'VPN Config Selector',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Get Configs',
                 noConfigs: 'No configs found for this country.',
                 configsFound: '{count} config files available:',
                 selectCountry: 'Select Country',
                 error: 'Error fetching configs. Please try again later.',
                 description: 'By selecting your country, you can access the fastest free V2Ray configs.',
-                footer: 'Built with love by <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Powered by <a href="https://github.com" target="_blank">GitHub</a> and <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Built with ❤️ by <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Powered by <a href="https://github.com" target="_blank">GitHub</a> and <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'The subscription link has been copied to your clipboard. You can use it in your V2Ray client.',
+                configsTab: 'Get Configs',
+                howtoTab: 'How to Use',
+                contactTab: 'Contact Us',
+                contactText: 'To contact us, you can reach out via GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>Or email: shatakvpn@example.com'
             },
             fa: {
-                title: 'انتخاب کننده کانفیگ VPN',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'دریافت کانفیگ‌ها',
                 noConfigs: 'هیچ کانفیگی برای این کشور یافت نشد.',
                 configsFound: '{count} فایل کانفیگ در دسترس است:',
                 selectCountry: 'انتخاب کشور',
                 error: 'خطا در دریافت کانفیگ‌ها. لطفاً بعداً امتحان کنید.',
                 description: 'با انتخاب کشور خود، می‌توانید به پرسرعت‌ترین کانفیگ‌های V2Ray رایگان دسترسی داشته باشید.',
-                footer: 'ساخته شده با عشق توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از <a href="https://github.com" target="_blank">گیت‌هاب</a> و <a href="https://check-host.net" target="_blank">چک هاست</a>'
+                footer: 'ساخته شده با ❤️ توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از <a href="https://github.com" target="_blank">گیت‌هاب</a> و <a href="https://check-host.net" target="_blank">چک هاست</a>',
+                copied: 'لینک ساب در کلیپ‌بورد کپی شد. می‌توانید آن را در کلاینت V2Ray خود استفاده کنید.',
+                configsTab: 'دریافت کانفیگ',
+                howtoTab: 'روش استفاده',
+                contactTab: 'ارتباط با ما',
+                contactText: 'برای ارتباط با ما، می‌توانید از طریق گیت‌هاب با ما در تماس باشید.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>یا ایمیل: shatakvpn@example.com'
             },
             zh: {
-                title: 'VPN 配置选择器',
+                title: 'ConfigForge V2Ray',
                 getBtns: '获取配置',
                 noConfigs: '未找到此国家的配置。',
                 configsFound: '找到 {count} 个配置文件：',
                 selectCountry: '选择国家',
                 error: '获取配置时出错。请稍后再试。',
                 description: '通过选择您的国家，您可以访问最快的免费 V2Ray 配置。',
-                footer: '由 <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> 倾情打造 | 由 <a href="https://github.com" target="_blank">GitHub</a> 和 <a href="https://check-host.net" target="_blank">Check-Host</a> 提供支持'
+                footer: '由 <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> 用❤️打造 | 由 <a href="https://github.com" target="_blank">GitHub</a> 和 <a href="https://check-host.net" target="_blank">Check-Host</a> 提供支持',
+                copied: '订阅链接已复制到剪贴板。您可以在 V2Ray 客户端中使用它。',
+                configsTab: '获取配置',
+                howtoTab: '使用方法',
+                contactTab: '联系我们',
+                contactText: '要联系我们，您可以通过 GitHub 与我们联系。<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>或电子邮件: shatakvpn@example.com'
             },
             es: {
-                title: 'Selector de Configuración VPN',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Obtener Configuraciones',
                 noConfigs: 'No se encontraron configuraciones para este país.',
                 configsFound: '{count} archivos de configuración disponibles:',
                 selectCountry: 'Seleccionar País',
                 error: 'Error al obtener configuraciones. Intenta de nuevo más tarde。',
                 description: 'Al seleccionar su país, puede acceder a las configuraciones V2Ray gratuitas más rápidas.',
-                footer: 'Construido con amor por <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Impulsado por <a href="https://github.com" target="_blank">GitHub</a> y <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Construido con ❤️ por <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Impulsado por <a href="https://github.com" target="_blank">GitHub</a> y <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'El enlace de suscripción se ha copiado al portapapeles. Puedes usarlo en tu cliente V2Ray.',
+                configsTab: 'Obtener Configuraciones',
+                howtoTab: 'Cómo Usar',
+                contactTab: 'Contáctanos',
+                contactText: 'Para contactarnos, puedes comunicarte a través de GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>O email: shatakvpn@example.com'
             },
             fr: {
-                title: 'Sélecteur de Configuration VPN',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Obtenir les Configurations',
                 noConfigs: 'Aucune configuration trouvée pour ce pays.',
                 configsFound: '{count} fichiers de configuration disponibles :',
                 selectCountry: 'Sélectionner le Pays',
                 error: 'Erreur lors de la récupération des configurations. Réessayez plus tard.',
                 description: 'En sélectionnant votre pays, vous pouvez accéder aux configurations V2Ray gratuites les plus rapides.',
-                footer: 'Construit avec amour par <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Propulsé par <a href="https://github.com" target="_blank">GitHub</a> et <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Construit avec ❤️ par <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Propulsé par <a href="https://github.com" target="_blank">GitHub</a> et <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'Le lien d\'abonnement a été copié dans le presse-papiers. Vous pouvez l\'utiliser dans votre client V2Ray.',
+                configsTab: 'Obtenir Configurations',
+                howtoTab: 'Comment Utiliser',
+                contactTab: 'Nous Contacter',
+                contactText: 'Pour nous contacter, vous pouvez nous joindre via GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>Ou email: shatakvpn@example.com'
             },
             de: {
-                title: 'VPN-Konfigurationsauswahl',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Konfigurationen Abrufen',
                 noConfigs: 'Keine Konfigurationen für dieses Land gefunden.',
                 configsFound: '{count} Konfigurationsdateien verfügbar:',
                 selectCountry: 'Land Auswählen',
                 error: 'Fehler beim Abrufen der Konfigurationen. Bitte später erneut versuchen.',
                 description: 'Durch Auswahl Ihres Landes können Sie auf die schnellsten kostenlosen V2Ray-Konfigurationen zugreifen.',
-                footer: 'Mit Liebe gebaut von <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Unterstützt von <a href="https://github.com" target="_blank">GitHub</a> und <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Mit ❤️ gebaut von <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Unterstützt von <a href="https://github.com" target="_blank">GitHub</a> und <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'Der Abonnement-Link wurde in die Zwischenablage kopiert. Sie können ihn in Ihrem V2Ray-Client verwenden.',
+                configsTab: 'Konfigurationen Abrufen',
+                howtoTab: 'Wie Man Benutzt',
+                contactTab: 'Kontaktieren Sie Uns',
+                contactText: 'Um uns zu kontaktieren, können Sie uns über GitHub erreichen.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>Oder E-Mail: shatakvpn@example.com'
             },
             ru: {
-                title: 'Селектор Конфигураций VPN',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Получить Конфигурации',
                 noConfigs: 'Конфигурации для этой страны не найдены.',
                 configsFound: 'Доступно {count} файлов конфигурации:',
                 selectCountry: 'Выбрать Страну',
                 error: 'Ошибка при получении конфигураций. Попробуйте позже.',
                 description: 'Выбрав свою страну, вы можете получить доступ к самым быстрым бесплатным конфигурациям V2Ray.',
-                footer: 'Создано с любовью <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | При поддержке <a href="https://github.com" target="_blank">GitHub</a> и <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Создано с ❤️ <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | При поддержке <a href="https://github.com" target="_blank">GitHub</a> и <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'Ссылка на подписку скопирована в буфер обмена. Вы можете использовать её в вашем клиенте V2Ray.',
+                configsTab: 'Получить Конфигурации',
+                howtoTab: 'Как Использовать',
+                contactTab: 'Связаться с Нами',
+                contactText: 'Чтобы связаться с нами, вы можете обратиться через GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>Или email: shatakvpn@example.com'
             },
             ar: {
-                title: 'محدد تكوين VPN',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'الحصول على التكوينات',
                 noConfigs: 'لم يتم العثور على تكوينات لهذا البلد.',
                 configsFound: '{count} ملفات تكوين متاحة:',
                 selectCountry: 'اختر البلد',
                 error: 'خطأ في جلب التكوينات. حاول مرة أخرى لاحقًا.',
                 description: 'باختيار بلدك، يمكنك الوصول إلى أسرع تكوينات V2Ray المجانية.',
-                footer: 'تم إنشاؤه بحب بواسطة <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | مدعوم من <a href="https://github.com" target="_blank">GitHub</a> و <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'تم بناؤه بـ ❤️ بواسطة <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | مدعوم من <a href="https://github.com" target="_blank">GitHub</a> و <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'تم نسخ رابط الاشتراك إلى الحافظة. يمكنك استخدامه في عميل V2Ray الخاص بك.',
+                configsTab: 'الحصول على التكوينات',
+                howtoTab: 'كيفية الاستخدام',
+                contactTab: 'اتصل بنا',
+                contactText: 'للاتصال بنا، يمكنك التواصل عبر GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>أو البريد الإلكتروني: shatakvpn@example.com'
             },
             ja: {
-                title: 'VPN 設定セレクター',
+                title: 'ConfigForge V2Ray',
                 getBtns: '設定を取得',
                 noConfigs: 'この国に対する設定が見つかりませんでした。',
                 configsFound: '{count} 個の設定ファイルが利用可能です：',
                 selectCountry: '国を選択',
                 error: '設定の取得中にエラーが発生しました。後で再試行してください。',
                 description: '自分の国を選択することで、最速の無料 V2Ray 設定にアクセスできます。',
-                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> によって愛を込めて作られました | <a href="https://github.com" target="_blank">GitHub</a> と <a href="https://check-host.net" target="_blank">Check-Host</a> によって提供されています'
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> によって❤️を込めて作られました | <a href="https://github.com" target="_blank">GitHub</a> と <a href="https://check-host.net" target="_blank">Check-Host</a> によって提供されています',
+                copied: 'サブスクリプションリンクがクリップボードにコピーされました。V2Rayクライアントで使用できます。',
+                configsTab: '設定を取得',
+                howtoTab: '使用方法',
+                contactTab: 'お問い合わせ',
+                contactText: 'お問い合わせは、GitHub経由でお願いします。<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>またはメール: shatakvpn@example.com'
             },
             ko: {
-                title: 'VPN 구성 선택기',
+                title: 'ConfigForge V2Ray',
                 getBtns: '구성 가져오기',
                 noConfigs: '이 국가에 대한 구성이 없습니다.',
                 configsFound: '{count} 개의 구성 파일 사용 가능:',
                 selectCountry: '국가 선택',
                 error: '구성 가져오기 오류. 나중에 다시 시도하십시오.',
                 description: '자신의 국가를 선택하여 가장 빠른 무료 V2Ray 구성에 액세스할 수 있습니다.',
-                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a>이 사랑으로 제작 | <a href="https://github.com" target="_blank">GitHub</a> 및 <a href="https://check-host.net" target="_blank">Check-Host</a> 제공'
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a>이 ❤️으로 제작 | <a href="https://github.com" target="_blank">GitHub</a> 및 <a href="https://check-host.net" target="_blank">Check-Host</a> 제공',
+                copied: '구독 링크가 클립보드에 복사되었습니다. V2Ray 클라이언트에서 사용할 수 있습니다.',
+                configsTab: '구성 가져오기',
+                howtoTab: '사용 방법',
+                contactTab: '문의하기',
+                contactText: '문의하려면 GitHub를 통해 연락하세요.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>또는 이메일: shatakvpn@example.com'
             },
             hi: {
-                title: 'VPN कॉन्फ़िग चयनकर्ता',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'कॉन्फ़िग प्राप्त करें',
                 noConfigs: 'इस देश के लिए कोई कॉन्फ़िग नहीं मिला।',
                 configsFound: '{count} कॉन्फ़िग फाइलें उपलब्ध हैं:',
                 selectCountry: 'देश चुनें',
                 error: 'कॉन्फ़िग प्राप्त करने में त्रुटि। कृपया बाद में पुनः प्रयास करें।',
                 description: 'अपने देश का चयन करके, आप सबसे तेज़ मुफ्त V2Ray कॉन्फ़िग तक पहुँच सकते हैं।',
-                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> द्वारा प्यार से बनाया गया | <a href="https://github.com" target="_blank">GitHub</a> और <a href="https://check-host.net" target="_blank">Check-Host</a> द्वारा संचालित'
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> द्वारा ❤️ से बनाया गया | <a href="https://github.com" target="_blank">GitHub</a> और <a href="https://check-host.net" target="_blank">Check-Host</a> द्वारा संचालित',
+                copied: 'सदस्यता लिंक क्लिपबोर्ड पर कॉपी कर दिया गया है। आप इसे अपने V2Ray क्लाइंट में उपयोग कर सकते हैं।',
+                configsTab: 'कॉन्फ़िग प्राप्त करें',
+                howtoTab: 'उपयोग कैसे करें',
+                contactTab: 'हमसे संपर्क करें',
+                contactText: 'हमसे संपर्क करने के लिए, आप GitHub के माध्यम से पहुंच सकते हैं।<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>या ईमेल: shatakvpn@example.com'
             },
             pt: {
-                title: 'Seletor de Configuração VPN',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Obter Configurações',
                 noConfigs: 'Nenhuma configuração encontrada para este país.',
                 configsFound: '{count} arquivos de configuração disponíveis:',
                 selectCountry: 'Selecionar País',
                 error: 'Erro ao obter configurações. Tente novamente mais tarde.',
                 description: 'Ao selecionar seu país, você pode acessar as configurações V2Ray gratuitas mais rápidas.',
-                footer: 'Construído com amor por <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Impulsado por <a href="https://github.com" target="_blank">GitHub</a> e <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Construído com ❤️ por <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Impulsado por <a href="https://github.com" target="_blank">GitHub</a> e <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'O link de assinatura foi copiado para a área de transferência. Você pode usá-lo no seu cliente V2Ray.',
+                configsTab: 'Obter Configurações',
+                howtoTab: 'Como Usar',
+                contactTab: 'Entre em Contato',
+                contactText: 'Para entrar em contato conosco, você pode nos alcançar via GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>Ou email: shatakvpn@example.com'
             },
             it: {
-                title: 'Selettore Configurazione VPN',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Ottieni Configurazioni',
                 noConfigs: 'Nessuna configurazione trovata per questo paese.',
                 configsFound: '{count} file di configurazione disponibili:',
                 selectCountry: 'Seleziona Paese',
                 error: 'Errore durante il recupero delle configurazioni. Riprova più tardi.',
                 description: 'Selezionando il tuo paese, puoi accedere alle configurazioni V2Ray gratuite più veloci.',
-                footer: 'Costruito con amore da <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Alimentato da <a href="https://github.com" target="_blank">GitHub</a> e <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Costruito con ❤️ da <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Alimentato da <a href="https://github.com" target="_blank">GitHub</a> e <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'Il link di sottoscrizione è stato copiato negli appunti. Puoi usarlo nel tuo client V2Ray.',
+                configsTab: 'Ottieni Configurazioni',
+                howtoTab: 'Come Usare',
+                contactTab: 'Contattaci',
+                contactText: 'Per contattarci, puoi raggiungerci via GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>O email: shatakvpn@example.com'
             },
             tr: {
-                title: 'VPN Yapılandırma Seçici',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Yapılandırmaları Al',
                 noConfigs: 'Bu ülke için yapılandırma bulunamadı.',
                 configsFound: '{count} yapılandırma dosyası mevcut:',
                 selectCountry: 'Ülke Seç',
                 error: 'Yapılandırmalar alınırken hata oluştu. Lütfen daha sonra tekrar deneyin.',
                 description: 'Ülkenizi seçerek en hızlı ücretsiz V2Ray yapılandırmalarına erişebilirsiniz.',
-                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> tarafından sevgiyle yapıldı | <a href="https://github.com" target="_blank">GitHub</a> ve <a href="https://check-host.net" target="_blank">Check-Host</a> tarafından desteklenmektedir'
+                footer: '<a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> tarafından ❤️ ile yapıldı | <a href="https://github.com" target="_blank">GitHub</a> ve <a href="https://check-host.net" target="_blank">Check-Host</a> tarafından desteklenmektedir',
+                copied: 'Abonelik bağlantısı panoya kopyalandı. V2Ray istemcinizde kullanabilirsiniz.',
+                configsTab: 'Yapılandırmaları Al',
+                howtoTab: 'Nasıl Kullanılır',
+                contactTab: 'Bize Ulaşın',
+                contactText: 'Bize ulaşmak için GitHub üzerinden iletişime geçebilirsiniz.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>Veya email: shatakvpn@example.com'
             },
             nl: {
-                title: 'VPN Config Selector',
+                title: 'ConfigForge V2Ray',
                 getBtns: 'Configs Ophalen',
                 noConfigs: 'Geen configs gevonden voor dit land.',
                 configsFound: '{count} config bestanden beschikbaar:',
                 selectCountry: 'Selecteer Land',
                 error: 'Fout bij het ophalen van configs. Probeer het later opnieuw.',
                 description: 'Door uw land te selecteren, kunt u toegang krijgen tot de snelste gratis V2Ray-configs.',
-                footer: 'Gebouwd met liefde door <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Aangedreven door <a href="https://github.com" target="_blank">GitHub</a> en <a href="https://check-host.net" target="_blank">Check-Host</a>'
+                footer: 'Gebouwd met ❤️ door <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Aangedreven door <a href="https://github.com" target="_blank">GitHub</a> en <a href="https://check-host.net" target="_blank">Check-Host</a>',
+                copied: 'De abonnementslink is gekopieerd naar het klembord. Je kunt het gebruiken in je V2Ray-client.',
+                configsTab: 'Configs Ophalen',
+                howtoTab: 'Hoe te Gebruiken',
+                contactTab: 'Contacteer Ons',
+                contactText: 'Om contact met ons op te nemen, kunt u ons bereiken via GitHub.<br><a href="https://github.com/ShatakVPN" target="_blank">GitHub: ShatakVPN</a><br>Of email: shatakvpn@example.com'
             }
         };
-
         let currentLang = navigator.language.substring(0, 2);
         if (!translations[currentLang]) currentLang = 'en';
-
         function updateLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
@@ -413,76 +649,56 @@
             document.getElementById('country-select').options[0].textContent = translations[lang].selectCountry;
             document.getElementById('description').textContent = translations[lang].description;
             document.getElementById('footer').innerHTML = translations[lang].footer;
+            document.getElementById('configs-tab').textContent = translations[lang].configsTab;
+            document.getElementById('howto-tab').textContent = translations[lang].howtoTab;
+            document.getElementById('contact-tab').textContent = translations[lang].contactTab;
+            document.querySelector('#contact .contact-info').innerHTML = translations[lang].contactText;
             twemoji.parse(document.body);
         }
-
         updateLanguage(currentLang);
         document.getElementById('language-select').value = currentLang;
-
         document.getElementById('language-select').addEventListener('change', (e) => {
             updateLanguage(e.target.value);
         });
-
         const configFiles = ['all.txt', 'light.txt', 'vless.txt', 'vmess.txt', 'shadowsocks.txt', 'trojan.txt', 'unknown.txt'];
-
         document.getElementById('get-configs').addEventListener('click', async () => {
             const countryCode = document.getElementById('country-select').value;
             if (!countryCode) {
                 alert(translations[currentLang].selectCountry);
                 return;
             }
-
             const listDiv = document.getElementById('configs-list');
             listDiv.innerHTML = '<p class="loading-spinner">⏳</p>';
-
             let availableFiles = [];
-
             try {
                 for (const file of configFiles) {
                     const url = `https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/${countryCode}/${file}`;
-                    try {
-                        const response = await fetch(url);
-                        if (!response.ok) {
-                            console.warn(`File ${file} not found for ${countryCode}`);
-                            continue;
-                        }
+                    const response = await fetch(url, { method: 'HEAD' });
+                    if (response.ok) {
                         availableFiles.push({ file, url });
-                    } catch (e) {
-                        console.warn(`Failed to fetch ${file}:`, e);
-                        continue;
                     }
                 }
-
                 listDiv.innerHTML = '';
                 if (availableFiles.length === 0) {
                     listDiv.innerHTML = `<p class="error-message">${translations[currentLang].noConfigs}</p>`;
                 } else {
-                    listDiv.innerHTML = `<p>${translations[currentLang].configsFound.replace('{count}', availableFiles.length)}</p>`;
-                    const ul = document.createElement('ul');
                     availableFiles.forEach(({ file, url }) => {
-                        const li = document.createElement('li');
-                        const span = document.createElement('span');
-                        span.textContent = file;
-                        const copyIcon = document.createElement('button');
-                        copyIcon.innerHTML = '📋';
-                        li.onclick = () => {
+                        const card = document.createElement('div');
+                        card.classList.add('config-card');
+                        card.textContent = file;
+                        card.onclick = () => {
                             navigator.clipboard.writeText(url).then(() => {
-                                alert('URL copied to clipboard! Paste it into your V2Ray client for always up-to-date configs.');
+                                alert(translations[currentLang].copied);
                             });
                         };
-                        li.appendChild(span);
-                        li.appendChild(copyIcon);
-                        ul.appendChild(li);
+                        listDiv.appendChild(card);
                     });
-                    listDiv.appendChild(ul);
-                    twemoji.parse(listDiv);
                 }
             } catch (err) {
                 console.error(err);
                 listDiv.innerHTML = `<p class="error-message">${translations[currentLang].error}</p>`;
             }
         });
-
         // Auto-detect user country
         fetch('https://ipapi.co/json/')
             .then(res => res.json())
@@ -494,16 +710,13 @@
                 }
             })
             .catch(() => {});
-
         // Particle animation (inspired by Grok's cosmic theme)
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         const particlesArray = [];
         const numberOfParticles = 50;
-
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
@@ -524,13 +737,11 @@
                 ctx.fill();
             }
         }
-
         function initParticles() {
             for (let i = 0; i < numberOfParticles; i++) {
                 particlesArray.push(new Particle());
             }
         }
-
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = 0; i < particlesArray.length; i++) {
@@ -544,10 +755,8 @@
             }
             requestAnimationFrame(animateParticles);
         }
-
         initParticles();
         animateParticles();
-
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
