@@ -3,113 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ConfigForge</title>
+<title>ConfigForge V2Ray</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-  body.rtl { direction: rtl; text-align: right; }
-  .flag { width: 1.5em; height: auto; margin-right: 0.5em; vertical-align: middle; }
-</style>
-</head>
-<body class="bg-gradient-to-r from-blue-500 to-green-400 text-white font-sans min-h-screen flex flex-col">
-
-<!-- Header ثابت -->
-<header class="bg-black bg-opacity-50 p-4 shadow-lg flex justify-between items-center">
-  <h1 class="text-2xl font-bold tracking-wide">ConfigForge</h1>
-  <select id="lang-select" class="bg-gray-900 text-white p-2 rounded-md">
-    <option value="en">English</option>
-    <option value="fa">فارسی</option>
-    <option value="ar">العربية</option>
-  </select>
-</header>
-
-<!-- Hero و انتخاب کشور -->
-<section class="flex flex-col items-center justify-center flex-1 text-center p-8 space-y-4">
-  <h2 id="hero-title" class="text-4xl md:text-5xl font-extrabold animate-pulse">
-    Get the fastest V2Ray config for your country
-  </h2>
-  <p id="hero-desc" class="text-lg md:text-2xl max-w-2xl">
-    Use our service to instantly get the best V2Ray config based on your country.
-  </p>
-  <div class="flex flex-wrap justify-center items-center space-x-2 space-y-2">
-    <select id="country-select" class="bg-gray-900 text-white p-2 rounded-md min-w-[180px]">
-      <!-- کشورها از JS اضافه می‌شوند -->
-    </select>
-    <button id="get-config" class="bg-white text-blue-600 font-bold px-6 py-3 rounded-lg shadow-lg hover:scale-105 transform transition">
-      Get Config
-    </button>
-  </div>
-</section>
-
-<!-- جدول نمایش کانفیگ‌ها -->
-<section id="results-section" class="p-4 max-w-4xl mx-auto hidden">
-  <h3 class="text-2xl font-bold mb-4">Configs Available</h3>
-  <table class="w-full text-left border border-gray-300 rounded-lg overflow-hidden">
-    <thead class="bg-gray-900">
-      <tr>
-        <th class="p-2 border-b">File</th>
-        <th class="p-2 border-b">Description</th>
-        <th class="p-2 border-b">Download</th>
-      </tr>
-    </thead>
-    <tbody id="results-body" class="bg-gray-800"></tbody>
-  </table>
-</section>
-
-<!-- Footer -->
-<footer class="bg-black bg-opacity-50 text-gray-300 p-4 text-center mt-auto">
-  Made with ❤️ by <a href="https://github.com/YOUR_USERNAME" class="underline">YOUR_USERNAME</a> |
-  Powered by <a href="https://github.com" class="underline">GitHub</a> + <a href="https://check-host.net" class="underline">Check-Host</a>
-</footer>
-
 <script>
+  // ترجمه‌ها
+  const translations = {
+    en: {
+      description: "Get the fastest V2Ray config for your country. Light file contains top 30 fastest configs.",
+      download: "Download Config",
+      selectCountry: "Select your country",
+      selectLanguage: "Language"
+    },
+    fa: {
+      description: "سریع‌ترین کانفیگ V2Ray برای کشور شما. فایل Light شامل ۳۰ کانفیگ سریع‌تر است.",
+      download: "دریافت کانفیگ",
+      selectCountry: "کشور خود را انتخاب کنید",
+      selectLanguage: "زبان"
+    },
+    ar: {
+      description: "احصل على أسرع إعدادات V2Ray لبلدك. يحتوي ملف Light على أسرع 30 إعداد.",
+      download: "تحميل الإعداد",
+      selectCountry: "اختر دولتك",
+      selectLanguage: "اللغة"
+    },
+    es: {
+      description: "Obtén la configuración V2Ray más rápida para tu país. El archivo Light contiene los 30 configs más rápidos.",
+      download: "Descargar Config",
+      selectCountry: "Selecciona tu país",
+      selectLanguage: "Idioma"
+    }
+  };
+
+  // شناسایی زبان مرورگر
+  let userLang = navigator.language.slice(0,2);
+  if (!translations[userLang]) userLang = "en";
+  let currentLang = userLang;
+
+  function changeLanguage(lang){
+    currentLang = lang;
+    document.querySelector("#desc").textContent = translations[lang].description;
+    document.querySelector("#btn-download").textContent = translations[lang].download;
+    document.querySelector("#label-country").textContent = translations[lang].selectCountry;
+    document.querySelector("#label-lang").textContent = translations[lang].selectLanguage;
+    document.documentElement.dir = ["fa","ar"].includes(lang) ? "rtl":"ltr";
+  }
+
+  // کشورها و پرچم‌ها
   const countries = [
-    "at","au","bg","br","ca","ch","cz","de","es","fi","fr","gb","hk","hu",
-    "id","il","in","ir","it","jp","kr","kz","lt","md","nl","pl","pt","rs",
-    "ru","se","sg","si","tr","ua","us","vn"
+    {code:"at", name:"Austria", flag:"🇦🇹"},
+    {code:"au", name:"Australia", flag:"🇦🇺"},
+    {code:"bg", name:"Bulgaria", flag:"🇧🇬"},
+    {code:"br", name:"Brazil", flag:"🇧🇷"},
+    {code:"ca", name:"Canada", flag:"🇨🇦"},
+    {code:"ch", name:"Switzerland", flag:"🇨🇭"},
+    {code:"cz", name:"Czech Republic", flag:"🇨🇿"},
+    {code:"de", name:"Germany", flag:"🇩🇪"},
+    {code:"es", name:"Spain", flag:"🇪🇸"},
+    {code:"fi", name:"Finland", flag:"🇫🇮"},
+    {code:"fr", name:"France", flag:"🇫🇷"},
+    {code:"gb", name:"United Kingdom", flag:"🇬🇧"},
+    {code:"hk", name:"Hong Kong", flag:"🇭🇰"},
+    {code:"hu", name:"Hungary", flag:"🇭🇺"},
+    {code:"id", name:"Indonesia", flag:"🇮🇩"},
+    {code:"il", name:"Israel", flag:"🇮🇱"},
+    {code:"in", name:"India", flag:"🇮🇳"},
+    {code:"ir", name:"Iran", flag:"🇮🇷"},
+    {code:"it", name:"Italy", flag:"🇮🇹"},
+    {code:"jp", name:"Japan", flag:"🇯🇵"},
+    {code:"kr", name:"South Korea", flag:"🇰🇷"},
+    {code:"kz", name:"Kazakhstan", flag:"🇰🇿"},
+    {code:"lt", name:"Lithuania", flag:"🇱🇹"},
+    {code:"md", name:"Moldova", flag:"🇲🇩"},
+    {code:"nl", name:"Netherlands", flag:"🇳🇱"},
+    {code:"pl", name:"Poland", flag:"🇵🇱"},
+    {code:"pt", name:"Portugal", flag:"🇵🇹"},
+    {code:"rs", name:"Serbia", flag:"🇷🇸"},
+    {code:"ru", name:"Russia", flag:"🇷🇺"},
+    {code:"se", name:"Sweden", flag:"🇸🇪"},
+    {code:"sg", name:"Singapore", flag:"🇸🇬"},
+    {code:"si", name:"Slovenia", flag:"🇸🇮"},
+    {code:"tr", name:"Turkey", flag:"🇹🇷"},
+    {code:"ua", name:"Ukraine", flag:"🇺🇦"},
+    {code:"us", name:"United States", flag:"🇺🇸"},
+    {code:"vn", name:"Vietnam", flag:"🇻🇳"}
   ];
 
-  const countrySelect = document.getElementById("country-select");
-  countries.forEach(code => {
-    const option = document.createElement("option");
-    option.value = code;
-    option.textContent = code.toUpperCase();
-    countrySelect.appendChild(option);
-  });
-
-  const baseGitRaw = "https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/";
-
-  document.getElementById("get-config").addEventListener("click", () => {
-    const country = countrySelect.value;
-    const resultsBody = document.getElementById("results-body");
-    resultsBody.innerHTML = ""; // پاک کردن نتایج قبلی
-
-    const files = ["all.txt","light.txt","vless.txt","vmess.txt","shadowsocks.txt","trojan.txt"];
-    const desc = {
-      "all.txt": "All configs",
-      "light.txt": "Light = fastest 30 configs",
-      "vless.txt": "VLESS protocol",
-      "vmess.txt": "VMess protocol",
-      "shadowsocks.txt": "Shadowsocks protocol",
-      "trojan.txt": "Trojan protocol"
-    };
-
-    files.forEach(file => {
-      const tr = document.createElement("tr");
-      tr.className = "border-b";
-      tr.innerHTML = `
-        <td class="p-2">${file}</td>
-        <td class="p-2">${desc[file]}</td>
-        <td class="p-2"><a href="${baseGitRaw}${country}/${file}" target="_blank" class="underline text-blue-300">Download</a></td>
-      `;
-      resultsBody.appendChild(tr);
+  function populateCountries(){
+    const select = document.querySelector("#country-select");
+    select.innerHTML = "";
+    countries.forEach(c=>{
+      const opt = document.createElement("option");
+      opt.value = c.code;
+      opt.textContent = `${c.flag} ${c.name}`;
+      select.appendChild(opt);
     });
+  }
 
-    document.getElementById("results-section").classList.remove("hidden");
-  });
-
-  // زبان پیشفرض انگلیسی
-  const langSelect = document.getElementById("lang-select");
-  langSelect.value = "en";
+  window.onload = () => {
+    populateCountries();
+    changeLanguage(currentLang);
+  }
 </script>
+</head>
+<body class="bg-gradient-to-b from-blue-400 to-green-400 min-h-screen flex flex-col">
+
+<!-- Header -->
+<header class="bg-white shadow-md p-4 flex justify-between items-center">
+  <div class="font-bold text-xl">ConfigForge V2Ray</div>
+  <div class="flex gap-4 items-center">
+    <div>
+      <label id="label-lang" class="mr-2 font-semibold"></label>
+      <select onchange="changeLanguage(this.value)" class="border rounded px-2 py-1">
+        <option value="en">English</option>
+        <option value="fa">فارسی</option>
+        <option value="ar">العربية</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="flex-grow container mx-auto p-6 flex flex-col gap-6">
+  <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+    <p id="desc" class="text-lg font-medium mb-4"></p>
+
+    <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+      <div>
+        <label id="label-country" class="block font-semibold mb-1"></label>
+        <select id="country-select" class="border rounded px-3 py-2 text-lg"></select>
+      </div>
+      <button id="btn-download" class="bg-blue-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+        Download Config
+      </button>
+    </div>
+  </div>
+
+  <!-- توضیح فایل‌ها -->
+  <div class="bg-white rounded-lg shadow-lg p-4 text-sm text-gray-700">
+    <ul class="list-disc ml-5">
+      <li><strong>all.txt:</strong> Includes all configs sorted by speed.</li>
+      <li><strong>light.txt:</strong> Includes top 30 fastest configs.</li>
+      <li>Click download after selecting your country to get configs.</li>
+    </ul>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-white text-center p-4 mt-auto shadow-inner">
+  Made with ❤️ by <a href="https://github.com/ShatakVPN" class="underline">ShatakVPN</a> | Powered by <a href="https://github.com" class="underline">GitHub</a> + <a href="https://check-host.net" class="underline">Check-Host</a>
+</footer>
+
 </body>
 </html>
