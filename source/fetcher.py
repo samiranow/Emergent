@@ -24,15 +24,17 @@ def fetch_data(url: str, timeout=10) -> str:
 def maybe_base64_decode(s: str) -> str:
     """
     Attempt to decode a string from Base64.
-    Returns decoded string if valid Base64, otherwise returns the original string.
+    Returns decoded string if it looks like a valid config, otherwise returns the original string.
     """
     s = s.strip()
     try:
+        # padding
         padded = s + "=" * ((4 - len(s) % 4) % 4)
         decoded_bytes = base64.b64decode(padded, validate=True)
-        decoded_str = decoded_bytes.decode(errors="ignore")
-        if re.search(r'[^\x00-\x7F]', decoded_str) or len(decoded_str) < 2:
-            return s
-        return decoded_str
+        decoded_str = decoded_bytes.decode(errors="ignore").strip()
+        # check if it contains at least one config protocol keyword
+        if any(proto in decoded_str for proto in ["vless://", "vmess://", "trojan://", "ss://"]):
+            return decoded_str
+        return s
     except Exception:
         return s
