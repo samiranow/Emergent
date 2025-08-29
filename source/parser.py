@@ -3,11 +3,6 @@ import json
 import re
 
 def detect_protocol(line: str) -> str:
-    """
-    Detect VPN protocol based on configuration prefix.
-    Supported: vless, vmess, shadowsocks, trojan.
-    Returns 'unknown' if no match found.
-    """
     line = line.strip().lower()
     if line.startswith("vless://"):
         return "vless"
@@ -20,11 +15,6 @@ def detect_protocol(line: str) -> str:
     return "unknown"
 
 def extract_host(line: str, proto: str) -> str:
-    """
-    Extract the host (server address) from a configuration line.
-    Handles vmess (Base64 JSON), vless, shadowsocks, and trojan formats.
-    Returns empty string if extraction fails.
-    """
     try:
         if proto == "vmess":
             b64_part = line[8:]
