@@ -2,7 +2,7 @@ name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '*/30 * * * *'   # هر ۳۰ دقیقه یکبار اجرا می‌شود
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -41,19 +41,11 @@ jobs:
           python source/main.py
         continue-on-error: false
 
-      - name: Configure Git user
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-
       - name: Commit and push changes if any
         env:
           GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git add .
-          if ! git diff --cached --quiet; then
-            git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
-            git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
-          else
-            echo "✅ No changes to commit"
-
+          git config user.name "github-actions" && \
+          git config user.email "actions@github.com" && \
+          git add . && \
+          git diff --cached --quiet || (git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')" && git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main)
