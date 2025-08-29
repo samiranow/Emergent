@@ -3,7 +3,7 @@ name: Update VPN Configs
 on:
   schedule:
     - cron: '*/30 * * * *'   # هر ۳۰ دقیقه یکبار اجرا می‌شود
-  workflow_dispatch:         # دستی هم قابل اجراست
+  workflow_dispatch:
 
 jobs:
   update-configs:
@@ -56,4 +56,4 @@ jobs:
             git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
           else
             echo "✅ No changes to commit"
-            
+
