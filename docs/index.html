@@ -1,181 +1,140 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ConfigForge VPN</title>
+<title>ConfigForge V2Ray</title>
 <style>
-    /* Reset & base */
-    * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif;}
-    body {background: linear-gradient(135deg,#0077ff,#00ff88); color:#fff; min-height:100vh;}
-    a {color:#fff; text-decoration:none;}
-    /* Header */
-    header {text-align:center; padding:2rem; background: rgba(0,0,0,0.2);}
-    header h1 {font-size:2.5rem; letter-spacing:1px;}
-    .lang-select {margin-top:1rem;}
-    select {padding:.5rem 1rem; border-radius:10px; border:none; font-size:1rem;}
-    /* Main */
-    main {padding:2rem; max-width:1000px; margin:0 auto;}
-    .section {background: rgba(0,0,0,0.25); border-radius:15px; padding:1.5rem; margin-bottom:1.5rem;}
-    h2 {margin-bottom:1rem; text-align:center;}
-    .country-select, .config-buttons {display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; margin-bottom:1rem;}
-    .country-select button {padding:.5rem 1rem; border-radius:10px; border:none; cursor:pointer; background: rgba(255,255,255,0.2); display:flex; align-items:center; gap:0.5rem;}
-    .country-select img {width:24px; height:16px; object-fit:cover;}
-    .config-buttons button {padding:.5rem 1rem; border-radius:10px; border:none; cursor:pointer; background: rgba(255,255,255,0.2); transition:0.2s; font-weight:bold;}
-    .config-buttons button:hover {background: rgba(255,255,255,0.4);}
-    /* Table */
-    table {width:100%; border-collapse:collapse; margin-top:1rem;}
-    th, td {padding:.5rem; border:1px solid rgba(255,255,255,0.3); text-align:center;}
-    th {background: rgba(0,0,0,0.3);}
-    /* Footer */
-    footer {text-align:center; padding:1rem; background: rgba(0,0,0,0.2);}
+  body { margin:0; font-family: 'Segoe UI', sans-serif; background: #f0f8ff; color:#333; }
+  header { text-align:center; background: linear-gradient(90deg,#1e90ff,#32cd32); color:#fff; padding:2rem; }
+  header h1 { margin:0; font-size:2.5rem; }
+  .controls { display:flex; justify-content:center; gap:1rem; margin:1rem 0; flex-wrap:wrap; }
+  select, button { padding:0.5rem 1rem; font-size:1rem; border-radius:5px; border:none; cursor:pointer; }
+  button { background:#1e90ff; color:white; transition:0.3s; }
+  button:hover { background:#32cd32; }
+  table { width:90%; margin:1rem auto; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+  th,td { padding:0.75rem 1rem; text-align:left; border-bottom:1px solid #ddd;}
+  th { background:#32cd32; color:white; }
+  footer { text-align:center; padding:1rem; background:#eee; margin-top:2rem;}
+  .flag { width:20px; vertical-align:middle; margin-right:0.5rem; }
 </style>
 </head>
 <body>
+
 <header>
-    <h1>ConfigForge VPN</h1>
-    <div class="lang-select">
-        <label for="language">Language:</label>
-        <select id="language"></select>
-    </div>
+  <h1>ConfigForge V2Ray</h1>
+  <p id="header-desc">Get the fastest V2Ray configs for your country using our service</p>
 </header>
-<main>
-    <div class="section">
-        <h2 id="select-country-title">Select Country</h2>
-        <div class="country-select" id="country-buttons"></div>
-    </div>
-    <div class="section">
-        <h2 id="config-title">Download Config</h2>
-        <div class="config-buttons" id="config-buttons"></div>
-        <table id="config-table">
-            <thead>
-                <tr>
-                    <th id="table-protocol">Protocol</th>
-                    <th id="table-file">File</th>
-                    <th id="table-desc">Description</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</main>
+
+<div class="controls">
+  <select id="language-select"></select>
+  <select id="country-select"></select>
+  <button id="download-btn">Download Config</button>
+</div>
+
+<table id="config-table">
+  <thead>
+    <tr>
+      <th id="table-protocol">Protocol</th>
+      <th id="table-file">File</th>
+      <th id="table-desc">Description</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
 <footer>
-    Made with ❤️ by <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Powered by <a href="https://github.com" target="_blank">GitHub</a> + <a href="https://check-host.net" target="_blank">Check-Host</a>
+  <p>Made with ❤️ by <a href="https://github.com/ShatakVPN">ShatakVPN</a> | Powered by <a href="https://github.com">GitHub</a> + <a href="https://check-host.net">Check-Host</a></p>
 </footer>
 
 <script>
-const languages = [
-  {code:'en', name:'English', dir:'ltr'},
-  {code:'fr', name:'Français', dir:'ltr'},
-  {code:'es', name:'Español', dir:'ltr'},
-  {code:'de', name:'Deutsch', dir:'ltr'},
-  {code:'it', name:'Italiano', dir:'ltr'},
-  {code:'ru', name:'Русский', dir:'ltr'},
-  {code:'zh', name:'中文', dir:'ltr'},
-  {code:'ja', name:'日本語', dir:'ltr'},
-  {code:'ar', name:'العربية', dir:'rtl'},
-  {code:'fa', name:'فارسی', dir:'rtl'},
-  {code:'pt', name:'Português', dir:'ltr'},
-  {code:'hi', name:'हिन्दी', dir:'ltr'},
-  {code:'ko', name:'한국어', dir:'ltr'},
-  {code:'tr', name:'Türkçe', dir:'ltr'},
-  {code:'id', name:'Bahasa Indonesia', dir:'ltr'}
-];
+// --- Translation ---
+const translations = {
+  en: { select_language:"Select Language", select_country:"Select Country", download_config:"Download Config", protocol:"Protocol", file:"File", description:"Description", all:"All configs available", light:"Fastest 30 configs", vless:"VLESS configs", vmess:"VMess configs", shadowsocks:"Shadowsocks configs", trojan:"Trojan configs" },
+  fr: { select_language:"Choisir la langue", select_country:"Choisir le pays", download_config:"Télécharger la configuration", protocol:"Protocole", file:"Fichier", description:"Description", all:"Tous les configs", light:"30 configs les plus rapides", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
+  fa: { select_language:"انتخاب زبان", select_country:"انتخاب کشور", download_config:"دانلود کانفیگ", protocol:"پروتکل", file:"فایل", description:"توضیح", all:"تمام کانفیگ‌ها", light:"۳۰ کانفیگ سریع‌تر", vless:"کانفیگ‌های VLESS", vmess:"کانفیگ‌های VMess", shadowsocks:"کانفیگ‌های Shadowsocks", trojan:"کانفیگ‌های Trojan" },
+  es: { select_language:"Seleccionar idioma", select_country:"Seleccionar país", download_config:"Descargar Config", protocol:"Protocolo", file:"Archivo", description:"Descripción", all:"Todos los configs", light:"30 configs más rápidos", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
+  de: { select_language:"Sprache auswählen", select_country:"Land auswählen", download_config:"Config herunterladen", protocol:"Protokoll", file:"Datei", description:"Beschreibung", all:"Alle configs", light:"Schnellste 30 configs", vless:"VLESS configs", vmess:"VMess configs", shadowsocks:"Shadowsocks configs", trojan:"Trojan configs" },
+  it: { select_language:"Seleziona lingua", select_country:"Seleziona paese", download_config:"Scarica Config", protocol:"Protocollo", file:"File", description:"Descrizione", all:"Tutti i configs", light:"30 configs più veloci", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
+  ru: { select_language:"Выберите язык", select_country:"Выберите страну", download_config:"Скачать конфиг", protocol:"Протокол", file:"Файл", description:"Описание", all:"Все configs", light:"30 самых быстрых", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
+  ja: { select_language:"言語を選択", select_country:"国を選択", download_config:"設定をダウンロード", protocol:"プロトコル", file:"ファイル", description:"説明", all:"すべての設定", light:"最速30設定", vless:"VLESS設定", vmess:"VMess設定", shadowsocks:"Shadowsocks設定", trojan:"Trojan設定" },
+  zh: { select_language:"选择语言", select_country:"选择国家", download_config:"下载配置", protocol:"协议", file:"文件", description:"描述", all:"所有配置", light:"最快30个配置", vless:"VLESS 配置", vmess:"VMess 配置", shadowsocks:"Shadowsocks 配置", trojan:"Trojan 配置" }
+};
 
-const languageSelect = document.getElementById('language');
+// --- Languages ---
+const languages = Object.keys(translations);
+const langSelect = document.getElementById("language-select");
 languages.forEach(lang=>{
-    const opt=document.createElement('option');
-    opt.value=lang.code;
-    opt.textContent=lang.name;
-    languageSelect.appendChild(opt);
+  const opt = document.createElement("option");
+  opt.value=lang;
+  opt.text=translations[lang].select_language;
+  langSelect.appendChild(opt);
 });
 
-// Country list
+// --- Country list (replace with your full list) ---
 const countries = [
-    {code:'us', name:'United States', flag:'https://flagcdn.com/us.svg'},
-    {code:'ca', name:'Canada', flag:'https://flagcdn.com/ca.svg'},
-    {code:'de', name:'Germany', flag:'https://flagcdn.com/de.svg'},
-    {code:'fr', name:'France', flag:'https://flagcdn.com/fr.svg'},
-    {code:'gb', name:'United Kingdom', flag:'https://flagcdn.com/gb.svg'},
-    {code:'jp', name:'Japan', flag:'https://flagcdn.com/jp.svg'},
-    {code:'kr', name:'South Korea', flag:'https://flagcdn.com/kr.svg'},
-    {code:'au', name:'Australia', flag:'https://flagcdn.com/au.svg'},
-    {code:'br', name:'Brazil', flag:'https://flagcdn.com/br.svg'},
-    {code:'vn', name:'Vietnam', flag:'https://flagcdn.com/vn.svg'}
-    // بقیه کشورها را طبق دایرکتوری configs اضافه کنید
+  {code:"us", name:"United States", flag:"https://flagcdn.com/us.svg"},
+  {code:"gb", name:"United Kingdom", flag:"https://flagcdn.com/gb.svg"},
+  {code:"fr", name:"France", flag:"https://flagcdn.com/fr.svg"},
+  {code:"de", name:"Germany", flag:"https://flagcdn.com/de.svg"},
+  {code:"ir", name:"Iran", flag:"https://flagcdn.com/ir.svg"},
+  {code:"jp", name:"Japan", flag:"https://flagcdn.com/jp.svg"},
+  // همه کشورها را اینجا اضافه کن با لینک raw فایل‌های configs
 ];
 
-const countryButtonsDiv = document.getElementById('country-buttons');
-let selectedCountry = countries[0].code;
-
-function renderCountries() {
-    countryButtonsDiv.innerHTML='';
-    countries.forEach(c=>{
-        const btn=document.createElement('button');
-        btn.innerHTML=`<img src="${c.flag}">${c.name}`;
-        btn.onclick=()=>{ selectedCountry=c.code; renderConfigs(); };
-        countryButtonsDiv.appendChild(btn);
-    });
-}
-
-// Config files
-const configTypes = ['all','light','vless','vmess','shadowsocks','trojan'];
-const configButtonsDiv = document.getElementById('config-buttons');
-let selectedConfigType = 'all';
-
-function renderConfigButtons() {
-    configButtonsDiv.innerHTML='';
-    configTypes.forEach(type=>{
-        const btn=document.createElement('button');
-        btn.textContent=type.toUpperCase();
-        btn.onclick=()=>{ selectedConfigType=type; renderConfigs(); };
-        configButtonsDiv.appendChild(btn);
-    });
-}
-
-function renderConfigs() {
-    const tbody = document.querySelector('#config-table tbody');
-    tbody.innerHTML='';
-    const urlBase = 'https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/';
-    const countryDir = selectedCountry+'/';
-    const type = selectedConfigType+'.txt';
-    const url = urlBase + countryDir + type;
-    const desc = {
-        'all':'All configs available',
-        'light':'Fastest 30 configs',
-        'vless':'VLESS configs',
-        'vmess':'VMess configs',
-        'shadowsocks':'Shadowsocks configs',
-        'trojan':'Trojan configs'
-    };
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${selectedConfigType.toUpperCase()}</td>
-                  <td><a href="${url}" target="_blank">${type}</a></td>
-                  <td>${desc[selectedConfigType]}</td>`;
-    tbody.appendChild(tr);
-}
-
-// Language change
-languageSelect.addEventListener('change',()=>{
-    const lang=languages.find(l=>l.code===languageSelect.value);
-    document.documentElement.lang=lang.code;
-    document.documentElement.dir=lang.dir;
-    // ترجمه متون ساده
-    document.getElementById('select-country-title').textContent=lang.code==='fr'?'Sélectionnez le pays':lang.code==='es'?'Seleccione el país':'Select Country';
-    document.getElementById('config-title').textContent=lang.code==='fr'?'Télécharger la configuration':lang.code==='es'?'Descargar Configuración':'Download Config';
-    document.getElementById('table-protocol').textContent=lang.code==='fr'?'Protocole':lang.code==='es'?'Protocolo':'Protocol';
-    document.getElementById('table-file').textContent=lang.code==='fr'?'Fichier':lang.code==='es'?'Archivo':'File';
-    document.getElementById('table-desc').textContent=lang.code==='fr'?'Description':lang.code==='es'?'Descripción':'Description';
+const countrySelect = document.getElementById("country-select");
+countries.forEach(c=>{
+  const opt = document.createElement("option");
+  opt.value=c.code;
+  opt.innerHTML=`<img src="${c.flag}" class="flag">${c.name}`;
+  countrySelect.appendChild(opt);
 });
 
-// Auto-detect country (simple)
-fetch('https://ipapi.co/json/').then(r=>r.json()).then(data=>{
-    const cc=data.country_code.toLowerCase();
-    if(countries.find(c=>c.code===cc)) selectedCountry=cc;
-    renderCountries();
-    renderConfigButtons();
-    renderConfigs();
-});
+// --- Default language English ---
+let currentLang="en";
+langSelect.value=currentLang;
+
+// --- Translate page ---
+function translatePage(lang){
+  currentLang=lang;
+  const t=translations[lang];
+  document.getElementById("table-protocol").textContent=t.protocol;
+  document.getElementById("table-file").textContent=t.file;
+  document.getElementById("table-desc").textContent=t.description;
+  document.getElementById("download-btn").textContent=t.download_config;
+  document.getElementById("header-desc").textContent="Get the fastest V2Ray configs for your country using our service";
+  renderConfigs();
+}
+
+langSelect.addEventListener("change",(e)=>translatePage(e.target.value));
+
+// --- Detect user country (simple example, can use IP API) ---
+const userCountry="us"; // TODO: use API to detect
+countrySelect.value=userCountry;
+
+// --- Render configs ---
+const configsBaseURL="https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/";
+const protocols=["all","light","vless","vmess","shadowsocks","trojan"];
+function renderConfigs(){
+  const tbody=document.querySelector("#config-table tbody");
+  tbody.innerHTML="";
+  const countryCode=countrySelect.value;
+  protocols.forEach(proto=>{
+    const filename=`${proto}.txt`;
+    const url=configsBaseURL+countryCode+"/"+filename;
+    const desc=translations[currentLang][proto];
+    const row=document.createElement("tr");
+    row.innerHTML=`<td>${proto.toUpperCase()}</td><td><a href="${url}" target="_blank">${filename}</a></td><td>${desc}</td>`;
+    tbody.appendChild(row);
+  });
+}
+
+countrySelect.addEventListener("change",renderConfigs);
+document.getElementById("download-btn").addEventListener("click",renderConfigs);
+
+// --- Initial render ---
+translatePage(currentLang);
 </script>
+
 </body>
 </html>
