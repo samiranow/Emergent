@@ -1,35 +1,53 @@
-<h1>ConfigForge V2Ray 🚀</h1>
-<p>
-  <b>VPN Config Collector & Organizer</b>
-</p>
 
-## 📂 Available Subscription Files
+# ConfigForge V2Ray 🌍
 
-| File            | Description                   | Direct Link                                                                                                          |
-| -------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| **all.txt**    | All combined configs         | [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/all.txt)                 |
-| **light.txt**  | Lightweight top 30 configs   | [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/light.txt)             |
-| **vless.txt**  | VLESS protocol configs       | [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/vless.txt)             |
-| **vmess.txt**  | VMess protocol configs       | [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/vmess.txt)             |
-| **shadowsocks.txt** | Shadowsocks configs        | [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/shadowsocks.txt) |
-| **trojan.txt** | Trojan configs               | [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/trojan.txt)           |
-| **unknown.txt**| Unknown or unsupported configs| [Link Sub](https://raw.githubusercontent.com/ShatakVPN/ConfigForge/main/configs/unknown.txt)         |
-
-✅ Files are updated automatically via **GitHub Actions** every 30 minutes.
+**ConfigForge V2Ray** is an advanced open-source platform that aggregates and optimizes V2Ray VPN configurations from multiple sources.  
+It automatically detects your country and suggests the **fastest configurations**, verified through **Check-Host API latency testing**, to ensure the best connection speed and reliability.
 
 ---
 
-## Features:
-- Download VPN config lists from multiple sources
-- Parse and categorize configs by protocol
-- Generate aggregated and lightweight subscription files
-- Auto commit and push updates to GitHub
-- Easy to customize and extend
+## 🌐 Access the Web Interface
+For the easiest experience, use our **modern multi-language web interface**:  
+➡️ **[https://shatakvpn.github.io/ConfigForge-V2Ray/](https://shatakvpn.github.io/ConfigForge-V2Ray/)**
 
-## How to Use
+---
 
-**✅ Option 1: Run Locally**
+## 🚀 Why ConfigForge?
+Unlike basic config repositories, **ConfigForge V2Ray**:
+- ✅ Continuously fetches configs from **multiple sources**
+- ✅ **Tests latency for each country** using [Check-Host API](https://check-host.net/)
+- ✅ Suggests **the fastest servers** for your location
+- ✅ Provides **aggregated, lightweight, and categorized configs** (VLESS, VMess, Shadowsocks, Trojan)
+- ✅ Runs **automatically with GitHub Actions** – no server required!
 
+---
+
+## ✨ Features
+- 🌍 **Country-based selection** – Automatically detect your location or choose manually  
+- 🔍 **Latency-tested recommendations** – Get only the **fastest working configs** for your country  
+- 🌐 **Multi-language support** – Dynamic translation of the entire interface  
+- 📂 **Subscription files available**:
+  - `all.txt` → Full list of configs
+  - `light.txt` → Top 30 fastest configs
+  - Individual files for each protocol (VLESS, VMess, Shadowsocks, Trojan)
+- 🔄 **Auto-updates via GitHub Actions**
+- ⚡ **Optimized for speed and simplicity**
+- 🛠 **Easy to extend** for new protocols or sources
+
+---
+
+## ✅ Additional Features:
+- Download VPN config lists from multiple sources  
+- Parse and categorize configs by protocol  
+- Generate aggregated and lightweight subscription files  
+- Auto commit and push updates to GitHub  
+- Fully customizable structure for advanced users  
+
+---
+
+## 🛠 How to Use
+
+### ✅ Option 1: Run Locally
 Clone the repository:
 ```bash
 git clone https://github.com/ShatakVPN/ConfigForge.git
@@ -48,8 +66,7 @@ python source/main.py
 
 ---
 
-**✅ Option 2: Run Automatically on GitHub (No Server Needed)**
-
+### ✅ Option 2: Run Automatically on GitHub (Serverless)
 You can **fork this repository** and let **GitHub Actions** handle everything for you!  
 
 1. **Fork this repository** to your own GitHub account.  
@@ -63,7 +80,34 @@ You can **fork this repository** and let **GitHub Actions** handle everything fo
 4. Done! The workflow will automatically:  
    - Download and update VPN configs  
    - Commit changes to your forked repo  
-   - Run on a schedule — completely serverless!  
+   - Run on a schedule — completely **serverless**!  
+
+---
+
+## 📂 Folder Structure
+```
+ConfigForge-V2Ray/
+│
+├── configs/
+│   ├── us/
+│   │   ├── all.txt
+│   │   ├── light.txt
+│   │   ├── vless.txt
+│   │   ├── vmess.txt
+│   │   ├── shadowsocks.txt
+│   │   └── trojan.txt
+│   ├── ir/
+│   └── ...
+│
+└── docs/
+    └── index.html  (Modern Web Interface)
+```
+
+---
+
+## 🔗 Important Links
+- **Live Website**: [https://shatakvpn.github.io/ConfigForge-V2Ray/](https://shatakvpn.github.io/ConfigForge-V2Ray/)
+- **GitHub Repository**: [https://github.com/ShatakVPN/ConfigForge-V2Ray](https://github.com/ShatakVPN/ConfigForge-V2Ray)
 
 ---
 
@@ -77,5 +121,10 @@ You can **fork this repository** and let **GitHub Actions** handle everything fo
 
 ---
 
-**License:** GPL-3.0 License
+## 📜 License
+This project is licensed under the **GPL-3.0 License**.  
+See the [LICENSE](LICENSE) file for details.
 
+---
+
+### ❤️ Built with love by [ShatakVPN](https://github.com/ShatakVPN)
