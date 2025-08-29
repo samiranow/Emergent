@@ -2,7 +2,7 @@ name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 */12 * * *'   # هر ۱۲ ساعت یک بار
   workflow_dispatch:
 
 jobs:
@@ -10,16 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ۱. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: Setup Python 3.x
+      # ۲. Setup Python 3.x
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
+      # ۳. Cache pip dependencies
       - name: Cache pip dependencies
         uses: actions/cache@v3
         with:
@@ -28,6 +31,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      # ۴. Setup virtual environment and install dependencies
       - name: Setup virtual environment and install dependencies
         run: |
           python -m venv venv
@@ -35,17 +39,28 @@ jobs:
           pip install --upgrade pip
           if [ -f source/requirements.txt ]; then pip install -r source/requirements.txt; fi
 
-      - name: Run main.py to update configs
+      # ۵. Run main.py to update configs
+      - name: Run main.py
         run: |
           source venv/bin/activate
           python source/main.py
         continue-on-error: false
 
-      - name: Commit and push changes if any
+      # ۶. Commit and push changes safely
+      - name: Commit and push changes
         env:
           GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git config user.name "github-actions" && \
-          git config user.email "actions@github.com" && \
-          git add . && \
-          git diff --cached --quiet || (git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')" && git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main)
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          # دریافت آخرین تغییرات remote
+          git fetch origin main
+          git reset --hard origin/main
+
+          # اضافه کردن تغییرات و push
+          git add .
+          git diff --cached --quiet || (
+            git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
+            git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
+          )
