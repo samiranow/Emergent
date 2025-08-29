@@ -8,6 +8,10 @@ from tester import test_speed, get_nodes_by_country
 from output import save_to_file
 
 def extract_configs(data: str) -> list[str]:
+    """
+    Extract VPN configurations from raw text.
+    Supports vless, vmess, trojan, and ss.
+    """
     pattern = r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)"
     return re.findall(pattern, data)
 
@@ -17,9 +21,10 @@ async def main_async():
     # دریافت نودها بر اساس کشور
     country_nodes_dict = await get_nodes_by_country()
 
-    # Fetch and decode configurations
+    # دیکشنری برای ذخیره کانفیگ‌ها بر اساس کشور
     categorized_per_country = {}  # {"us": {"vless": [], ...}, ...}
 
+    # دریافت و پردازش کانفیگ‌ها از URL‌ها
     for url in URLS:
         raw_data = fetch_data(url)
         decoded_text = maybe_base64_decode(raw_data)
@@ -32,24 +37,30 @@ async def main_async():
             if not host:
                 continue
 
-            # اضافه کردن کانفیگ به همه کشورهایی که Node دارند
+            # اضافه کردن کانفیگ به کشورهایی که نود دارند
             for country_code in country_nodes_dict.keys():
-                categorized_per_country.setdefault(country_code, {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []})
-                categorized_per_country[country_code][proto].append((line, host))  # ذخیره خط و host
+                categorized_per_country.setdefault(
+                    country_code,
+                    {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []}
+                )
+                categorized_per_country[country_code][proto].append((line, host))
 
-    # محدودیت همزمانی
+    # محدودیت همزمانی تست‌ها
     sem = asyncio.Semaphore(50)
 
     async def test_line_country(line_host, country_code):
-    line, host = line_host
-    nodes = country_nodes_dict.get(country_code, [])
-    if not nodes:
-        return float('inf'), line, country_code
-    async with sem:
-        latency = await test_speed(host, country_nodes=nodes)
-        return latency, line, country_code
+        """
+        Test latency for a single config line using nodes of the specific country.
+        """
+        line, host = line_host
+        nodes = country_nodes_dict.get(country_code, [])
+        if not nodes:
+            return float('inf'), line, country_code
+        async with sem:
+            latency = await test_speed(host, country_nodes=nodes)
+            return latency, line, country_code
 
-    # تست سرعت و مرتب‌سازی
+    # تست سرعت و مرتب‌سازی کانفیگ‌ها
     for country_code, categorized in categorized_per_country.items():
         print(f"Processing country: {country_code}")
         all_results = []
@@ -57,7 +68,9 @@ async def main_async():
         for proto, lines_hosts in categorized.items():
             if not lines_hosts:
                 continue
-            results = await asyncio.gather(*[test_line_country(lh, country_code) for lh in lines_hosts])
+            results = await asyncio.gather(*[
+                test_line_country(lh, country_code) for lh in lines_hosts
+            ])
             results.sort(key=lambda x: x[0])
             categorized[proto] = [line for _, line, _ in results]
             all_results.extend(results)
