@@ -4,6 +4,8 @@ import os
 import random
 import socket
 import requests
+import base64
+import json
 
 from config import URLS, TIMESTAMP, OUTPUT_DIR
 from fetcher import fetch_data, maybe_base64_decode
@@ -12,6 +14,11 @@ from tester import test_speed, get_nodes_by_country
 from output import save_to_file
 
 def rename_line(line: str) -> str:
+    """
+    Rename a VPN config line for display.
+    Replace hostname with resolved IP in the config itself.
+    Format: [Flag/IP]::ConfigForge-V2Ray-XXXXXX
+    """
     proto = detect_protocol(line)
     host = extract_host(line, proto)
 
@@ -21,13 +28,13 @@ def rename_line(line: str) -> str:
     except Exception:
         ip_addr = host  # fallback if DNS fails
 
-    # Try to get country code via free API
+    # Get country code via free API
     try:
         resp = requests.get(f"https://ipapi.co/{ip_addr}/country/", timeout=5)
         if resp.status_code == 200:
             country_code = resp.text.strip().lower()
         else:
-            country_code = ip_addr  # fallback to IP if API fails
+            country_code = ip_addr
     except Exception:
         country_code = ip_addr
 
@@ -36,7 +43,6 @@ def rename_line(line: str) -> str:
 
     # Replace host/domain in the config line with IP
     if proto == "vmess":
-        import base64, json
         try:
             b64_part = line[8:]
             padded = b64_part + "=" * ((4 - len(b64_part) % 4) % 4)
@@ -47,21 +53,23 @@ def rename_line(line: str) -> str:
         except Exception:
             pass
     elif proto == "vless":
-        line = re.sub(r"(vless://[^@]+@)([^:/]+)", rf"\1{ip_addr}", line)
+        line = re.sub(r"(vless://[^@]+@)([^:/]+)", lambda m: f"{m.group(1)}{ip_addr}", line)
     elif proto == "trojan":
-        line = re.sub(r"(trojan://[^@]+@)([^:/?#]+)", rf"\1{ip_addr}", line)
+        line = re.sub(r"(trojan://[^@]+@)([^:/?#]+)", lambda m: f"{m.group(1)}{ip_addr}", line)
     elif proto == "shadowsocks":
-        line = re.sub(r"(ss://(?:[^@]+@)?)([^:/]+)", rf"\1{ip_addr}", line)
+        line = re.sub(r"(ss://(?:[^@]+@)?)([^:/]+)", lambda m: f"{m.group(1)}{ip_addr}", line)
 
     # Prepend display name
     return f"{display_name} {line}"
 
-# Extract VPN configs from raw text
 def extract_configs(data: str) -> list[str]:
+    """
+    Extract all VPN configurations from raw text.
+    Supports vless, vmess, trojan, shadowsocks.
+    """
     pattern = r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)"
     return re.findall(pattern, data)
 
-# Main async function
 async def main_async():
     print(f"[{TIMESTAMP}] Starting download and processing with country-based speed test...")
 
@@ -91,7 +99,6 @@ async def main_async():
                 )
                 categorized_per_country[country_code][proto].append((line, host))
 
-    # Limit concurrency for speed tests
     sem = asyncio.Semaphore(50)
 
     async def test_line_country(line_host, country_code):
