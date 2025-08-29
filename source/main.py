@@ -32,26 +32,49 @@ async def main_async():
             if not host:
                 continue
 
-            # بر اساس کشور هر Node تست می‌کنیم
-            for country_code, nodes in country_nodes_dict.items():
+            # اضافه کردن کانفیگ به همه کشورهایی که Node دارند
+            for country_code in country_nodes_dict.keys():
                 categorized_per_country.setdefault(country_code, {"vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []})
-                categorized_per_country[country_code][proto].append(line)
+                categorized_per_country[country_code][proto].append((line, host))  # ذخیره خط و host
 
-    # ایجاد فولدر خروجی برای هر کشور و ذخیره فایل‌ها
+    # محدودیت همزمانی
+    sem = asyncio.Semaphore(50)
+
+    async def test_line_country(line_host, country_code):
+        line, host = line_host
+        nodes = country_nodes_dict.get(country_code, [])
+        # اگر Node برای کشور وجود ندارد، پینگ نامحدود
+        if not nodes:
+            return float('inf'), line, country_code
+        async with sem:
+            latency = await test_speed(host)
+            return latency, line, country_code
+
+    # تست سرعت و مرتب‌سازی
     for country_code, categorized in categorized_per_country.items():
+        print(f"Processing country: {country_code}")
+        all_results = []
+
+        for proto, lines_hosts in categorized.items():
+            if not lines_hosts:
+                continue
+            results = await asyncio.gather(*[test_line_country(lh, country_code) for lh in lines_hosts])
+            results.sort(key=lambda x: x[0])
+            categorized[proto] = [line for _, line, _ in results]
+            all_results.extend(results)
+
+        all_results.sort(key=lambda x: x[0])
+        sorted_lines = [line for _, line, _ in all_results]
+
+        # ساخت فولدر کشور
         country_dir = os.path.join(OUTPUT_DIR, country_code)
         os.makedirs(country_dir, exist_ok=True)
 
-        all_lines = []
+        # ذخیره فایل‌ها
         for proto, lines in categorized.items():
-            if not lines:
-                continue
-            # می‌توان تست سرعت اضافه کرد اگر خواستید
-            all_lines.extend(lines)
             save_to_file(os.path.join(country_dir, f"{proto}.txt"), lines)
-
-        save_to_file(os.path.join(country_dir, "all.txt"), all_lines)
-        save_to_file(os.path.join(country_dir, "light.txt"), all_lines[:30])
+        save_to_file(os.path.join(country_dir, "all.txt"), sorted_lines)
+        save_to_file(os.path.join(country_dir, "light.txt"), sorted_lines[:30])
 
 if __name__ == "__main__":
     asyncio.run(main_async())
