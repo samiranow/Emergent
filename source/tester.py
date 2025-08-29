@@ -1,22 +1,52 @@
-import httpx
 import asyncio
+import httpx
 
-async def test_speed(host: str, timeout=5) -> float:
+async def test_speed(host: str, timeout=10) -> float:
     """
-    Perform a simple HTTP GET request to measure server latency.
-    Returns latency in seconds or infinity if the host is unreachable.
+    Measure host latency using check-host.net API.
+    Returns average ping in seconds or infinity if unreachable.
     """
     if not host:
         return float('inf')
-    url = f"http://{host}"
-    try:
-        async with httpx.AsyncClient(timeout=timeout) as client:
-            import time
-            start = time.monotonic()
-            r = await client.get(url)
-            if r.status_code == 200:
-                end = time.monotonic()
-                return end - start
+
+    base_url = "https://check-host.net"
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        try:
+            # 1️⃣ Start ping test
+            r = await client.get(f"{base_url}/check-ping", params={"host": host}, headers={"Accept": "application/json"})
+            r.raise_for_status()
+            data = r.json()
+            request_id = data.get("request_id")
+            if not request_id:
+                return float('inf')
+
+            # 2️⃣ Wait a few seconds for nodes to finish
+            await asyncio.sleep(10)
+
+            # 3️⃣ Get results
+            r2 = await client.get(f"{base_url}/check-result/{request_id}", headers={"Accept": "application/json"})
+            r2.raise_for_status()
+            results = r2.json()
+
+            # 4️⃣ Parse results and calculate average latency
+            latencies = []
+            for node, node_results in results.items():
+                if not node_results:
+                    continue
+                # node_results is a list of lists, take first inner list
+                try:
+                    node_results_list = node_results[0]
+                    for entry in node_results_list:
+                        # entry format: ["OK", 0.044, "94.242.206.94"]
+                        if entry and entry[0] == "OK":
+                            latencies.append(entry[1])
+                except Exception:
+                    continue
+
+            if not latencies:
+                return float('inf')
+
+            return sum(latencies) / len(latencies)
+
+        except Exception:
             return float('inf')
-    except Exception:
-        return float('inf')
