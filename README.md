@@ -1,5 +1,5 @@
 
-# ConfigForge V2Ray 🌍
+# 🌍 ConfigForge V2Ray 
 
 **ConfigForge V2Ray** is an advanced open-source platform that aggregates and optimizes V2Ray VPN configurations from multiple sources.  
 It automatically detects your country and suggests the **fastest configurations**, verified through **Check-Host API latency testing**, to ensure the best connection speed and reliability.
@@ -84,33 +84,6 @@ You can **fork this repository** and let **GitHub Actions** handle everything fo
 
 ---
 
-## 📂 Folder Structure
-```
-ConfigForge-V2Ray/
-│
-├── configs/
-│   ├── us/
-│   │   ├── all.txt
-│   │   ├── light.txt
-│   │   ├── vless.txt
-│   │   ├── vmess.txt
-│   │   ├── shadowsocks.txt
-│   │   └── trojan.txt
-│   ├── ir/
-│   └── ...
-│
-└── docs/
-    └── index.html  (Modern Web Interface)
-```
-
----
-
-## 🔗 Important Links
-- **Live Website**: [https://shatakvpn.github.io/ConfigForge-V2Ray/](https://shatakvpn.github.io/ConfigForge-V2Ray/)
-- **GitHub Repository**: [https://github.com/ShatakVPN/ConfigForge-V2Ray](https://github.com/ShatakVPN/ConfigForge-V2Ray)
-
----
-
 <p align="center">
   <img src="https://img.shields.io/github/stars/ShatakVPN/ConfigForge?style=for-the-badge&color=yellow" alt="Stars" />
   <img src="https://img.shields.io/github/forks/ShatakVPN/ConfigForge?style=for-the-badge&color=blue" alt="Forks" />
@@ -120,11 +93,6 @@ ConfigForge-V2Ray/
 </p>
 
 ---
-
-## 📜 License
 This project is licensed under the **GPL-3.0 License**.  
-See the [LICENSE](LICENSE) file for details.
-
----
 
 ### ❤️ Built with love by [ShatakVPN](https://github.com/ShatakVPN)
