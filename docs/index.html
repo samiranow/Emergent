@@ -3,56 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConfigForge V2Ray Frontend</title>
+    <title>ConfigForge V2Ray</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
         }
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h1 {
             text-align: center;
-            margin-bottom: 1.5rem;
-            color: #333;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .description {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .form-select, .btn {
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .form-select:hover, .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         .btn-primary {
+            background: linear-gradient(90deg, #6e8efb, #a777e3);
+            border: none;
             width: 100%;
-            transition: background-color 0.3s;
+        }
+        .btn-success, .btn-info {
+            width: 100%;
+            margin-top: 1rem;
         }
         #configs-list {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 1rem;
-            padding: 1rem;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
             background: #f8f9fa;
-            border-radius: 10px;
+            border-radius: 15px;
+            max-height: 300px;
+            overflow-y: auto;
         }
         ul {
             list-style-type: none;
             padding: 0;
         }
         li {
-            padding: 0.5rem;
-            border-bottom: 1px solid #eee;
-        }
-        .config-file-section {
-            margin-bottom: 1rem;
-        }
-        .config-file-section h3 {
-            font-size: 1.2rem;
-            color: #007bff;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
             margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        li:hover {
+            transform: scale(1.02);
+            background: #e9ecef;
+        }
+        li span {
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        li button {
+            margin-left: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
         }
         [dir="rtl"] {
             text-align: right;
@@ -60,12 +101,32 @@
         .error-message {
             color: #dc3545;
             text-align: center;
+            font-weight: 500;
+        }
+        footer {
+            margin-top: auto;
+            padding: 1rem;
+            text-align: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        select option {
+            font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 id="title">VPN Config Selector</h1>
+        <p class="description" id="description">با انتخاب کشور خود، می‌توانید به پرسرعت‌ترین کانفیگ‌های V2Ray رایگان دسترسی داشته باشید.</p>
         <select id="language-select" class="form-select mb-3">
             <option value="en">English</option>
             <option value="fa">فارسی</option>
@@ -85,27 +146,30 @@
         </select>
         <select id="country-select" class="form-select mb-3">
             <option value="">Select Country</option>
-            <option value="United States">🇺🇸 United States</option>
-            <option value="Iran">🇮🇷 Iran</option>
-            <option value="China">🇨🇳 China</option>
-            <option value="United Kingdom">🇬🇧 United Kingdom</option>
-            <option value="Germany">🇩🇪 Germany</option>
-            <option value="France">🇫🇷 France</option>
-            <option value="Japan">🇯🇵 Japan</option>
-            <option value="Canada">🇨🇦 Canada</option>
-            <option value="Russia">🇷🇺 Russia</option>
-            <option value="India">🇮🇳 India</option>
-            <option value="Brazil">🇧🇷 Brazil</option>
-            <option value="Australia">🇦🇺 Australia</option>
-            <option value="Turkey">🇹🇷 Turkey</option>
-            <option value="Netherlands">🇳🇱 Netherlands</option>
-            <option value="Spain">🇪🇸 Spain</option>
+            <option value="us">🇺🇸 United States</option>
+            <option value="ir">🇮🇷 Iran</option>
+            <option value="cn">🇨🇳 China</option>
+            <option value="gb">🇬🇧 United Kingdom</option>
+            <option value="de">🇩🇪 Germany</option>
+            <option value="fr">🇫🇷 France</option>
+            <option value="jp">🇯🇵 Japan</option>
+            <option value="ca">🇨🇦 Canada</option>
+            <option value="ru">🇷🇺 Russia</option>
+            <option value="in">🇮🇳 India</option>
+            <option value="br">🇧🇷 Brazil</option>
+            <option value="au">🇦🇺 Australia</option>
+            <option value="tr">🇹🇷 Turkey</option>
+            <option value="nl">🇳🇱 Netherlands</option>
+            <option value="es">🇪🇸 Spain</option>
         </select>
         <button id="get-configs" class="btn btn-primary mb-3">Get Configs</button>
         <div id="configs-list"></div>
-        <button id="copy-all" class="btn btn-success mt-3" style="display: none; width: 100%;">Copy All to Clipboard</button>
-        <button id="download-sub" class="btn btn-info mt-3" style="display: none; width: 100%;">Download Configs File</button>
+        <button id="copy-all" class="btn btn-success mt-3" style="display: none;">Copy All to Clipboard</button>
+        <button id="download-sub" class="btn btn-info mt-3" style="display: none;">Download Configs File</button>
     </div>
+    <footer>
+        ساخته شده با عشق توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از گیت‌هاب و چک هاست
+    </footer>
 
     <script>
         const translations = {
@@ -115,9 +179,10 @@
                 copyAll: 'Copy All to Clipboard',
                 download: 'Download Configs File',
                 noConfigs: 'No configs found for this country.',
-                configsFound: 'Found {count} configs in {file}.',
+                configsFound: '{count} config files available:',
                 selectCountry: 'Select Country',
-                error: 'Error fetching configs. Please try again later.'
+                error: 'Error fetching configs. Please try again later.',
+                description: 'By selecting your country, you can access the fastest free V2Ray configs.'
             },
             fa: {
                 title: 'انتخاب کننده کانفیگ VPN',
@@ -125,9 +190,10 @@
                 copyAll: 'کپی همه به کلیپ‌بورد',
                 download: 'دانلود فایل کانفیگ‌ها',
                 noConfigs: 'هیچ کانفیگی برای این کشور یافت نشد.',
-                configsFound: '{count} کانفیگ در {file} یافت شد.',
+                configsFound: '{count} فایل کانفیگ در دسترس است:',
                 selectCountry: 'انتخاب کشور',
-                error: 'خطا در دریافت کانفیگ‌ها. لطفاً بعداً امتحان کنید.'
+                error: 'خطا در دریافت کانفیگ‌ها. لطفاً بعداً امتحان کنید.',
+                description: 'با انتخاب کشور خود، می‌توانید به پرسرعت‌ترین کانفیگ‌های V2Ray رایگان دسترسی داشته باشید.'
             },
             zh: {
                 title: 'VPN 配置选择器',
@@ -135,9 +201,10 @@
                 copyAll: '复制所有到剪贴板',
                 download: '下载配置文件',
                 noConfigs: '未找到此国家的配置。',
-                configsFound: '在 {file} 中找到 {count} 个配置。',
+                configsFound: '找到 {count} 个配置文件：',
                 selectCountry: '选择国家',
-                error: '获取配置时出错。请稍后再试。'
+                error: '获取配置时出错。请稍后再试。',
+                description: '通过选择您的国家，您可以访问最快的免费 V2Ray 配置。'
             },
             es: {
                 title: 'Selector de Configuración VPN',
@@ -145,9 +212,10 @@
                 copyAll: 'Copiar Todo al Portapapeles',
                 download: 'Descargar Archivo de Configuraciones',
                 noConfigs: 'No se encontraron configuraciones para este país.',
-                configsFound: 'Encontradas {count} configuraciones en {file}.',
+                configsFound: '{count} archivos de configuración disponibles:',
                 selectCountry: 'Seleccionar País',
-                error: 'Error al obtener configuraciones. Intenta de nuevo más tarde.'
+                error: 'Error al obtener configuraciones. Intenta de nuevo más tarde。',
+                description: 'Al seleccionar su país, puede acceder a las configuraciones V2Ray gratuitas más rápidas.'
             },
             fr: {
                 title: 'Sélecteur de Configuration VPN',
@@ -155,9 +223,10 @@
                 copyAll: 'Copier Tout dans le Presse-papiers',
                 download: 'Télécharger le Fichier de Configurations',
                 noConfigs: 'Aucune configuration trouvée pour ce pays.',
-                configsFound: '{count} configurations trouvées dans {file}.',
+                configsFound: '{count} fichiers de configuration disponibles :',
                 selectCountry: 'Sélectionner le Pays',
-                error: 'Erreur lors de la récupération des configurations. Réessayez plus tard.'
+                error: 'Erreur lors de la récupération des configurations. Réessayez plus tard.',
+                description: 'En sélectionnant votre pays, vous pouvez accéder aux configurations V2Ray gratuites les plus rapides.'
             },
             de: {
                 title: 'VPN-Konfigurationsauswahl',
@@ -165,9 +234,10 @@
                 copyAll: 'Alle in die Zwischenablage Kopieren',
                 download: 'Konfigurationsdatei Herunterladen',
                 noConfigs: 'Keine Konfigurationen für dieses Land gefunden.',
-                configsFound: '{count} Konfigurationen in {file} gefunden.',
+                configsFound: '{count} Konfigurationsdateien verfügbar:',
                 selectCountry: 'Land Auswählen',
-                error: 'Fehler beim Abrufen der Konfigurationen. Bitte später erneut versuchen.'
+                error: 'Fehler beim Abrufen der Konfigurationen. Bitte später erneut versuchen.',
+                description: 'Durch Auswahl Ihres Landes können Sie auf die schnellsten kostenlosen V2Ray-Konfigurationen zugreifen.'
             },
             ru: {
                 title: 'Селектор Конфигураций VPN',
@@ -175,9 +245,10 @@
                 copyAll: 'Скопировать Все в Буфер Обмена',
                 download: 'Скачать Файл Конфигураций',
                 noConfigs: 'Конфигурации для этой страны не найдены.',
-                configsFound: 'Найдено {count} конфигураций в {file}.',
+                configsFound: 'Доступно {count} файлов конфигурации:',
                 selectCountry: 'Выбрать Страну',
-                error: 'Ошибка при получении конфигураций. Попробуйте позже.'
+                error: 'Ошибка при получении конфигураций. Попробуйте позже.',
+                description: 'Выбрав свою страну, вы можете получить доступ к самым быстрым бесплатным конфигурациям V2Ray.'
             },
             ar: {
                 title: 'محدد تكوين VPN',
@@ -185,9 +256,10 @@
                 copyAll: 'نسخ الكل إلى الحافظة',
                 download: 'تنزيل ملف التكوينات',
                 noConfigs: 'لم يتم العثور على تكوينات لهذا البلد.',
-                configsFound: 'تم العثور على {count} تكوينات في {file}.',
+                configsFound: '{count} ملفات تكوين متاحة:',
                 selectCountry: 'اختر البلد',
-                error: 'خطأ في جلب التكوينات. حاول مرة أخرى لاحقًا.'
+                error: 'خطأ في جلب التكوينات. حاول مرة أخرى لاحقًا.',
+                description: 'باختيار بلدك، يمكنك الوصول إلى أسرع تكوينات V2Ray المجانية.'
             },
             ja: {
                 title: 'VPN 設定セレクター',
@@ -195,9 +267,10 @@
                 copyAll: 'すべてをクリップボードにコピー',
                 download: '設定ファイルをダウンロード',
                 noConfigs: 'この国に対する設定が見つかりませんでした。',
-                configsFound: '{file} で {count} 個の設定が見つかりました。',
+                configsFound: '{count} 個の設定ファイルが利用可能です：',
                 selectCountry: '国を選択',
-                error: '設定の取得中にエラーが発生しました。後で再試行してください。'
+                error: '設定の取得中にエラーが発生しました。後で再試行してください。',
+                description: '自分の国を選択することで、最速の無料 V2Ray 設定にアクセスできます。'
             },
             ko: {
                 title: 'VPN 구성 선택기',
@@ -205,9 +278,10 @@
                 copyAll: '모두 클립보드에 복사',
                 download: '구성 파일 다운로드',
                 noConfigs: '이 국가에 대한 구성이 없습니다.',
-                configsFound: '{file}에서 {count} 개의 구성을 찾았습니다.',
+                configsFound: '{count} 개의 구성 파일 사용 가능:',
                 selectCountry: '국가 선택',
-                error: '구성 가져오기 오류. 나중에 다시 시도하십시오.'
+                error: '구성 가져오기 오류. 나중에 다시 시도하십시오.',
+                description: '자신의 국가를 선택하여 가장 빠른 무료 V2Ray 구성에 액세스할 수 있습니다.'
             },
             hi: {
                 title: 'VPN कॉन्फ़िग चयनकर्ता',
@@ -215,9 +289,10 @@
                 copyAll: 'सभी को क्लिपबोर्ड पर कॉपी करें',
                 download: 'कॉन्फ़िग फ़ाइल डाउनलोड करें',
                 noConfigs: 'इस देश के लिए कोई कॉन्फ़िग नहीं मिला।',
-                configsFound: '{file} में {count} कॉन्फ़िग मिले।',
+                configsFound: '{count} कॉन्फ़िग फाइलें उपलब्ध हैं:',
                 selectCountry: 'देश चुनें',
-                error: 'कॉन्फ़िग प्राप्त करने में त्रुटि। कृपया बाद में पुनः प्रयास करें।'
+                error: 'कॉन्फ़िग प्राप्त करने में त्रुटि। कृपया बाद में पुनः प्रयास करें।',
+                description: 'अपने देश का चयन करके, आप सबसे तेज़ मुफ्त V2Ray कॉन्फ़िग तक पहुँच सकते हैं।'
             },
             pt: {
                 title: 'Seletor de Configuração VPN',
@@ -225,9 +300,10 @@
                 copyAll: 'Copiar Tudo para a Área de Transferência',
                 download: 'Baixar Arquivo de Configurações',
                 noConfigs: 'Nenhuma configuração encontrada para este país.',
-                configsFound: '{count} configurações encontradas em {file}.',
+                configsFound: '{count} arquivos de configuração disponíveis:',
                 selectCountry: 'Selecionar País',
-                error: 'Erro ao obter configurações. Tente novamente mais tarde.'
+                error: 'Erro ao obter configurações. Tente novamente mais tarde.',
+                description: 'Ao selecionar seu país, você pode acessar as configurações V2Ray gratuitas mais rápidas.'
             },
             it: {
                 title: 'Selettore Configurazione VPN',
@@ -235,9 +311,10 @@
                 copyAll: 'Copia Tutto negli Appunti',
                 download: 'Scarica File di Configurazioni',
                 noConfigs: 'Nessuna configurazione trovata per questo paese.',
-                configsFound: 'Trovate {count} configurazioni in {file}.',
+                configsFound: '{count} file di configurazione disponibili:',
                 selectCountry: 'Seleziona Paese',
-                error: 'Errore durante il recupero delle configurazioni. Riprova più tardi.'
+                error: 'Errore durante il recupero delle configurazioni. Riprova più tardi.',
+                description: 'Selezionando il tuo paese, puoi accedere alle configurazioni V2Ray gratuite più veloci.'
             },
             tr: {
                 title: 'VPN Yapılandırma Seçici',
@@ -245,9 +322,10 @@
                 copyAll: 'Tümünü Panoya Kopyala',
                 download: 'Yapılandırma Dosyasını İndir',
                 noConfigs: 'Bu ülke için yapılandırma bulunamadı.',
-                configsFound: '{file} içinde {count} yapılandırma bulundu.',
+                configsFound: '{count} yapılandırma dosyası mevcut:',
                 selectCountry: 'Ülke Seç',
-                error: 'Yapılandırmalar alınırken hata oluştu. Lütfen daha sonra tekrar deneyin.'
+                error: 'Yapılandırmalar alınırken hata oluştu. Lütfen daha sonra tekrar deneyin.',
+                description: 'Ülkenizi seçerek en hızlı ücretsiz V2Ray yapılandırmalarına erişebilirsiniz.'
             },
             nl: {
                 title: 'VPN Config Selector',
@@ -255,9 +333,10 @@
                 copyAll: 'Alles Kopiëren naar Klembord',
                 download: 'Configs Bestand Downloaden',
                 noConfigs: 'Geen configs gevonden voor dit land.',
-                configsFound: '{count} configs gevonden in {file}.',
+                configsFound: '{count} config bestanden beschikbaar:',
                 selectCountry: 'Selecteer Land',
-                error: 'Fout bij het ophalen van configs. Probeer het later opnieuw.'
+                error: 'Fout bij het ophalen van configs. Probeer het later opnieuw.',
+                description: 'Door uw land te selecteren, kunt u toegang krijgen tot de snelste gratis V2Ray-configs.'
             }
         };
 
@@ -274,6 +353,7 @@
             document.getElementById('copy-all').textContent = translations[lang].copyAll;
             document.getElementById('download-sub').textContent = translations[lang].download;
             document.getElementById('country-select').options[0].textContent = translations[lang].selectCountry;
+            document.getElementById('description').textContent = translations[lang].description;
         }
 
         updateLanguage(currentLang);
@@ -283,44 +363,11 @@
             updateLanguage(e.target.value);
         });
 
-        const countryMap = {
-            'United States': ['🇺🇸', 'us', 'usa', 'united states', 'america', 'new york', 'los angeles', 'chicago'],
-            'Iran': ['🇮🇷', 'ir', 'iran', 'tehran', 'ایران', 'تهران', 'persia'],
-            'China': ['🇨🇳', 'cn', 'china', 'beijing', 'shanghai', '中国'],
-            'United Kingdom': ['🇬🇧', 'gb', 'uk', 'united kingdom', 'london', 'england'],
-            'Germany': ['🇩🇪', 'de', 'germany', 'berlin', 'frankfurt', 'deutschland'],
-            'France': ['🇫🇷', 'fr', 'france', 'paris', 'marseille'],
-            'Japan': ['🇯🇵', 'jp', 'japan', 'tokyo', 'osaka', '日本'],
-            'Canada': ['🇨🇦', 'ca', 'canada', 'toronto', 'vancouver'],
-            'Russia': ['🇷🇺', 'ru', 'russia', 'moscow', 'saint petersburg', 'россия'],
-            'India': ['🇮🇳', 'in', 'india', 'mumbai', 'delhi', 'भारत'],
-            'Brazil': ['🇧🇷', 'br', 'brazil', 'sao paulo', 'rio de janeiro', 'brasil'],
-            'Australia': ['🇦🇺', 'au', 'australia', 'sydney', 'melbourne'],
-            'Turkey': ['🇹🇷', 'tr', 'turkey', 'istanbul', 'ankara', 'türkiye'],
-            'Netherlands': ['🇳🇱', 'nl', 'netherlands', 'amsterdam', 'rotterdam'],
-            'Spain': ['🇪🇸', 'es', 'spain', 'madrid', 'barcelona', 'españa']
-        };
-
-        function getRemark(line) {
-            try {
-                if (line.startsWith('vmess://')) {
-                    const jsonStr = atob(line.substring(8));
-                    const obj = JSON.parse(jsonStr);
-                    return obj.ps || '';
-                } else if (line.includes('#')) {
-                    return decodeURIComponent(line.split('#')[1] || '');
-                }
-            } catch (e) {
-                return '';
-            }
-            return '';
-        }
-
         const configFiles = ['all.txt', 'light.txt', 'vless.txt', 'vmess.txt', 'shadowsocks.txt', 'trojan.txt', 'unknown.txt'];
 
         document.getElementById('get-configs').addEventListener('click', async () => {
-            const country = document.getElementById('country-select').value;
-            if (!country) {
+            const countryCode = document.getElementById('country-select').value;
+            if (!countryCode) {
                 alert(translations[currentLang].selectCountry);
                 return;
             }
@@ -332,44 +379,51 @@
             copyBtn.style.display = 'none';
             downloadBtn.style.display = 'none';
 
+            let availableFiles = [];
             let allConfigs = [];
-            let hasContent = false;
 
             try {
                 for (const file of configFiles) {
-                    const url = `https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/${country}/${file}`;
+                    const url = `https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/${countryCode}/${file}`;
                     try {
                         const response = await fetch(url);
-                        if (!response.ok) continue; // Skip if file doesn't exist
-                        const text = await response.text();
-                        const decoded = atob(text); // Decode base64
-                        const lines = decoded.split('\n').filter(line => line.trim() !== '');
-
-                        if (lines.length > 0) {
-                            hasContent = true;
-                            const section = document.createElement('div');
-                            section.className = 'config-file-section';
-                            section.innerHTML = `<h3>${file}</h3><p>${translations[currentLang].configsFound.replace('{count}', lines.length).replace('{file}', file)}</p>`;
-                            const ul = document.createElement('ul');
-                            lines.forEach(line => {
-                                const remark = getRemark(line);
-                                const li = document.createElement('li');
-                                li.textContent = remark || 'Unknown';
-                                ul.appendChild(li);
-                                allConfigs.push(line);
-                            });
-                            section.appendChild(ul);
-                            listDiv.appendChild(section);
+                        if (!response.ok) {
+                            console.warn(`File ${file} not found for ${countryCode}`);
+                            continue;
                         }
+                        availableFiles.push({ file, url });
+                        const text = await response.text();
+                        const lines = text.split('\n').filter(line => line.trim() !== '');
+                        allConfigs.push(...lines);
                     } catch (e) {
                         console.warn(`Failed to fetch ${file}:`, e);
                         continue;
                     }
                 }
 
-                if (!hasContent) {
+                listDiv.innerHTML = '';
+                if (availableFiles.length === 0) {
                     listDiv.innerHTML = `<p class="error-message">${translations[currentLang].noConfigs}</p>`;
                 } else {
+                    listDiv.innerHTML = `<p>${translations[currentLang].configsFound.replace('{count}', availableFiles.length)}</p>`;
+                    const ul = document.createElement('ul');
+                    availableFiles.forEach(({ file, url }) => {
+                        const li = document.createElement('li');
+                        const span = document.createElement('span');
+                        span.textContent = file;
+                        const copyIcon = document.createElement('button');
+                        copyIcon.innerHTML = '📋';
+                        copyIcon.onclick = () => {
+                            navigator.clipboard.writeText(url).then(() => {
+                                alert('URL copied to clipboard! Paste it into your V2Ray client for always up-to-date configs.');
+                            });
+                        };
+                        li.appendChild(span);
+                        li.appendChild(copyIcon);
+                        ul.appendChild(li);
+                    });
+                    listDiv.appendChild(ul);
+
                     copyBtn.style.display = 'block';
                     downloadBtn.style.display = 'block';
                     copyBtn.onclick = () => {
@@ -382,7 +436,7 @@
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = `${country}_v2ray_configs.txt`;
+                        a.download = `${countryCode}_v2ray_configs.txt`;
                         a.click();
                         URL.revokeObjectURL(url);
                     };
@@ -397,10 +451,10 @@
         fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(data => {
-                const countryName = data.country_name;
+                const countryCode = data.country_code?.toLowerCase();
                 const countrySelect = document.getElementById('country-select');
-                if (countryName && countrySelect.querySelector(`option[value="${countryName}"]`)) {
-                    countrySelect.value = countryName;
+                if (countryCode && countrySelect.querySelector(`option[value="${countryCode}"]`)) {
+                    countrySelect.value = countryCode;
                 }
             })
             .catch(() => {});
