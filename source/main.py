@@ -41,14 +41,13 @@ async def main_async():
     sem = asyncio.Semaphore(50)
 
     async def test_line_country(line_host, country_code):
-        line, host = line_host
-        nodes = country_nodes_dict.get(country_code, [])
-        # اگر Node برای کشور وجود ندارد، پینگ نامحدود
-        if not nodes:
-            return float('inf'), line, country_code
-        async with sem:
-            latency = await test_speed(host)
-            return latency, line, country_code
+    line, host = line_host
+    nodes = country_nodes_dict.get(country_code, [])
+    if not nodes:
+        return float('inf'), line, country_code
+    async with sem:
+        latency = await test_speed(host, country_nodes=nodes)
+        return latency, line, country_code
 
     # تست سرعت و مرتب‌سازی
     for country_code, categorized in categorized_per_country.items():
