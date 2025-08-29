@@ -5,6 +5,7 @@ from datetime import datetime
 # URLs to fetch VPN configurations from
 URLS = [
     "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
+    "https://www.v2nodes.com/subscriptions/country/all/?key=769B61EA877690D",
     "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
 ]
 
