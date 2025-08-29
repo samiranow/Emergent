@@ -4,192 +4,178 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ConfigForge VPN</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --primary: #1e90ff;
-  --secondary: #32cd32;
-  --bg: #f5f5f5;
-  --text: #222;
-  --rtl-font: 'Tahoma', sans-serif;
-}
-body {
-  font-family: 'Roboto', sans-serif;
-  margin:0;
-  background: var(--bg);
-  color: var(--text);
-}
-header {
-  text-align:center;
-  font-size:2rem;
-  font-weight:bold;
-  padding:1.5rem;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  color:white;
-}
-.controls {
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:1rem;
-  margin:1rem;
-}
-select {
-  padding:0.5rem 1rem;
-  border-radius:8px;
-  border:1px solid #ccc;
-  cursor:pointer;
-}
-.downloads {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:1rem;
-  margin:2rem auto;
-  max-width:1200px;
-}
-.country-card {
-  background:white;
-  border-radius:12px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-  padding:1rem;
-  text-align:center;
-  width:250px;
-}
-.country-card img {
-  width:40px;
-  margin-right:0.5rem;
-  vertical-align:middle;
-}
-.country-card h3 { margin:0.5rem 0; }
-.btn {
-  display:inline-block;
-  margin:0.3rem 0;
-  padding:0.5rem 0.8rem;
-  border-radius:8px;
-  background: var(--primary);
-  color:white;
-  font-weight:bold;
-  text-decoration:none;
-  transition:0.2s;
-}
-.btn:hover { background: var(--secondary); transform:translateY(-2px);}
-footer {
-  text-align:center;
-  padding:1rem;
-  font-size:0.9rem;
-  color:#555;
-  border-top:1px solid #ccc;
-  margin-top:2rem;
-}
-[dir="rtl"] body { font-family: var(--rtl-font); text-align:right;}
-@media(max-width:600px){ .downloads{ flex-direction:column; align-items:center; } }
+    /* Reset & base */
+    * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif;}
+    body {background: linear-gradient(135deg,#0077ff,#00ff88); color:#fff; min-height:100vh;}
+    a {color:#fff; text-decoration:none;}
+    /* Header */
+    header {text-align:center; padding:2rem; background: rgba(0,0,0,0.2);}
+    header h1 {font-size:2.5rem; letter-spacing:1px;}
+    .lang-select {margin-top:1rem;}
+    select {padding:.5rem 1rem; border-radius:10px; border:none; font-size:1rem;}
+    /* Main */
+    main {padding:2rem; max-width:1000px; margin:0 auto;}
+    .section {background: rgba(0,0,0,0.25); border-radius:15px; padding:1.5rem; margin-bottom:1.5rem;}
+    h2 {margin-bottom:1rem; text-align:center;}
+    .country-select, .config-buttons {display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; margin-bottom:1rem;}
+    .country-select button {padding:.5rem 1rem; border-radius:10px; border:none; cursor:pointer; background: rgba(255,255,255,0.2); display:flex; align-items:center; gap:0.5rem;}
+    .country-select img {width:24px; height:16px; object-fit:cover;}
+    .config-buttons button {padding:.5rem 1rem; border-radius:10px; border:none; cursor:pointer; background: rgba(255,255,255,0.2); transition:0.2s; font-weight:bold;}
+    .config-buttons button:hover {background: rgba(255,255,255,0.4);}
+    /* Table */
+    table {width:100%; border-collapse:collapse; margin-top:1rem;}
+    th, td {padding:.5rem; border:1px solid rgba(255,255,255,0.3); text-align:center;}
+    th {background: rgba(0,0,0,0.3);}
+    /* Footer */
+    footer {text-align:center; padding:1rem; background: rgba(0,0,0,0.2);}
 </style>
 </head>
 <body>
-<header>ConfigForge VPN</header>
-
-<div class="controls">
-  <div>
-    <label for="lang">Language:</label>
-    <select id="lang">
-      <option value="en" selected>English</option>
-      <option value="fa">فارسی</option>
-      <option value="ar">العربية</option>
-      <option value="es">Español</option>
-      <option value="fr">Français</option>
-      <option value="de">Deutsch</option>
-      <option value="ru">Русский</option>
-      <option value="zh">中文</option>
-      <option value="ja">日本語</option>
-      <option value="hi">हिंदी</option>
-      <option value="pt">Português</option>
-    </select>
-  </div>
-  <div>
-    <label for="country">Country:</label>
-    <select id="country"></select>
-  </div>
-</div>
-
-<div class="downloads" id="downloads"></div>
-
+<header>
+    <h1>ConfigForge VPN</h1>
+    <div class="lang-select">
+        <label for="language">Language:</label>
+        <select id="language"></select>
+    </div>
+</header>
+<main>
+    <div class="section">
+        <h2 id="select-country-title">Select Country</h2>
+        <div class="country-select" id="country-buttons"></div>
+    </div>
+    <div class="section">
+        <h2 id="config-title">Download Config</h2>
+        <div class="config-buttons" id="config-buttons"></div>
+        <table id="config-table">
+            <thead>
+                <tr>
+                    <th id="table-protocol">Protocol</th>
+                    <th id="table-file">File</th>
+                    <th id="table-desc">Description</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</main>
 <footer>
-  ساخته شده با ❤️ توسط <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | قدرت گرفته از <a href="https://github.com" target="_blank">GitHub</a> + <a href="https://check-host.net" target="_blank">Check-Host</a>
+    Made with ❤️ by <a href="https://github.com/ShatakVPN" target="_blank">ShatakVPN</a> | Powered by <a href="https://github.com" target="_blank">GitHub</a> + <a href="https://check-host.net" target="_blank">Check-Host</a>
 </footer>
 
 <script>
-const countries=[
-  {code:'at',name:'Austria',flag:'https://flagcdn.com/w20/at.png'},
-  {code:'au',name:'Australia',flag:'https://flagcdn.com/w20/au.png'},
-  {code:'bg',name:'Bulgaria',flag:'https://flagcdn.com/w20/bg.png'},
-  {code:'br',name:'Brazil',flag:'https://flagcdn.com/w20/br.png'},
-  {code:'ca',name:'Canada',flag:'https://flagcdn.com/w20/ca.png'},
-  {code:'ch',name:'Switzerland',flag:'https://flagcdn.com/w20/ch.png'},
-  {code:'cz',name:'Czech Republic',flag:'https://flagcdn.com/w20/cz.png'},
-  {code:'de',name:'Germany',flag:'https://flagcdn.com/w20/de.png'},
-  {code:'es',name:'Spain',flag:'https://flagcdn.com/w20/es.png'},
-  {code:'fi',name:'Finland',flag:'https://flagcdn.com/w20/fi.png'},
-  {code:'fr',name:'France',flag:'https://flagcdn.com/w20/fr.png'},
-  {code:'gb',name:'United Kingdom',flag:'https://flagcdn.com/w20/gb.png'},
-  {code:'hk',name:'Hong Kong',flag:'https://flagcdn.com/w20/hk.png'},
-  {code:'hu',name:'Hungary',flag:'https://flagcdn.com/w20/hu.png'},
-  {code:'id',name:'Indonesia',flag:'https://flagcdn.com/w20/id.png'},
-  {code:'il',name:'Israel',flag:'https://flagcdn.com/w20/il.png'},
-  {code:'in',name:'India',flag:'https://flagcdn.com/w20/in.png'},
-  {code:'ir',name:'Iran',flag:'https://flagcdn.com/w20/ir.png'},
-  {code:'it',name:'Italy',flag:'https://flagcdn.com/w20/it.png'},
-  {code:'jp',name:'Japan',flag:'https://flagcdn.com/w20/jp.png'},
-  {code:'kr',name:'South Korea',flag:'https://flagcdn.com/w20/kr.png'},
-  {code:'kz',name:'Kazakhstan',flag:'https://flagcdn.com/w20/kz.png'},
-  {code:'lt',name:'Lithuania',flag:'https://flagcdn.com/w20/lt.png'},
-  {code:'md',name:'Moldova',flag:'https://flagcdn.com/w20/md.png'},
-  {code:'nl',name:'Netherlands',flag:'https://flagcdn.com/w20/nl.png'},
-  {code:'pl',name:'Poland',flag:'https://flagcdn.com/w20/pl.png'},
-  {code:'pt',name:'Portugal',flag:'https://flagcdn.com/w20/pt.png'},
-  {code:'rs',name:'Serbia',flag:'https://flagcdn.com/w20/rs.png'},
-  {code:'ru',name:'Russia',flag:'https://flagcdn.com/w20/ru.png'},
-  {code:'se',name:'Sweden',flag:'https://flagcdn.com/w20/se.png'},
-  {code:'sg',name:'Singapore',flag:'https://flagcdn.com/w20/sg.png'},
-  {code:'si',name:'Slovenia',flag:'https://flagcdn.com/w20/si.png'},
-  {code:'tr',name:'Turkey',flag:'https://flagcdn.com/w20/tr.png'},
-  {code:'ua',name:'Ukraine',flag:'https://flagcdn.com/w20/ua.png'},
-  {code:'us',name:'United States',flag:'https://flagcdn.com/w20/us.png'},
-  {code:'vn',name:'Vietnam',flag:'https://flagcdn.com/w20/vn.png'}
+const languages = [
+  {code:'en', name:'English', dir:'ltr'},
+  {code:'fr', name:'Français', dir:'ltr'},
+  {code:'es', name:'Español', dir:'ltr'},
+  {code:'de', name:'Deutsch', dir:'ltr'},
+  {code:'it', name:'Italiano', dir:'ltr'},
+  {code:'ru', name:'Русский', dir:'ltr'},
+  {code:'zh', name:'中文', dir:'ltr'},
+  {code:'ja', name:'日本語', dir:'ltr'},
+  {code:'ar', name:'العربية', dir:'rtl'},
+  {code:'fa', name:'فارسی', dir:'rtl'},
+  {code:'pt', name:'Português', dir:'ltr'},
+  {code:'hi', name:'हिन्दी', dir:'ltr'},
+  {code:'ko', name:'한국어', dir:'ltr'},
+  {code:'tr', name:'Türkçe', dir:'ltr'},
+  {code:'id', name:'Bahasa Indonesia', dir:'ltr'}
 ];
-const files=['all','light','vless','vmess','shadowsocks','trojan'];
 
-function detectCountry(){ let region='us'; try{ const loc=navigator.language||navigator.userLanguage; region=loc.slice(-2).toLowerCase(); if(!countries.find(c=>c.code===region))region='us';}catch{region='us';} return region; }
+const languageSelect = document.getElementById('language');
+languages.forEach(lang=>{
+    const opt=document.createElement('option');
+    opt.value=lang.code;
+    opt.textContent=lang.name;
+    languageSelect.appendChild(opt);
+});
 
-function renderDownloads(code){
-  const container=document.getElementById('downloads'); container.innerHTML='';
-  const country=countries.find(c=>c.code===code)||countries[0];
-  const card=document.createElement('div'); card.className='country-card';
-  card.innerHTML=`<img src="${country.flag}">${country.name}`;
-  files.forEach(f=>{
-    const btn=document.createElement('a'); btn.className='btn';
-    btn.textContent=f;
-    btn.href=`https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/${country.code}/${f}.txt`;
-    btn.target='_blank';
-    btn.title=f==='light'?'Fastest 30 configs':`Download ${f}.txt`;
-    card.appendChild(btn);
-  });
-  container.appendChild(card);
+// Country list
+const countries = [
+    {code:'us', name:'United States', flag:'https://flagcdn.com/us.svg'},
+    {code:'ca', name:'Canada', flag:'https://flagcdn.com/ca.svg'},
+    {code:'de', name:'Germany', flag:'https://flagcdn.com/de.svg'},
+    {code:'fr', name:'France', flag:'https://flagcdn.com/fr.svg'},
+    {code:'gb', name:'United Kingdom', flag:'https://flagcdn.com/gb.svg'},
+    {code:'jp', name:'Japan', flag:'https://flagcdn.com/jp.svg'},
+    {code:'kr', name:'South Korea', flag:'https://flagcdn.com/kr.svg'},
+    {code:'au', name:'Australia', flag:'https://flagcdn.com/au.svg'},
+    {code:'br', name:'Brazil', flag:'https://flagcdn.com/br.svg'},
+    {code:'vn', name:'Vietnam', flag:'https://flagcdn.com/vn.svg'}
+    // بقیه کشورها را طبق دایرکتوری configs اضافه کنید
+];
+
+const countryButtonsDiv = document.getElementById('country-buttons');
+let selectedCountry = countries[0].code;
+
+function renderCountries() {
+    countryButtonsDiv.innerHTML='';
+    countries.forEach(c=>{
+        const btn=document.createElement('button');
+        btn.innerHTML=`<img src="${c.flag}">${c.name}`;
+        btn.onclick=()=>{ selectedCountry=c.code; renderConfigs(); };
+        countryButtonsDiv.appendChild(btn);
+    });
 }
 
-const countrySelect=document.getElementById('country');
-countries.forEach(c=>{
-  const opt=document.createElement('option'); opt.value=c.code; opt.textContent=c.name; countrySelect.appendChild(opt);
-});
-const userCountry=detectCountry(); countrySelect.value=userCountry; renderDownloads(userCountry);
+// Config files
+const configTypes = ['all','light','vless','vmess','shadowsocks','trojan'];
+const configButtonsDiv = document.getElementById('config-buttons');
+let selectedConfigType = 'all';
 
-document.getElementById('lang').addEventListener('change',e=>{
-  const l=e.target.value; document.documentElement.lang=l;
-  document.documentElement.dir=(l==='fa'||l==='ar')?'rtl':'ltr';
-  // TODO: اضافه کردن ترجمه کامل
+function renderConfigButtons() {
+    configButtonsDiv.innerHTML='';
+    configTypes.forEach(type=>{
+        const btn=document.createElement('button');
+        btn.textContent=type.toUpperCase();
+        btn.onclick=()=>{ selectedConfigType=type; renderConfigs(); };
+        configButtonsDiv.appendChild(btn);
+    });
+}
+
+function renderConfigs() {
+    const tbody = document.querySelector('#config-table tbody');
+    tbody.innerHTML='';
+    const urlBase = 'https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/';
+    const countryDir = selectedCountry+'/';
+    const type = selectedConfigType+'.txt';
+    const url = urlBase + countryDir + type;
+    const desc = {
+        'all':'All configs available',
+        'light':'Fastest 30 configs',
+        'vless':'VLESS configs',
+        'vmess':'VMess configs',
+        'shadowsocks':'Shadowsocks configs',
+        'trojan':'Trojan configs'
+    };
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${selectedConfigType.toUpperCase()}</td>
+                  <td><a href="${url}" target="_blank">${type}</a></td>
+                  <td>${desc[selectedConfigType]}</td>`;
+    tbody.appendChild(tr);
+}
+
+// Language change
+languageSelect.addEventListener('change',()=>{
+    const lang=languages.find(l=>l.code===languageSelect.value);
+    document.documentElement.lang=lang.code;
+    document.documentElement.dir=lang.dir;
+    // ترجمه متون ساده
+    document.getElementById('select-country-title').textContent=lang.code==='fr'?'Sélectionnez le pays':lang.code==='es'?'Seleccione el país':'Select Country';
+    document.getElementById('config-title').textContent=lang.code==='fr'?'Télécharger la configuration':lang.code==='es'?'Descargar Configuración':'Download Config';
+    document.getElementById('table-protocol').textContent=lang.code==='fr'?'Protocole':lang.code==='es'?'Protocolo':'Protocol';
+    document.getElementById('table-file').textContent=lang.code==='fr'?'Fichier':lang.code==='es'?'Archivo':'File';
+    document.getElementById('table-desc').textContent=lang.code==='fr'?'Description':lang.code==='es'?'Descripción':'Description';
 });
 
-countrySelect.addEventListener('change',e=>{ renderDownloads(e.target.value); });
+// Auto-detect country (simple)
+fetch('https://ipapi.co/json/').then(r=>r.json()).then(data=>{
+    const cc=data.country_code.toLowerCase();
+    if(countries.find(c=>c.code===cc)) selectedCountry=cc;
+    renderCountries();
+    renderConfigButtons();
+    renderConfigs();
+});
 </script>
 </body>
 </html>
