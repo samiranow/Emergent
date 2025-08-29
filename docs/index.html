@@ -5,90 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ConfigForge</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.7.6/css/flag-icons.min.css"/>
-  <script>
-    // تشخیص زبان مرورگر و تنظیم خودکار
-    const userLang = navigator.language || navigator.userLanguage;
-    const langSelector = document.getElementById("lang-select");
-    if(langSelector) {
-      if(userLang.startsWith("fa")) langSelector.value = "fa";
-      else if(userLang.startsWith("en")) langSelector.value = "en";
-      // بقیه زبان‌ها می‌توان اضافه شوند
-    }
-  </script>
+  <style>
+    body.rtl { direction: rtl; text-align: right; }
+    .flag { width: 1.5em; height: auto; margin-right: 0.5em; vertical-align: middle; }
+  </style>
 </head>
 <body class="bg-gradient-to-r from-blue-500 to-green-400 text-white font-sans min-h-screen flex flex-col">
 
   <!-- Header -->
-  <header class="bg-black bg-opacity-50 p-4 shadow-lg flex flex-wrap justify-between items-center">
+  <header class="bg-black bg-opacity-50 p-4 shadow-lg flex justify-between items-center">
     <h1 class="text-2xl font-bold tracking-wide">ConfigForge</h1>
-    <div class="flex space-x-4 items-center">
-      <!-- Language Dropdown -->
-      <select id="lang-select" class="bg-gray-900 text-white p-2 rounded-md">
-        <option value="en">English</option>
-        <option value="fa">فارسی</option>
-        <option value="fr">Français</option>
-        <option value="es">Español</option>
-        <option value="de">Deutsch</option>
-        <option value="zh">中文</option>
-        <option value="ja">日本語</option>
-        <!-- بقیه زبان‌ها اضافه شود -->
-      </select>
-      <!-- Country Dropdown -->
-      <select id="country-select" class="bg-gray-900 text-white p-2 rounded-md">
-        <option value="us" data-flag="us">🇺🇸 United States</option>
-        <option value="ir" data-flag="ir">🇮🇷 ایران</option>
-        <option value="fr" data-flag="fr">🇫🇷 France</option>
-        <option value="de" data-flag="de">🇩🇪 Germany</option>
-        <option value="jp" data-flag="jp">🇯🇵 Japan</option>
-        <option value="gb" data-flag="gb">🇬🇧 United Kingdom</option>
-        <!-- بقیه کشورها اضافه شود -->
-      </select>
-    </div>
+    <select id="lang-select" class="bg-gray-900 text-white p-2 rounded-md">
+      <option value="en">English</option>
+      <option value="fa">فارسی</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+      <option value="de">Deutsch</option>
+      <option value="zh">中文</option>
+      <option value="ja">日本語</option>
+      <option value="ar">العربية</option>
+      <!-- می‌توان زبان‌های بیشتر اضافه کرد -->
+    </select>
   </header>
 
   <!-- Hero Section -->
-  <section class="flex flex-col items-center justify-center flex-1 text-center p-8 space-y-6">
-    <h2 class="text-4xl md:text-6xl font-extrabold animate-pulse">دریافت سریع‌ترین کانفیگ V2Ray برای کشور شما</h2>
-    <p class="text-lg md:text-2xl max-w-2xl">
-      با سرویس ما می‌توانید برای کشوری که از آن به اینترنت متصل هستید، بهترین و سریع‌ترین کانفیگ V2Ray را دریافت کنید.
+  <section class="flex flex-col items-center justify-center flex-1 text-center p-8 space-y-4">
+    <h2 id="hero-title" class="text-4xl md:text-5xl font-extrabold animate-pulse">Get the fastest V2Ray config for your country</h2>
+    <p id="hero-desc" class="text-lg md:text-2xl max-w-2xl">
+      Use our service to instantly get the best V2Ray config based on the country you are connecting from.
     </p>
-    <button id="get-config" class="bg-white text-blue-600 font-bold px-6 py-3 rounded-lg shadow-lg hover:scale-105 transform transition">
-      دریافت کانفیگ
-    </button>
+    <div class="flex flex-wrap justify-center items-center space-x-2 space-y-2">
+      <select id="country-select" class="bg-gray-900 text-white p-2 rounded-md">
+        <option value="us">🇺🇸 United States</option>
+        <option value="ir">🇮🇷 ایران</option>
+        <option value="fr">🇫🇷 France</option>
+        <option value="de">🇩🇪 Germany</option>
+        <option value="jp">🇯🇵 Japan</option>
+        <option value="gb">🇬🇧 United Kingdom</option>
+      </select>
+      <button id="get-config" class="bg-white text-blue-600 font-bold px-6 py-3 rounded-lg shadow-lg hover:scale-105 transform transition">
+        Get Config
+      </button>
+    </div>
   </section>
 
-  <!-- Features / Info -->
+  <!-- Features Section -->
   <section class="bg-black bg-opacity-30 p-8 space-y-4">
-    <h3 class="text-2xl font-bold text-center">ویژگی‌ها</h3>
+    <h3 class="text-2xl font-bold text-center" id="features-title">Features</h3>
     <ul class="grid md:grid-cols-3 gap-6 mt-4">
       <li class="bg-gray-800 bg-opacity-60 p-4 rounded-lg shadow-md hover:scale-105 transition transform">
-        <h4 class="font-bold text-xl mb-2">چند زبانه</h4>
-        <p>پشتیبانی از زبان‌های مختلف با تشخیص خودکار زبان مرورگر.</p>
+        <h4 class="font-bold text-xl mb-2" id="feat-multi">Multilingual</h4>
+        <p id="feat-multi-desc">Supports multiple languages with automatic detection.</p>
       </li>
       <li class="bg-gray-800 bg-opacity-60 p-4 rounded-lg shadow-md hover:scale-105 transition transform">
-        <h4 class="font-bold text-xl mb-2">کشور خودکار</h4>
-        <p>انتخاب سریع کشور برای تست و دریافت بهترین کانفیگ.</p>
+        <h4 class="font-bold text-xl mb-2" id="feat-country">Country-based</h4>
+        <p id="feat-country-desc">Select your country quickly to get the best config.</p>
       </li>
       <li class="bg-gray-800 bg-opacity-60 p-4 rounded-lg shadow-md hover:scale-105 transition transform">
-        <h4 class="font-bold text-xl mb-2">امن و سریع</h4>
-        <p>کانفیگ‌های بهینه برای سرعت و امنیت حداکثری.</p>
+        <h4 class="font-bold text-xl mb-2" id="feat-secure">Secure & Fast</h4>
+        <p id="feat-secure-desc">Optimized configs for maximum speed and security.</p>
       </li>
     </ul>
   </section>
 
   <!-- Footer -->
   <footer class="bg-black bg-opacity-50 text-gray-300 p-4 text-center mt-auto">
-    ساخته شده با ❤️ توسط <a href="https://github.com/YOUR_USERNAME" class="underline">YOUR_USERNAME</a> |
-    قدرت گرفته از <a href="https://github.com" class="underline">GitHub</a> + <a href="https://check-host.net" class="underline">Check-Host</a>
+    Made with ❤️ by <a href="https://github.com/YOUR_USERNAME" class="underline">YOUR_USERNAME</a> |
+    Powered by <a href="https://github.com" class="underline">GitHub</a> + <a href="https://check-host.net" class="underline">Check-Host</a>
   </footer>
 
   <script>
-    // مثال: دریافت کانفیگ بر اساس کشور انتخابی
+    const i18n = {
+      en: {
+        heroTitle: "Get the fastest V2Ray config for your country",
+        heroDesc: "Use our service to instantly get the best V2Ray config based on the country you are connecting from.",
+        getBtn: "Get Config",
+        featuresTitle: "Features",
+        featMulti: "Multilingual",
+        featMultiDesc: "Supports multiple languages with automatic detection.",
+        featCountry: "Country-based",
+        featCountryDesc: "Select your country quickly to get the best config.",
+        featSecure: "Secure & Fast",
+        featSecureDesc: "Optimized configs for maximum speed and security."
+      },
+      fa: {
+        heroTitle: "دریافت سریع‌ترین کانفیگ V2Ray برای کشور شما",
+        heroDesc: "با سرویس ما می‌توانید برای کشوری که از آن به اینترنت متصل هستید، بهترین کانفیگ V2Ray را دریافت کنید.",
+        getBtn: "دریافت کانفیگ",
+        featuresTitle: "ویژگی‌ها",
+        featMulti: "چند زبانه",
+        featMultiDesc: "پشتیبانی از زبان‌های مختلف با تشخیص خودکار.",
+        featCountry: "کشوری",
+        featCountryDesc: "انتخاب سریع کشور برای دریافت بهترین کانفیگ.",
+        featSecure: "امن و سریع",
+        featSecureDesc: "کانفیگ‌های بهینه برای سرعت و امنیت حداکثری."
+      }
+      // می‌توان زبان‌های بیشتر اضافه کرد
+    };
+
+    const langSelect = document.getElementById("lang-select");
+    function updateLanguage() {
+      const lang = langSelect.value;
+      const rtl = ["fa","ar"].includes(lang);
+      document.body.classList.toggle("rtl", rtl);
+      document.body.lang = lang;
+
+      const dict = i18n[lang] || i18n.en;
+      document.getElementById("hero-title").textContent = dict.heroTitle;
+      document.getElementById("hero-desc").textContent = dict.heroDesc;
+      document.getElementById("get-config").textContent = dict.getBtn;
+      document.getElementById("features-title").textContent = dict.featuresTitle;
+      document.getElementById("feat-multi").textContent = dict.featMulti;
+      document.getElementById("feat-multi-desc").textContent = dict.featMultiDesc;
+      document.getElementById("feat-country").textContent = dict.featCountry;
+      document.getElementById("feat-country-desc").textContent = dict.featCountryDesc;
+      document.getElementById("feat-secure").textContent = dict.featSecure;
+      document.getElementById("feat-secure-desc").textContent = dict.featSecureDesc;
+    }
+
+    langSelect.addEventListener("change", updateLanguage);
+
+    // detect browser language on load
+    window.addEventListener("load", () => {
+      const browserLang = navigator.language.startsWith("fa") ? "fa" : "en";
+      langSelect.value = browserLang;
+      updateLanguage();
+    });
+
     document.getElementById("get-config").addEventListener("click", () => {
       const country = document.getElementById("country-select").value;
-      alert(`کانفیگ کشور ${country.toUpperCase()} آماده خواهد شد!`);
-      // بعداً می‌توان API ما را صدا زد و لینک دانلود را برگرداند
+      alert(`Config for ${country.toUpperCase()} will be prepared!`);
     });
   </script>
 </body>
