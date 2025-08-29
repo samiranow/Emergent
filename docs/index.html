@@ -1,158 +1,201 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ConfigForge V2Ray</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  // ترجمه‌ها
-  const translations = {
-    en: {
-      description: "Get the fastest V2Ray config for your country. Light file contains top 30 fastest configs.",
-      download: "Download Config",
-      selectCountry: "Select your country",
-      selectLanguage: "Language"
-    },
-    fa: {
-      description: "سریع‌ترین کانفیگ V2Ray برای کشور شما. فایل Light شامل ۳۰ کانفیگ سریع‌تر است.",
-      download: "دریافت کانفیگ",
-      selectCountry: "کشور خود را انتخاب کنید",
-      selectLanguage: "زبان"
-    },
-    ar: {
-      description: "احصل على أسرع إعدادات V2Ray لبلدك. يحتوي ملف Light على أسرع 30 إعداد.",
-      download: "تحميل الإعداد",
-      selectCountry: "اختر دولتك",
-      selectLanguage: "اللغة"
-    },
-    es: {
-      description: "Obtén la configuración V2Ray más rápida para tu país. El archivo Light contiene los 30 configs más rápidos.",
-      download: "Descargar Config",
-      selectCountry: "Selecciona tu país",
-      selectLanguage: "Idioma"
+<title>ConfigForge VPN</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: #00b4d8;
+        --secondary-color: #48cae4;
+        --accent-color: #90e0ef;
+        --bg-color: #f1faee;
+        --text-color: #023047;
     }
-  };
-
-  // شناسایی زبان مرورگر
-  let userLang = navigator.language.slice(0,2);
-  if (!translations[userLang]) userLang = "en";
-  let currentLang = userLang;
-
-  function changeLanguage(lang){
-    currentLang = lang;
-    document.querySelector("#desc").textContent = translations[lang].description;
-    document.querySelector("#btn-download").textContent = translations[lang].download;
-    document.querySelector("#label-country").textContent = translations[lang].selectCountry;
-    document.querySelector("#label-lang").textContent = translations[lang].selectLanguage;
-    document.documentElement.dir = ["fa","ar"].includes(lang) ? "rtl":"ltr";
-  }
-
-  // کشورها و پرچم‌ها
-  const countries = [
-    {code:"at", name:"Austria", flag:"🇦🇹"},
-    {code:"au", name:"Australia", flag:"🇦🇺"},
-    {code:"bg", name:"Bulgaria", flag:"🇧🇬"},
-    {code:"br", name:"Brazil", flag:"🇧🇷"},
-    {code:"ca", name:"Canada", flag:"🇨🇦"},
-    {code:"ch", name:"Switzerland", flag:"🇨🇭"},
-    {code:"cz", name:"Czech Republic", flag:"🇨🇿"},
-    {code:"de", name:"Germany", flag:"🇩🇪"},
-    {code:"es", name:"Spain", flag:"🇪🇸"},
-    {code:"fi", name:"Finland", flag:"🇫🇮"},
-    {code:"fr", name:"France", flag:"🇫🇷"},
-    {code:"gb", name:"United Kingdom", flag:"🇬🇧"},
-    {code:"hk", name:"Hong Kong", flag:"🇭🇰"},
-    {code:"hu", name:"Hungary", flag:"🇭🇺"},
-    {code:"id", name:"Indonesia", flag:"🇮🇩"},
-    {code:"il", name:"Israel", flag:"🇮🇱"},
-    {code:"in", name:"India", flag:"🇮🇳"},
-    {code:"ir", name:"Iran", flag:"🇮🇷"},
-    {code:"it", name:"Italy", flag:"🇮🇹"},
-    {code:"jp", name:"Japan", flag:"🇯🇵"},
-    {code:"kr", name:"South Korea", flag:"🇰🇷"},
-    {code:"kz", name:"Kazakhstan", flag:"🇰🇿"},
-    {code:"lt", name:"Lithuania", flag:"🇱🇹"},
-    {code:"md", name:"Moldova", flag:"🇲🇩"},
-    {code:"nl", name:"Netherlands", flag:"🇳🇱"},
-    {code:"pl", name:"Poland", flag:"🇵🇱"},
-    {code:"pt", name:"Portugal", flag:"🇵🇹"},
-    {code:"rs", name:"Serbia", flag:"🇷🇸"},
-    {code:"ru", name:"Russia", flag:"🇷🇺"},
-    {code:"se", name:"Sweden", flag:"🇸🇪"},
-    {code:"sg", name:"Singapore", flag:"🇸🇬"},
-    {code:"si", name:"Slovenia", flag:"🇸🇮"},
-    {code:"tr", name:"Turkey", flag:"🇹🇷"},
-    {code:"ua", name:"Ukraine", flag:"🇺🇦"},
-    {code:"us", name:"United States", flag:"🇺🇸"},
-    {code:"vn", name:"Vietnam", flag:"🇻🇳"}
-  ];
-
-  function populateCountries(){
-    const select = document.querySelector("#country-select");
-    select.innerHTML = "";
-    countries.forEach(c=>{
-      const opt = document.createElement("option");
-      opt.value = c.code;
-      opt.textContent = `${c.flag} ${c.name}`;
-      select.appendChild(opt);
-    });
-  }
-
-  window.onload = () => {
-    populateCountries();
-    changeLanguage(currentLang);
-  }
-</script>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-color);
+    }
+    header {
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    select, button {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    select {
+        min-width: 180px;
+    }
+    button {
+        background: var(--accent-color);
+        color: var(--text-color);
+        font-weight: 600;
+    }
+    button:hover, select:hover {
+        transform: scale(1.05);
+    }
+    main {
+        padding: 2rem;
+        max-width: 900px;
+        margin: auto;
+    }
+    .description {
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    footer {
+        text-align: center;
+        padding: 1.5rem 1rem;
+        background: var(--primary-color);
+        color: white;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+    }
+</style>
 </head>
-<body class="bg-gradient-to-b from-blue-400 to-green-400 min-h-screen flex flex-col">
-
-<!-- Header -->
-<header class="bg-white shadow-md p-4 flex justify-between items-center">
-  <div class="font-bold text-xl">ConfigForge V2Ray</div>
-  <div class="flex gap-4 items-center">
-    <div>
-      <label id="label-lang" class="mr-2 font-semibold"></label>
-      <select onchange="changeLanguage(this.value)" class="border rounded px-2 py-1">
-        <option value="en">English</option>
-        <option value="fa">فارسی</option>
-        <option value="ar">العربية</option>
-        <option value="es">Español</option>
-      </select>
+<body>
+<header>
+    <h1>ConfigForge VPN</h1>
+    <div class="controls">
+        <select id="language">
+            <option value="en" selected>English</option>
+            <option value="fa">فارسی</option>
+            <option value="ar">العربية</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ru">Русский</option>
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+            <option value="pt">Português</option>
+            <option value="ko">한국어</option>
+        </select>
     </div>
-  </div>
 </header>
 
-<!-- Main -->
-<main class="flex-grow container mx-auto p-6 flex flex-col gap-6">
-  <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-    <p id="desc" class="text-lg font-medium mb-4"></p>
-
-    <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-      <div>
-        <label id="label-country" class="block font-semibold mb-1"></label>
-        <select id="country-select" class="border rounded px-3 py-2 text-lg"></select>
-      </div>
-      <button id="btn-download" class="bg-blue-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-        Download Config
-      </button>
+<main>
+    <div class="description" id="desc">
+        Select your country to get the fastest VPN configuration for V2Ray.
     </div>
-  </div>
 
-  <!-- توضیح فایل‌ها -->
-  <div class="bg-white rounded-lg shadow-lg p-4 text-sm text-gray-700">
-    <ul class="list-disc ml-5">
-      <li><strong>all.txt:</strong> Includes all configs sorted by speed.</li>
-      <li><strong>light.txt:</strong> Includes top 30 fastest configs.</li>
-      <li>Click download after selecting your country to get configs.</li>
-    </ul>
-  </div>
+    <div style="display:flex; gap:1rem; align-items:center;">
+        <select id="country">
+            <!-- Countries with flags -->
+        </select>
+        <button id="downloadBtn">Download Config</button>
+    </div>
+
+    <div style="margin-top:1rem; font-size:0.95rem;" id="fileInfo">
+        Light.txt: Fastest 30 configs | All.txt: All tested configs
+    </div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-white text-center p-4 mt-auto shadow-inner">
-  Made with ❤️ by <a href="https://github.com/ShatakVPN" class="underline">ShatakVPN</a> | Powered by <a href="https://github.com" class="underline">GitHub</a> + <a href="https://check-host.net" class="underline">Check-Host</a>
+<footer>
+    ساخته شده با عشق توسط <a href="https://github.com/ShatakVPN" target="_blank" style="color:white; text-decoration:underline;">ShatakVPN</a> | قدرت گرفته از <a href="https://github.com" target="_blank" style="color:white; text-decoration:underline;">GitHub</a> + <a href="https://check-host.net" target="_blank" style="color:white; text-decoration:underline;">Check-Host</a>
 </footer>
 
+<script>
+// Country list with flags
+const countries = [
+    {code: 'at', name: 'Austria', flag: '🇦🇹'},
+    {code: 'au', name: 'Australia', flag: '🇦🇺'},
+    {code: 'bg', name: 'Bulgaria', flag: '🇧🇬'},
+    {code: 'br', name: 'Brazil', flag: '🇧🇷'},
+    {code: 'ca', name: 'Canada', flag: '🇨🇦'},
+    {code: 'ch', name: 'Switzerland', flag: '🇨🇭'},
+    {code: 'cz', name: 'Czech Republic', flag: '🇨🇿'},
+    {code: 'de', name: 'Germany', flag: '🇩🇪'},
+    {code: 'es', name: 'Spain', flag: '🇪🇸'},
+    {code: 'fi', name: 'Finland', flag: '🇫🇮'},
+    {code: 'fr', name: 'France', flag: '🇫🇷'},
+    {code: 'gb', name: 'United Kingdom', flag: '🇬🇧'},
+    {code: 'hk', name: 'Hong Kong', flag: '🇭🇰'},
+    {code: 'hu', name: 'Hungary', flag: '🇭🇺'},
+    {code: 'id', name: 'Indonesia', flag: '🇮🇩'},
+    {code: 'il', name: 'Israel', flag: '🇮🇱'},
+    {code: 'in', name: 'India', flag: '🇮🇳'},
+    {code: 'ir', name: 'Iran', flag: '🇮🇷'},
+    {code: 'it', name: 'Italy', flag: '🇮🇹'},
+    {code: 'jp', name: 'Japan', flag: '🇯🇵'},
+    {code: 'kr', name: 'South Korea', flag: '🇰🇷'},
+    {code: 'kz', name: 'Kazakhstan', flag: '🇰🇿'},
+    {code: 'lt', name: 'Lithuania', flag: '🇱🇹'},
+    {code: 'md', name: 'Moldova', flag: '🇲🇩'},
+    {code: 'nl', name: 'Netherlands', flag: '🇳🇱'},
+    {code: 'pl', name: 'Poland', flag: '🇵🇱'},
+    {code: 'pt', name: 'Portugal', flag: '🇵🇹'},
+    {code: 'rs', name: 'Serbia', flag: '🇷🇸'},
+    {code: 'ru', name: 'Russia', flag: '🇷🇺'},
+    {code: 'se', name: 'Sweden', flag: '🇸🇪'},
+    {code: 'sg', name: 'Singapore', flag: '🇸🇬'},
+    {code: 'si', name: 'Slovenia', flag: '🇸🇮'},
+    {code: 'tr', name: 'Turkey', flag: '🇹🇷'},
+    {code: 'ua', name: 'Ukraine', flag: '🇺🇦'},
+    {code: 'us', name: 'United States', flag: '🇺🇸'},
+    {code: 'vn', name: 'Vietnam', flag: '🇻🇳'},
+];
+
+const countrySelect = document.getElementById('country');
+countries.forEach(c => {
+    const option = document.createElement('option');
+    option.value = c.code;
+    option.textContent = `${c.flag} ${c.name}`;
+    countrySelect.appendChild(option);
+});
+
+// Download button logic
+const downloadBtn = document.getElementById('downloadBtn');
+downloadBtn.addEventListener('click', () => {
+    const country = countrySelect.value;
+    const url = `https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/${country}/all.txt`;
+    window.open(url, '_blank');
+});
+
+// Language switching (example)
+const languageSelect = document.getElementById('language');
+const descriptions = {
+    en: "Select your country to get the fastest VPN configuration for V2Ray.",
+    fa: "کشور خود را انتخاب کنید تا سریعترین کانفیگ VPN برای V2Ray دریافت شود.",
+    ar: "اختر بلدك للحصول على أسرع إعدادات VPN لـ V2Ray.",
+    es: "Seleccione su país para obtener la configuración VPN más rápida para V2Ray.",
+    fr: "Sélectionnez votre pays pour obtenir la configuration VPN la plus rapide pour V2Ray.",
+    de: "Wählen Sie Ihr Land, um die schnellste VPN-Konfiguration für V2Ray zu erhalten.",
+    ru: "Выберите свою страну, чтобы получить самую быструю конфигурацию VPN для V2Ray.",
+    zh: "选择您的国家以获取最快的V2Ray VPN配置。",
+    ja: "お住まいの国を選択して、最速のV2Ray VPN構成を取得してください。",
+    pt: "Selecione seu país para obter a configuração VPN mais rápida para V2Ray.",
+    ko: "국가를 선택하여 가장 빠른 V2Ray VPN 구성을 받으세요."
+};
+languageSelect.addEventListener('change', () => {
+    const lang = languageSelect.value;
+    document.getElementById('desc').textContent = descriptions[lang] || descriptions['en'];
+    document.body.dir = ['fa','ar'].includes(lang) ? 'rtl' : 'ltr';
+});
+</script>
 </body>
 </html>
