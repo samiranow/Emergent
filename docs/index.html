@@ -1,140 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ConfigForge V2Ray</title>
-<style>
-  body { margin:0; font-family: 'Segoe UI', sans-serif; background: #f0f8ff; color:#333; }
-  header { text-align:center; background: linear-gradient(90deg,#1e90ff,#32cd32); color:#fff; padding:2rem; }
-  header h1 { margin:0; font-size:2.5rem; }
-  .controls { display:flex; justify-content:center; gap:1rem; margin:1rem 0; flex-wrap:wrap; }
-  select, button { padding:0.5rem 1rem; font-size:1rem; border-radius:5px; border:none; cursor:pointer; }
-  button { background:#1e90ff; color:white; transition:0.3s; }
-  button:hover { background:#32cd32; }
-  table { width:90%; margin:1rem auto; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-  th,td { padding:0.75rem 1rem; text-align:left; border-bottom:1px solid #ddd;}
-  th { background:#32cd32; color:white; }
-  footer { text-align:center; padding:1rem; background:#eee; margin-top:2rem;}
-  .flag { width:20px; vertical-align:middle; margin-right:0.5rem; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConfigForge V2Ray Frontend</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        #configs-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        [dir="rtl"] {
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1 id="title">VPN Config Selector</h1>
+        <select id="language-select" class="form-select mb-3">
+            <option value="en">English</option>
+            <option value="fa">فارسی</option>
+            <option value="zh">中文 (简体)</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ru">Русский</option>
+            <option value="ar">العربية</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="hi">हिन्दी</option>
+            <option value="pt">Português</option>
+            <option value="it">Italiano</option>
+            <option value="tr">Türkçe</option>
+            <option value="nl">Nederlands</option>
+            <!-- Add more languages as needed -->
+        </select>
+        <select id="country-select" class="form-select mb-3">
+            <option value="">Select Country</option>
+            <option value="United States">🇺🇸 United States</option>
+            <option value="Iran">🇮🇷 Iran</option>
+            <option value="China">🇨🇳 China</option>
+            <option value="United Kingdom">🇬🇧 United Kingdom</option>
+            <option value="Germany">🇩🇪 Germany</option>
+            <option value="France">🇫🇷 France</option>
+            <option value="Japan">🇯🇵 Japan</option>
+            <option value="Canada">🇨🇦 Canada</option>
+            <option value="Russia">🇷🇺 Russia</option>
+            <option value="India">🇮🇳 India</option>
+            <option value="Brazil">🇧🇷 Brazil</option>
+            <option value="Australia">🇦🇺 Australia</option>
+            <option value="Turkey">🇹🇷 Turkey</option>
+            <option value="Netherlands">🇳🇱 Netherlands</option>
+            <option value="Spain">🇪🇸 Spain</option>
+            <!-- Add more countries as needed -->
+        </select>
+        <button id="get-configs" class="btn btn-primary mb-3">Get Configs</button>
+        <div id="configs-list"></div>
+        <button id="copy-all" class="btn btn-success mt-3" style="display: none; width: 100%;">Copy All to Clipboard</button>
+        <button id="download-sub" class="btn btn-info mt-3" style="display: none; width: 100%;">Download Configs File</button>
+    </div>
 
-<header>
-  <h1>ConfigForge V2Ray</h1>
-  <p id="header-desc">Get the fastest V2Ray configs for your country using our service</p>
-</header>
+    <script>
+        const translations = {
+            en: {
+                title: 'VPN Config Selector',
+                getBtns: 'Get Configs',
+                copyAll: 'Copy All to Clipboard',
+                download: 'Download Configs File',
+                noConfigs: 'No configs found for this country.',
+                configsFound: 'Found {count} configs.',
+                selectCountry: 'Select Country'
+            },
+            fa: {
+                title: 'انتخاب کننده کانفیگ VPN',
+                getBtns: 'دریافت کانفیگ‌ها',
+                copyAll: 'کپی همه به کلیپ‌بورد',
+                download: 'دانلود فایل کانفیگ‌ها',
+                noConfigs: 'هیچ کانفیگی برای این کشور یافت نشد.',
+                configsFound: '{count} کانفیگ یافت شد.',
+                selectCountry: 'انتخاب کشور'
+            },
+            zh: {
+                title: 'VPN 配置选择器',
+                getBtns: '获取配置',
+                copyAll: '复制所有到剪贴板',
+                download: '下载配置文件',
+                noConfigs: '未找到此国家的配置。',
+                configsFound: '找到 {count} 个配置。',
+                selectCountry: '选择国家'
+            },
+            es: {
+                title: 'Selector de Configuración VPN',
+                getBtns: 'Obtener Configuraciones',
+                copyAll: 'Copiar Todo al Portapapeles',
+                download: 'Descargar Archivo de Configuraciones',
+                noConfigs: 'No se encontraron configuraciones para este país.',
+                configsFound: 'Encontradas {count} configuraciones.',
+                selectCountry: 'Seleccionar País'
+            },
+            fr: {
+                title: 'Sélecteur de Configuration VPN',
+                getBtns: 'Obtenir les Configurations',
+                copyAll: 'Copier Tout dans le Presse-papiers',
+                download: 'Télécharger le Fichier de Configurations',
+                noConfigs: 'Aucune configuration trouvée pour ce pays.',
+                configsFound: '{count} configurations trouvées.',
+                selectCountry: 'Sélectionner le Pays'
+            },
+            de: {
+                title: 'VPN-Konfigurationsauswahl',
+                getBtns: 'Konfigurationen Abrufen',
+                copyAll: 'Alle in die Zwischenablage Kopieren',
+                download: 'Konfigurationsdatei Herunterladen',
+                noConfigs: 'Keine Konfigurationen für dieses Land gefunden.',
+                configsFound: '{count} Konfigurationen gefunden.',
+                selectCountry: 'Land Auswählen'
+            },
+            ru: {
+                title: 'Селектор Конфигураций VPN',
+                getBtns: 'Получить Конфигурации',
+                copyAll: 'Скопировать Все в Буфер Обмена',
+                download: 'Скачать Файл Конфигураций',
+                noConfigs: 'Конфигурации для этой страны не найдены.',
+                configsFound: 'Найдено {count} конфигураций.',
+                selectCountry: 'Выбрать Страну'
+            },
+            ar: {
+                title: 'محدد تكوين VPN',
+                getBtns: 'الحصول على التكوينات',
+                copyAll: 'نسخ الكل إلى الحافظة',
+                download: 'تنزيل ملف التكوينات',
+                noConfigs: 'لم يتم العثور على تكوينات لهذا البلد.',
+                configsFound: 'تم العثور على {count} تكوينات.',
+                selectCountry: 'اختر البلد'
+            },
+            ja: {
+                title: 'VPN 設定セレクター',
+                getBtns: '設定を取得',
+                copyAll: 'すべてをクリップボードにコピー',
+                download: '設定ファイルをダウンロード',
+                noConfigs: 'この国に対する設定が見つかりませんでした。',
+                configsFound: '{count} 個の設定が見つかりました。',
+                selectCountry: '国を選択'
+            },
+            ko: {
+                title: 'VPN 구성 선택기',
+                getBtns: '구성 가져오기',
+                copyAll: '모두 클립보드에 복사',
+                download: '구성 파일 다운로드',
+                noConfigs: '이 국가에 대한 구성이 없습니다.',
+                configsFound: '{count} 개의 구성을 찾았습니다.',
+                selectCountry: '국가 선택'
+            },
+            hi: {
+                title: 'VPN कॉन्फ़िग चयनकर्ता',
+                getBtns: 'कॉन्फ़िग प्राप्त करें',
+                copyAll: 'सभी को क्लिपबोर्ड पर कॉपी करें',
+                download: 'कॉन्फ़िग फ़ाइल डाउनलोड करें',
+                noConfigs: 'इस देश के लिए कोई कॉन्फ़िग नहीं मिला।',
+                configsFound: '{count} कॉन्फ़िग मिले।',
+                selectCountry: 'देश चुनें'
+            },
+            pt: {
+                title: 'Seletor de Configuração VPN',
+                getBtns: 'Obter Configurações',
+                copyAll: 'Copiar Tudo para a Área de Transferência',
+                download: 'Baixar Arquivo de Configurações',
+                noConfigs: 'Nenhuma configuração encontrada para este país.',
+                configsFound: '{count} configurações encontradas.',
+                selectCountry: 'Selecionar País'
+            },
+            it: {
+                title: 'Selettore Configurazione VPN',
+                getBtns: 'Ottieni Configurazioni',
+                copyAll: 'Copia Tutto negli Appunti',
+                download: 'Scarica File di Configurazioni',
+                noConfigs: 'Nessuna configurazione trovata per questo paese.',
+                configsFound: 'Trovate {count} configurazioni.',
+                selectCountry: 'Seleziona Paese'
+            },
+            tr: {
+                title: 'VPN Yapılandırma Seçici',
+                getBtns: 'Yapılandırmaları Al',
+                copyAll: 'Tümünü Panoya Kopyala',
+                download: 'Yapılandırma Dosyasını İndir',
+                noConfigs: 'Bu ülke için yapılandırma bulunamadı.',
+                configsFound: '{count} yapılandırma bulundu.',
+                selectCountry: 'Ülke Seç'
+            },
+            nl: {
+                title: 'VPN Config Selector',
+                getBtns: 'Configs Ophalen',
+                copyAll: 'Alles Kopiëren naar Klembord',
+                download: 'Configs Bestand Downloaden',
+                noConfigs: 'Geen configs gevonden voor dit land.',
+                configsFound: '{count} configs gevonden.',
+                selectCountry: 'Selecteer Land'
+            }
+            // Add more languages as needed
+        };
 
-<div class="controls">
-  <select id="language-select"></select>
-  <select id="country-select"></select>
-  <button id="download-btn">Download Config</button>
-</div>
+        let currentLang = navigator.language.substring(0, 2);
+        if (!translations[currentLang]) currentLang = 'en';
 
-<table id="config-table">
-  <thead>
-    <tr>
-      <th id="table-protocol">Protocol</th>
-      <th id="table-file">File</th>
-      <th id="table-desc">Description</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+        function updateLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            const rtlLanguages = ['fa', 'ar'];
+            document.documentElement.dir = rtlLanguages.includes(lang) ? 'rtl' : 'ltr';
+            document.getElementById('title').textContent = translations[lang].title;
+            document.getElementById('get-configs').textContent = translations[lang].getBtns;
+            document.getElementById('copy-all').textContent = translations[lang].copyAll;
+            document.getElementById('download-sub').textContent = translations[lang].download;
+            document.getElementById('country-select').options[0].textContent = translations[lang].selectCountry;
+        }
 
-<footer>
-  <p>Made with ❤️ by <a href="https://github.com/ShatakVPN">ShatakVPN</a> | Powered by <a href="https://github.com">GitHub</a> + <a href="https://check-host.net">Check-Host</a></p>
-</footer>
+        updateLanguage(currentLang);
+        document.getElementById('language-select').value = currentLang;
 
-<script>
-// --- Translation ---
-const translations = {
-  en: { select_language:"Select Language", select_country:"Select Country", download_config:"Download Config", protocol:"Protocol", file:"File", description:"Description", all:"All configs available", light:"Fastest 30 configs", vless:"VLESS configs", vmess:"VMess configs", shadowsocks:"Shadowsocks configs", trojan:"Trojan configs" },
-  fr: { select_language:"Choisir la langue", select_country:"Choisir le pays", download_config:"Télécharger la configuration", protocol:"Protocole", file:"Fichier", description:"Description", all:"Tous les configs", light:"30 configs les plus rapides", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
-  fa: { select_language:"انتخاب زبان", select_country:"انتخاب کشور", download_config:"دانلود کانفیگ", protocol:"پروتکل", file:"فایل", description:"توضیح", all:"تمام کانفیگ‌ها", light:"۳۰ کانفیگ سریع‌تر", vless:"کانفیگ‌های VLESS", vmess:"کانفیگ‌های VMess", shadowsocks:"کانفیگ‌های Shadowsocks", trojan:"کانفیگ‌های Trojan" },
-  es: { select_language:"Seleccionar idioma", select_country:"Seleccionar país", download_config:"Descargar Config", protocol:"Protocolo", file:"Archivo", description:"Descripción", all:"Todos los configs", light:"30 configs más rápidos", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
-  de: { select_language:"Sprache auswählen", select_country:"Land auswählen", download_config:"Config herunterladen", protocol:"Protokoll", file:"Datei", description:"Beschreibung", all:"Alle configs", light:"Schnellste 30 configs", vless:"VLESS configs", vmess:"VMess configs", shadowsocks:"Shadowsocks configs", trojan:"Trojan configs" },
-  it: { select_language:"Seleziona lingua", select_country:"Seleziona paese", download_config:"Scarica Config", protocol:"Protocollo", file:"File", description:"Descrizione", all:"Tutti i configs", light:"30 configs più veloci", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
-  ru: { select_language:"Выберите язык", select_country:"Выберите страну", download_config:"Скачать конфиг", protocol:"Протокол", file:"Файл", description:"Описание", all:"Все configs", light:"30 самых быстрых", vless:"Configs VLESS", vmess:"Configs VMess", shadowsocks:"Configs Shadowsocks", trojan:"Configs Trojan" },
-  ja: { select_language:"言語を選択", select_country:"国を選択", download_config:"設定をダウンロード", protocol:"プロトコル", file:"ファイル", description:"説明", all:"すべての設定", light:"最速30設定", vless:"VLESS設定", vmess:"VMess設定", shadowsocks:"Shadowsocks設定", trojan:"Trojan設定" },
-  zh: { select_language:"选择语言", select_country:"选择国家", download_config:"下载配置", protocol:"协议", file:"文件", description:"描述", all:"所有配置", light:"最快30个配置", vless:"VLESS 配置", vmess:"VMess 配置", shadowsocks:"Shadowsocks 配置", trojan:"Trojan 配置" }
-};
+        document.getElementById('language-select').addEventListener('change', (e) => {
+            updateLanguage(e.target.value);
+        });
 
-// --- Languages ---
-const languages = Object.keys(translations);
-const langSelect = document.getElementById("language-select");
-languages.forEach(lang=>{
-  const opt = document.createElement("option");
-  opt.value=lang;
-  opt.text=translations[lang].select_language;
-  langSelect.appendChild(opt);
-});
+        const countryMap = {
+            'United States': ['🇺🇸', 'us', 'usa', 'united states', 'america', 'new york', 'los angeles', 'chicago'],
+            'Iran': ['🇮🇷', 'ir', 'iran', 'tehran', 'ایران', 'تهران', 'persia'],
+            'China': ['🇨🇳', 'cn', 'china', 'beijing', 'shanghai', '中国'],
+            'United Kingdom': ['🇬🇧', 'gb', 'uk', 'united kingdom', 'london', 'england'],
+            'Germany': ['🇩🇪', 'de', 'germany', 'berlin', 'frankfurt', 'deutschland'],
+            'France': ['🇫🇷', 'fr', 'france', 'paris', 'marseille'],
+            'Japan': ['🇯🇵', 'jp', 'japan', 'tokyo', 'osaka', '日本'],
+            'Canada': ['🇨🇦', 'ca', 'canada', 'toronto', 'vancouver'],
+            'Russia': ['🇷🇺', 'ru', 'russia', 'moscow', 'saint petersburg', 'россия'],
+            'India': ['🇮🇳', 'in', 'india', 'mumbai', 'delhi', 'भारत'],
+            'Brazil': ['🇧🇷', 'br', 'brazil', 'sao paulo', 'rio de janeiro', 'brasil'],
+            'Australia': ['🇦🇺', 'au', 'australia', 'sydney', 'melbourne'],
+            'Turkey': ['🇹🇷', 'tr', 'turkey', 'istanbul', 'ankara', 'türkiye'],
+            'Netherlands': ['🇳🇱', 'nl', 'netherlands', 'amsterdam', 'rotterdam'],
+            'Spain': ['🇪🇸', 'es', 'spain', 'madrid', 'barcelona', 'españa']
+            // Add more countries with relevant keywords and variations
+        };
 
-// --- Country list (replace with your full list) ---
-const countries = [
-  {code:"us", name:"United States", flag:"https://flagcdn.com/us.svg"},
-  {code:"gb", name:"United Kingdom", flag:"https://flagcdn.com/gb.svg"},
-  {code:"fr", name:"France", flag:"https://flagcdn.com/fr.svg"},
-  {code:"de", name:"Germany", flag:"https://flagcdn.com/de.svg"},
-  {code:"ir", name:"Iran", flag:"https://flagcdn.com/ir.svg"},
-  {code:"jp", name:"Japan", flag:"https://flagcdn.com/jp.svg"},
-  // همه کشورها را اینجا اضافه کن با لینک raw فایل‌های configs
-];
+        function getRemark(line) {
+            try {
+                if (line.startsWith('vmess://')) {
+                    const jsonStr = atob(line.substring(8));
+                    const obj = JSON.parse(jsonStr);
+                    return obj.ps || '';
+                } else if (line.includes('#')) {
+                    return decodeURIComponent(line.split('#')[1] || '');
+                }
+            } catch (e) {
+                return '';
+            }
+            return '';
+        }
 
-const countrySelect = document.getElementById("country-select");
-countries.forEach(c=>{
-  const opt = document.createElement("option");
-  opt.value=c.code;
-  opt.innerHTML=`<img src="${c.flag}" class="flag">${c.name}`;
-  countrySelect.appendChild(opt);
-});
+        document.getElementById('get-configs').addEventListener('click', () => {
+            const country = document.getElementById('country-select').value;
+            if (!country) {
+                alert(translations[currentLang].selectCountry);
+                return;
+            }
+            const keywords = countryMap[country].map(k => k.toLowerCase());
+            fetch('https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/all.txt')
+                .then(res => res.text())
+                .then(text => atob(text))  // Decode base64
+                .then(decoded => decoded.split('\n').filter(line => line.trim() !== ''))
+                .then(lines => lines.filter(line => {
+                    const remark = getRemark(line).toLowerCase();
+                    return keywords.some(k => remark.includes(k));
+                }))
+                .then(filtered => {
+                    const listDiv = document.getElementById('configs-list');
+                    listDiv.innerHTML = '';
+                    if (filtered.length === 0) {
+                        listDiv.textContent = translations[currentLang].noConfigs;
+                    } else {
+                        listDiv.innerHTML = `<p>${translations[currentLang].configsFound.replace('{count}', filtered.length)}</p>`;
+                        const ul = document.createElement('ul');
+                        filtered.forEach(line => {
+                            const remark = getRemark(line);
+                            const li = document.createElement('li');
+                            li.textContent = remark || 'Unknown';
+                            ul.appendChild(li);
+                        });
+                        listDiv.appendChild(ul);
+                    }
+                    const copyBtn = document.getElementById('copy-all');
+                    const downloadBtn = document.getElementById('download-sub');
+                    if (filtered.length > 0) {
+                        copyBtn.style.display = 'block';
+                        downloadBtn.style.display = 'block';
+                        copyBtn.onclick = () => {
+                            navigator.clipboard.writeText(filtered.join('\n')).then(() => {
+                                alert('Copied to clipboard! Paste into your V2Ray client.');
+                            });
+                        };
+                        downloadBtn.onclick = () => {
+                            const blob = new Blob([filtered.join('\n')], { type: 'text/plain' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `${country}_v2ray_configs.txt`;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                        };
+                    } else {
+                        copyBtn.style.display = 'none';
+                        downloadBtn.style.display = 'none';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error fetching configs.');
+                });
+        });
 
-// --- Default language English ---
-let currentLang="en";
-langSelect.value=currentLang;
-
-// --- Translate page ---
-function translatePage(lang){
-  currentLang=lang;
-  const t=translations[lang];
-  document.getElementById("table-protocol").textContent=t.protocol;
-  document.getElementById("table-file").textContent=t.file;
-  document.getElementById("table-desc").textContent=t.description;
-  document.getElementById("download-btn").textContent=t.download_config;
-  document.getElementById("header-desc").textContent="Get the fastest V2Ray configs for your country using our service";
-  renderConfigs();
-}
-
-langSelect.addEventListener("change",(e)=>translatePage(e.target.value));
-
-// --- Detect user country (simple example, can use IP API) ---
-const userCountry="us"; // TODO: use API to detect
-countrySelect.value=userCountry;
-
-// --- Render configs ---
-const configsBaseURL="https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/";
-const protocols=["all","light","vless","vmess","shadowsocks","trojan"];
-function renderConfigs(){
-  const tbody=document.querySelector("#config-table tbody");
-  tbody.innerHTML="";
-  const countryCode=countrySelect.value;
-  protocols.forEach(proto=>{
-    const filename=`${proto}.txt`;
-    const url=configsBaseURL+countryCode+"/"+filename;
-    const desc=translations[currentLang][proto];
-    const row=document.createElement("tr");
-    row.innerHTML=`<td>${proto.toUpperCase()}</td><td><a href="${url}" target="_blank">${filename}</a></td><td>${desc}</td>`;
-    tbody.appendChild(row);
-  });
-}
-
-countrySelect.addEventListener("change",renderConfigs);
-document.getElementById("download-btn").addEventListener("click",renderConfigs);
-
-// --- Initial render ---
-translatePage(currentLang);
-</script>
-
+        // Auto-detect user country
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                const countryName = data.country_name;
+                const countrySelect = document.getElementById('country-select');
+                if (countryName && countrySelect.querySelector(`option[value="${countryName}"]`)) {
+                    countrySelect.value = countryName;
+                }
+            })
+            .catch(() => {});
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
