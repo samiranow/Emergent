@@ -2,7 +2,7 @@ name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # هر 12 ساعت
+    - cron: '0 */12 * * *'  # اجرا هر 12 ساعت
   workflow_dispatch:
 
 jobs:
@@ -10,27 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      # 2. Setup Python
+      - name: Setup Python 3.13
         uses: actions/setup-python@v4
         with:
           python-version: '3.13'
 
+      # 3. Create virtual environment
       - name: Create virtual environment
         run: python -m venv venv --copies
 
+      # 4. Upgrade pip
       - name: Upgrade pip
         run: ./venv/bin/python -m pip install --upgrade pip
 
+      # 5. Install requirements
       - name: Install dependencies
         run: ./venv/bin/python -m pip install -r source/requirements.txt
 
-      - name: Verify installation
-        run: ./venv/bin/python -m pip list
-
+      # 6. Run main.py using venv python directly
       - name: Run main.py
-        run: |
-          source ./venv/bin/activate
-          python source/main.py
+        run: ./venv/bin/python source/main.py
