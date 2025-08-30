@@ -62,3 +62,4 @@ jobs:
             git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
             git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
           )
+
