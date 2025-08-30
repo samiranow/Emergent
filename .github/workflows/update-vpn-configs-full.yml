@@ -31,34 +31,14 @@ jobs:
       # ۴. Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
-          . venv/bin/activate
-          python -m pip install --upgrade pip
-          pip install --no-cache-dir -r source/requirements.txt
+          python -m venv venv
+          venv/bin/python -m pip install --upgrade pip
+          venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
 
       # ۵. Debug: List installed packages
       - name: "Debug: List installed packages"
-        run: |
-          . venv/bin/activate
-          pip list
+        run: venv/bin/python -m pip list
 
       # ۶. Run main.py to update configs
       - name: Run main.py
-        run: |
-          . venv/bin/activate
-          python source/main.py
-        continue-on-error: false
-
-      # ۷. Commit and push changes safely
-      - name: Commit and push changes
-        env:
-          GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git fetch origin main
-          git reset --hard origin/main
-          git add .
-          git diff --cached --quiet || (
-            git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
-            git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
-          )
+        run: venv/bin/python source/main.py
