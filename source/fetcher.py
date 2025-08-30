@@ -27,3 +27,6 @@ def maybe_base64_decode(s: str) -> str:
         return s
     except Exception:
         return s
+
+def fetch_and_decode(url: str) -> str:
+    return maybe_base64_decode(fetch_data(url))
