@@ -1,8 +1,8 @@
-name: "Update VPN Configs Debug"
+name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 */12 * * *'  # هر 12 ساعت یکبار
   workflow_dispatch:
 
 jobs:
@@ -10,49 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Checkout repository"
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
 
-      - name: "Setup Python 3.13"
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: 3.13
 
-      - name: "Create virtual environment"
-        run: |
-          python -m venv venv --copies
-          echo "VENV created at $(pwd)/venv"
+      - name: Create venv
+        run: python -m venv venv --copies
 
-      - name: "Upgrade pip in venv"
-        run: |
-          ./venv/bin/python -m pip install --upgrade pip
-          ./venv/bin/python -m pip --version
+      - name: Upgrade pip
+        run: ./venv/bin/python -m pip install --upgrade pip
 
-      - name: "Install dependencies in venv"
-        run: |
-          ./venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
-          ./venv/bin/python -m pip list
+      - name: Install dependencies
+        run: ./venv/bin/python -m pip install -r source/requirements.txt
 
-      - name: "Debug: Check emoji_country_flag installation"
-        run: |
-          ./venv/bin/python -c "import emoji_country_flag; print('emoji_country_flag imported successfully')"
-
-      - name: "Run main.py using venv python"
-        run: |
-          ./venv/bin/python source/main.py
-
-      - name: "Commit and push changes"
-        env:
-          GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git fetch origin main
-          git reset --hard origin/main
-          git add .
-          git diff --cached --quiet || (
-            git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
-            git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
-          )
+      - name: Run main.py
+        run: ./venv/bin/python source/main.py
