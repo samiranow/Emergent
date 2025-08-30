@@ -34,7 +34,7 @@ jobs:
         run: ./venv/bin/python -m pip list
 
       # ۵. Run main.py
-      - name: Run main.py
+      - name: "Run main.py"
         run: ./venv/bin/python -m source.main
 
       # ۶. Commit and push changes
