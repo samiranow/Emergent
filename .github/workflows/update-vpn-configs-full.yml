@@ -30,7 +30,7 @@ jobs:
         run: ./venv/bin/python -m pip list
 
       - name: "Run main.py"
-        run: ./venv/bin/python -m source.main
+        run: ./venv/bin/python source/main.py
 
       - name: "Commit and push changes"
         env:
