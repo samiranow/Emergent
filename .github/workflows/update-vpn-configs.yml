@@ -1,37 +1,40 @@
 name: Update VPN Configs
 
 on:
-  schedule:
-    - cron: '0 */12 * * *'  # اجرا هر 12 ساعت
   workflow_dispatch:
+  schedule:
+    - cron: '0 */12 * * *'  # هر 12 ساعت یک بار اجرا شود
 
 jobs:
   update-configs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Python
-      - name: Setup Python 3.13
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.13'
 
-      # 3. Create virtual environment
       - name: Create virtual environment
         run: python -m venv venv --copies
 
-      # 4. Upgrade pip
       - name: Upgrade pip
         run: ./venv/bin/python -m pip install --upgrade pip
 
-      # 5. Install requirements
-      - name: Install dependencies
+      - name: Install requirements
         run: ./venv/bin/python -m pip install -r source/requirements.txt
 
-      # 6. Run main.py using venv python directly
-      - name: Run main.py
+      - name: Debug installed packages
+        run: |
+          echo "Python executable:"
+          ./venv/bin/python -c "import sys; print(sys.executable)"
+          echo "Installed emoji_country_flag:"
+          ./venv/bin/python -m pip show emoji_country_flag
+          echo "Try importing emoji_country_flag:"
+          ./venv/bin/python -c "import emoji_country_flag; print('emoji_country_flag imported successfully')"
+
+      - name: Run main script
         run: ./venv/bin/python source/main.py
