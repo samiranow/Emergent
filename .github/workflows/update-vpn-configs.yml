@@ -36,9 +36,9 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install --upgrade pip
-          if [ -f source/requirements.txt ]; then pip install -r source/requirements.txt; fi
-
+              pip install --upgrade pip
+              pip install -r source/requirements.txt
+              
       # ۵. Run main.py to update configs
       - name: Run main.py
         run: |
