@@ -7,7 +7,7 @@ from fetcher import fetch_data, maybe_base64_decode
 from parser import detect_protocol, extract_host
 from tester import test_speed, get_nodes_by_country
 from output import save_to_file
-from main import rename_line  # اگر جدا کردی، اینو اصلاح کن
+
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 
