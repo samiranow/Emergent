@@ -1,8 +1,8 @@
-name: "Update VPN Configs"
+name: "Update VPN Configs Debug"
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # هر 12 ساعت یکبار اجرا می‌شود
+    - cron: '0 */12 * * *'
   workflow_dispatch:
 
 jobs:
@@ -20,14 +20,28 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: "Install dependencies"
+      - name: "Create virtual environment"
         run: |
           python -m venv venv --copies
-          ./venv/bin/python -m pip install --upgrade pip
-          ./venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
+          echo "VENV created at $(pwd)/venv"
 
-      - name: "Run main.py"
-        run: ./venv/bin/python source/main.py
+      - name: "Upgrade pip in venv"
+        run: |
+          ./venv/bin/python -m pip install --upgrade pip
+          ./venv/bin/python -m pip --version
+
+      - name: "Install dependencies in venv"
+        run: |
+          ./venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
+          ./venv/bin/python -m pip list
+
+      - name: "Debug: Check emoji_country_flag installation"
+        run: |
+          ./venv/bin/python -c "import emoji_country_flag; print('emoji_country_flag imported successfully')"
+
+      - name: "Run main.py using venv python"
+        run: |
+          ./venv/bin/python source/main.py
 
       - name: "Commit and push changes"
         env:
