@@ -2,8 +2,8 @@ name: "Update VPN Configs"
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # هر ۱۲ ساعت یک بار
-  workflow_dispatch:        # امکان اجرا به صورت دستی
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
 
 jobs:
   update-configs:
@@ -20,17 +20,12 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: "Create virtual environment and install dependencies"
+      - name: "Install dependencies and run main.py"
         run: |
           python -m venv venv --copies
           ./venv/bin/python -m pip install --upgrade pip
           ./venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
-
-      - name: "Debug: List installed packages"
-        run: ./venv/bin/python -m pip list
-
-      - name: "Run main.py"
-        run: ./venv/bin/python source/main.py
+          ./venv/bin/python source/main.py
 
       - name: "Commit and push changes"
         env:
