@@ -27,6 +27,21 @@ jobs:
       - name: Install requirements
         run: ./venv/bin/python -m pip install -r source/requirements.txt
 
-
       - name: Run main script
         run: ./venv/bin/python source/main.py
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "🔄 Update VPN configs [auto]"
+        continue-on-error: true
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
