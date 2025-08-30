@@ -3,7 +3,7 @@ name: Update VPN Configs
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */12 * * *'  # هر 12 ساعت یک بار اجرا شود
+    - cron: '0 */12 * * *'
 
 jobs:
   update-configs:
@@ -32,15 +32,20 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.name "TargolBot"
+          git config --global user.email "targol@vpnbot.local"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+
+      - name: Debug Git status
+        run: |
+          git status
+          git diff --stat
 
       - name: Commit changes
         run: |
           git add .
-          git commit -m "🔄 Update VPN configs [auto]"
+          git commit -m "🔄 Auto-update VPN configs"
         continue-on-error: true
 
       - name: Push changes
-        run: git push origin HEAD:main
+        run: git push origin main
