@@ -8,7 +8,7 @@ import requests
 import base64
 import json
 import logging
-import emoji_country_flag as flag
+import flag
 
 from config import URLS, TIMESTAMP, OUTPUT_DIR
 from fetcher import fetch_data, maybe_base64_decode
