@@ -1,20 +1,63 @@
-# main.py
-import asyncio
 import os
+import asyncio
 import logging
+import random
+import socket
+import re
+import json
+import base64
 from config import URLS, TIMESTAMP, OUTPUT_DIR
 from fetcher import fetch_data, maybe_base64_decode
 from parser import detect_protocol, extract_host
-from tester import test_speed, get_nodes_by_country
+from tester import test_speed, get_nodes_by_country, get_country_by_ip
 from output import save_to_file
-
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 
 def extract_configs(data: str) -> list[str]:
-    import re
     pattern = r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)"
     return re.findall(pattern, data)
+
+def base64_decode(s: str) -> str:
+    padded = s + "=" * ((4 - len(s) % 4) % 4)
+    return base64.b64decode(padded).decode(errors="ignore")
+
+def base64_encode(s: str) -> str:
+    return base64.b64encode(s.encode()).decode()
+
+def rename_line(line: str) -> str:
+    proto = detect_protocol(line)
+    host = extract_host(line, proto)
+    if not host:
+        return line
+
+    try:
+        ip = socket.gethostbyname(host)
+    except Exception:
+        ip = host
+
+    country = get_country_by_ip(ip)
+    emoji = {
+        "us": "🇺🇸", "de": "🇩🇪", "fr": "🇫🇷", "ir": "🇮🇷", "nl": "🇳🇱",
+        "gb": "🇬🇧", "ca": "🇨🇦", "ru": "🇷🇺", "cn": "🇨🇳", "jp": "🇯🇵",
+        "in": "🇮🇳", "sg": "🇸🇬", "ae": "🇦🇪", "tr": "🇹🇷", "unknown": "🏳️"
+    }.get(country.lower(), "🏳️")
+
+    display = f"[{emoji}{country.lower()}]::ShatalVPN-{random.randint(100000, 999999)}"
+
+    if proto == "vmess":
+        try:
+            raw = line.split("://", 1)[1]
+            decoded = json.loads(base64_decode(raw))
+            decoded["add"] = ip
+            new_raw = base64_encode(json.dumps(decoded))
+            return f"{display} vmess://{new_raw}"
+        except Exception:
+            return f"{display} {line}"
+    elif proto in ["vless", "trojan", "ss"]:
+        return re.sub(r"@[^:]+", f"@{ip}", f"{display} {line}")
+    else:
+        return f"{display} {line}"
 
 async def main_async():
     logging.info(f"[{TIMESTAMP}] Starting download and processing with country-based speed test...")
@@ -63,7 +106,8 @@ async def main_async():
                 test_line_country(lh, country_code) for lh in unique_lines_hosts
             ])
             results.sort(key=lambda x: x[0])
-            categorized[proto] = [rename_line(line) for _, line, _ in results]
+            renamed_lines = [rename_line(line) for _, line, _ in results]
+            categorized[proto] = renamed_lines
             all_results.extend(results)
 
         all_results.sort(key=lambda x: x[0])
