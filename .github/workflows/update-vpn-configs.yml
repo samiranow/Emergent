@@ -2,7 +2,7 @@ name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 */12 * * *'  # هر ۱۲ ساعت یک بار
   workflow_dispatch:
 
 jobs:
@@ -10,34 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ۱. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
+      # ۲. Setup Python 3.x
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Cache pip dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('source/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
+      # ۳. Install dependencies from requirements.txt without cache
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r source/requirements.txt
+          pip install --no-cache-dir -r source/requirements.txt
 
+      # ۴. Run main.py to update configs
       - name: Run main.py
         run: |
           python source/main.py
         continue-on-error: false
 
+      # ۵. Commit and push changes safely
       - name: Commit and push changes
         env:
           GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
