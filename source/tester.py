@@ -1,10 +1,12 @@
+# tester.py
 import asyncio
 import httpx
+import logging
 
 async def test_speed(host: str, country_nodes: list[str] = None, timeout=10) -> float:
     """
     Measure host latency using check-host.net API.
-    If country_nodes is provided, randomly select one node from the country for ping.
+    If country_nodes is provided, filter results to those nodes.
     Returns average ping in seconds or infinity if unreachable.
     """
     if not host:
@@ -21,17 +23,22 @@ async def test_speed(host: str, country_nodes: list[str] = None, timeout=10) -> 
             if not request_id:
                 return float('inf')
 
-            # 2️⃣ Wait a few seconds for nodes to finish
-            await asyncio.sleep(10)
+            # 2️⃣ Wait with loop check
+            for _ in range(10):  # Max 20 seconds
+                await asyncio.sleep(2)
+                r2 = await client.get(f"{base_url}/check-result/{request_id}", headers={"Accept": "application/json"})
+                if r2.status_code == 200:
+                    results = r2.json()
+                    if results:  # If results are available
+                        break
+            else:
+                return float('inf')
 
-            # 3️⃣ Get results
-            r2 = await client.get(f"{base_url}/check-result/{request_id}", headers={"Accept": "application/json"})
-            r2.raise_for_status()
-            results = r2.json()
-
-            # 4️⃣ Parse results and calculate average latency
+            # 3️⃣ Parse results and calculate average latency, filtered by country_nodes
             latencies = []
             for node, node_results in results.items():
+                if country_nodes and node not in country_nodes:
+                    continue
                 if not node_results:
                     continue
                 try:
@@ -47,9 +54,9 @@ async def test_speed(host: str, country_nodes: list[str] = None, timeout=10) -> 
 
             return sum(latencies) / len(latencies)
 
-        except Exception:
+        except Exception as e:
+            logging.error(f"Ping test error for {host}: {e}")
             return float('inf')
-
 
 async def get_nodes_by_country() -> dict[str, list[str]]:
     """
@@ -57,9 +64,13 @@ async def get_nodes_by_country() -> dict[str, list[str]]:
     """
     url = "https://check-host.net/nodes/hosts"
     async with httpx.AsyncClient(timeout=10) as client:
-        r = await client.get(url)
-        r.raise_for_status()
-        data = r.json()
+        try:
+            r = await client.get(url)
+            r.raise_for_status()
+            data = r.json()
+        except Exception as e:
+            logging.error(f"Error fetching nodes: {e}")
+            return {}
 
     country_nodes = {}
     nodes = data.get("nodes", {})
