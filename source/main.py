@@ -70,10 +70,11 @@ def rename_line(line: str) -> str:
         return f"{display} {line}"
 
 async def main_async():
-    logging.info(f"[{TIMESTAMP}] Starting download and processing with country-based speed test...")
+    logging.info(f"[{TIMESTAMP}] Starting download and processing with optimized ping strategy...")
 
     country_nodes_dict = await get_nodes_by_country()
     categorized_per_country = {}
+    all_lines_hosts = []
 
     for url in URLS:
         raw_data = fetch_data(url)
@@ -86,6 +87,7 @@ async def main_async():
             host = extract_host(line, proto)
             if not host:
                 continue
+            all_lines_hosts.append((line, host))
             for country_code in country_nodes_dict.keys():
                 categorized_per_country.setdefault(
                     country_code,
@@ -93,29 +95,27 @@ async def main_async():
                 )
                 categorized_per_country[country_code][proto].append((line, host))
 
+    # فقط یک بار پینگ برای هر host
+    host_to_lines = {}
+    for line, host in all_lines_hosts:
+        host_to_lines.setdefault(host, []).append(line)
+
+    host_to_results = {}
+    for host in host_to_lines:
+        host_to_results[host] = await run_ping_once(host)
+
     for country_code, categorized in categorized_per_country.items():
         logging.info(f"Processing country: {country_code}")
-        all_lines_hosts = []
+        country_nodes = country_nodes_dict.get(country_code, [])
+        host_latencies = {}
 
-        for proto, lines_hosts in categorized.items():
-            if not lines_hosts:
-                continue
-            unique_lines_hosts = list(set(lines_hosts))
-            all_lines_hosts.extend(unique_lines_hosts)
-
-        host_to_lines = {}
-        for line, host in all_lines_hosts:
-            host_to_lines.setdefault(host, []).append(line)
-
-        host_results = {}
-        for host in host_to_lines.keys():
-            results = await run_ping_once(host)
-            country_latencies = extract_latency_by_country(results, {country_code: country_nodes_dict.get(country_code, [])})
-            latency = country_latencies.get(country_code, float('inf'))
+        for host, results in host_to_results.items():
+            country_latency = extract_latency_by_country(results, {country_code: country_nodes})
+            latency = country_latency.get(country_code, float('inf'))
             for line in host_to_lines[host]:
-                host_results[line] = latency
+                host_latencies[line] = latency
 
-        sorted_lines = sorted(host_results.items(), key=lambda x: x[1])
+        sorted_lines = sorted(host_latencies.items(), key=lambda x: x[1])
         renamed_lines = [rename_line(line) for line, _ in sorted_lines]
 
         country_dir = os.path.join(OUTPUT_DIR, country_code)
