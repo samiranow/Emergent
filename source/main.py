@@ -6,10 +6,11 @@ import socket
 import re
 import json
 import base64
+import requests
 from config import URLS, TIMESTAMP, OUTPUT_DIR
 from fetcher import fetch_data, maybe_base64_decode
 from parser import detect_protocol, extract_host
-from tester import test_speed, get_nodes_by_country, get_country_by_ip
+from tester import test_speed, get_nodes_by_country
 from output import save_to_file
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
@@ -24,6 +25,15 @@ def base64_decode(s: str) -> str:
 
 def base64_encode(s: str) -> str:
     return base64.b64encode(s.encode()).decode()
+
+def get_country_by_ip(ip: str) -> str:
+    try:
+        r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=5)
+        if r.status_code == 200:
+            return r.text.strip().lower()
+    except Exception:
+        pass
+    return "unknown"
 
 def rename_line(line: str) -> str:
     proto = detect_protocol(line)
