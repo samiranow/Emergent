@@ -36,7 +36,7 @@ jobs:
           pip install --no-cache-dir -r source/requirements.txt
 
       # ۵. Debug: List installed packages
-      - name: Debug: List installed packages
+      - name: "Debug: List installed packages"
         run: |
           . venv/bin/activate
           pip list
@@ -62,4 +62,3 @@ jobs:
             git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
             git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
           )
-
