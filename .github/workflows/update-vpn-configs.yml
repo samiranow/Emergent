@@ -28,13 +28,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install --no-cache-dir -r source/requirements.txt
 
-      # ۴. Run main.py to update configs
+      # ۴. Debug: List installed packages
+      - name: Debug: List installed packages
+        run: |
+          pip list
+
+      # ۵. Run main.py to update configs
       - name: Run main.py
         run: |
           python source/main.py
         continue-on-error: false
 
-      # ۵. Commit and push changes safely
+      # ۶. Commit and push changes safely
       - name: Commit and push changes
         env:
           GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
