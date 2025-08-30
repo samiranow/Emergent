@@ -10,30 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ۱. Checkout repository
       - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
+      # ۲. Setup Python
       - name: "Setup Python 3.13"
         uses: actions/setup-python@v4
         with:
           python-version: '3.13'
 
-      - name: "Create virtual environment and install dependencies"
+      # ۳. Install dependencies in virtual environment
+      - name: "Install dependencies"
         run: |
           python -m venv venv --copies
           ./venv/bin/python -m pip install --upgrade pip
           ./venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
 
+      # ۴. Debug: List installed packages
       - name: "Debug: List installed packages"
         run: |
           ./venv/bin/python -m pip list
 
-      - name: "Run main.py with virtual environment"
+      # ۵. Run main.py as a module
+      - name: "Run main.py"
         run: |
-          ./venv/bin/python source/main.py
+          ./venv/bin/python -m source.main
 
+      # ۶. Commit and push changes
       - name: "Commit and push changes"
         env:
           GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -47,4 +53,3 @@ jobs:
             git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
             git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
           )
-
