@@ -8,6 +8,7 @@ import requests
 import base64
 import json
 import logging
+import flag
 
 
 from config import URLS, TIMESTAMP, OUTPUT_DIR
