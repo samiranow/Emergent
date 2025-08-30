@@ -1,36 +1,54 @@
-name: Update VPN Configs - Full Workflow
+name: Update VPN Configs
 
 on:
   schedule:
-    - cron: '0 */12 * * *'
-  workflow_dispatch:
+    - cron: '0 */12 * * *'  # هر ۱۲ ساعت یک بار
+  workflow_dispatch:  # برای اجرا به صورت دستی
 
 jobs:
   update-configs:
     runs-on: ubuntu-latest
 
     steps:
+      # ۱. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: Set up Python
+      # ۲. Setup Python 3.x
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
+      # ۳. Create virtual environment
+      - name: Setup virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      # ۴. Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
+          source venv/bin/activate
           python -m pip install --upgrade pip
           pip install --no-cache-dir -r source/requirements.txt
 
-      - name: List installed packages
-        run: pip list
+      # ۵. Debug: List installed packages
+      - name: Debug: List installed packages
+        run: |
+          source venv/bin/activate
+          pip list
 
+      # ۶. Run main.py to update configs
       - name: Run main.py
-        run: python source/main.py
+        run: |
+          source venv/bin/activate
+          python source/main.py
+        continue-on-error: false
 
+      # ۷. Commit and push changes safely
       - name: Commit and push changes
         env:
           GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
