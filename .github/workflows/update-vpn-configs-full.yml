@@ -22,29 +22,29 @@ jobs:
         with:
           python-version: '3.x'
 
-      # ۳. Create virtual environment
+      # ۳. Create and activate virtual environment
       - name: Setup virtual environment
         run: |
           python -m venv venv
-          source venv/bin/activate
+          echo "Environment created at $(pwd)/venv"
 
       # ۴. Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
-          source venv/bin/activate
+          . venv/bin/activate
           python -m pip install --upgrade pip
           pip install --no-cache-dir -r source/requirements.txt
 
       # ۵. Debug: List installed packages
       - name: Debug: List installed packages
         run: |
-          source venv/bin/activate
+          . venv/bin/activate
           pip list
 
       # ۶. Run main.py to update configs
       - name: Run main.py
         run: |
-          source venv/bin/activate
+          . venv/bin/activate
           python source/main.py
         continue-on-error: false
 
