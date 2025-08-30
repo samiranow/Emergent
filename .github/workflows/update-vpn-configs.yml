@@ -27,14 +27,6 @@ jobs:
       - name: Install requirements
         run: ./venv/bin/python -m pip install -r source/requirements.txt
 
-      - name: Debug installed packages
-        run: |
-          echo "Python executable:"
-          ./venv/bin/python -c "import sys; print(sys.executable)"
-          echo "Installed emoji_country_flag:"
-          ./venv/bin/python -m pip show emoji_country_flag
-          echo "Try importing emoji_country_flag:"
-          ./venv/bin/python -c "import emoji_country_flag; print('emoji_country_flag imported successfully')"
 
       - name: Run main script
         run: ./venv/bin/python source/main.py
