@@ -3,7 +3,7 @@ name: Update VPN Configs
 on:
   schedule:
     - cron: '0 */12 * * *'  # هر ۱۲ ساعت یک بار
-  workflow_dispatch:  # برای اجرا به صورت دستی
+  workflow_dispatch:  # امکان اجرا به صورت دستی
 
 jobs:
   update-configs:
@@ -20,25 +20,34 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.13'
 
-      # ۳. Create and activate virtual environment
-      - name: Setup virtual environment
+      # ۳. Create virtual environment and install dependencies
+      - name: Setup virtual environment and install dependencies
         run: |
-          python -m venv venv
-          echo "Environment created at $(pwd)/venv"
+          python -m venv venv --copies
+          ./venv/bin/python -m pip install --upgrade pip
+          ./venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
 
-      # ۴. Install dependencies from requirements.txt
-      - name: Install dependencies
-        run: |
-          python -m venv venv
-          venv/bin/python -m pip install --upgrade pip
-          venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
-
-      # ۵. Debug: List installed packages
+      # ۴. Debug: List installed packages
       - name: "Debug: List installed packages"
-        run: venv/bin/python -m pip list
+        run: ./venv/bin/python -m pip list
 
-      # ۶. Run main.py to update configs
+      # ۵. Run main.py
       - name: Run main.py
-        run: venv/bin/python source/main.py
+        run: ./venv/bin/python -m source.main
+
+      # ۶. Commit and push changes
+      - name: Commit and push changes
+        env:
+          GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          git add .
+          git diff --cached --quiet || (
+            git commit -m "Auto update VPN configs $(date '+%Y-%m-%d %H:%M:%S')"
+            git push https://x-access-token:${GIT_TOKEN}@github.com/ShatakVPN/ConfigForge-V2Ray.git main
+          )
