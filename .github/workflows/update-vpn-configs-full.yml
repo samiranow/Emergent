@@ -2,7 +2,7 @@ name: "Update VPN Configs"
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # هر 12 ساعت یک بار
+    - cron: '0 */12 * * *'  # هر 12 ساعت یکبار اجرا می‌شود
   workflow_dispatch:
 
 jobs:
@@ -10,36 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
       - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
 
-      # 2. Setup Python 3.13
-      - name: "Setup Python"
+      - name: "Setup Python 3.13"
         uses: actions/setup-python@v4
         with:
           python-version: '3.13'
 
-      # 3. Install dependencies in a virtual environment
       - name: "Install dependencies"
         run: |
           python -m venv venv --copies
           ./venv/bin/python -m pip install --upgrade pip
           ./venv/bin/python -m pip install --no-cache-dir -r source/requirements.txt
 
-      # 4. Debug: list installed packages
-      - name: "Debug: List installed packages"
-        run: |
-          ./venv/bin/python -m pip list
-
-      # 5. Run main.py using venv python
       - name: "Run main.py"
-        run: |
-          ./venv/bin/python source/main.py
+        run: ./venv/bin/python source/main.py
 
-      # 6. Commit and push changes if any
       - name: "Commit and push changes"
         env:
           GIT_TOKEN: ${{ secrets.PAT_TOKEN }}
