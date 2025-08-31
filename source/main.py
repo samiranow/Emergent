@@ -7,35 +7,26 @@ import random
 import asyncio
 import logging
 import base64
-
 import aiofiles
-import requests
 import httpx
 import urllib3
 import zoneinfo
-
 from datetime import datetime
 
-# ──────────────── Configuration ────────────────
-URLS = [
+# ──────────────── Config from ENV ────────────────
+URLS = os.getenv("URLS", "").split(",") if os.getenv("URLS") else [
     "https://www.v2nodes.com/subscriptions/country/de/?key=769B61EA877690D",
     "https://raw.githubusercontent.com/Rayan-Config/C-Sub/refs/heads/main/configs/proxy.txt",
     "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
     "https://raw.githubusercontent.com/Everyday-VPN/Everyday-VPN/main/subscription/main.txt",
     "https://raw.githubusercontent.com/MahsaNetConfigTopic/config/refs/heads/main/xray_final.txt",
 ]
-
 OUTPUT_DIR = "configs"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-CHROME_UA = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/138.0.0.0 Safari/537.36"
-)
-
+MAX_CONCURRENCY = int(os.getenv("MAX_CONCURRENCY", 5))
+BATCH_SIZE = int(os.getenv("BATCH_SIZE", 10))
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# Logging setup
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s] %(levelname)s: %(message)s",
@@ -43,11 +34,17 @@ logging.basicConfig(
 )
 
 ZONE = zoneinfo.ZoneInfo("Asia/Tehran")
+connection_limit = asyncio.Semaphore(MAX_CONCURRENCY)
+geo_cache: dict[str, str] = {}
+dns_cache: dict[str, str] = {}
+
+CHROME_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/138.0.0.0 Safari/537.36"
+)
 
 # ──────────────── Helpers ────────────────
-geo_cache: dict[str, str] = {}
-connection_limit = asyncio.Semaphore(5)  # حداکثر ۵ اتصال همزمان
-
 def b64_decode(s: str) -> str:
     pad = "=" * ((4 - len(s) % 4) % 4)
     return base64.b64decode(s + pad).decode(errors="ignore")
@@ -66,26 +63,39 @@ def country_flag(code: str) -> str:
         return "🏳️"
     return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
 
-def get_country_by_ip(ip: str) -> str:
+async def get_country_by_ip(client: httpx.AsyncClient, ip: str) -> str:
     if ip in geo_cache:
         return geo_cache[ip]
     try:
-        r = requests.get(f"https://ipwhois.app/json/{ip}", timeout=5)
+        r = await client.get(f"https://ipwhois.app/json/{ip}", timeout=5)
         if r.status_code == 200:
             code = r.json().get("country_code", "unknown").lower()
             geo_cache[ip] = code
             return code
     except Exception as e:
-        logging.warning(f"Geolocation lookup failed for {ip}: {e}")
+        logging.warning(f"GeoIP lookup failed for {ip}: {e}")
     geo_cache[ip] = "unknown"
     return "unknown"
 
-def fetch_data(url: str, timeout: int = 10) -> str:
+async def resolve_dns(host: str) -> str:
+    if host in dns_cache:
+        return dns_cache[host]
+    loop = asyncio.get_event_loop()
+    try:
+        infos = await loop.getaddrinfo(host, None)
+        ip = infos[0][4][0]
+        dns_cache[host] = ip
+        return ip
+    except:
+        dns_cache[host] = host
+        return host
+
+async def fetch_data(client: httpx.AsyncClient, url: str) -> str:
     headers = {"User-Agent": CHROME_UA}
     try:
-        resp = requests.get(url, headers=headers, timeout=timeout, verify=False)
-        resp.raise_for_status()
-        return resp.text
+        r = await client.get(url, headers=headers)
+        r.raise_for_status()
+        return r.text
     except Exception as e:
         logging.error(f"Download error for {url}: {e}")
         return ""
@@ -130,94 +140,17 @@ def extract_host(link: str, proto: str) -> str:
         logging.debug(f"extract_host error for [{proto}] {link}: {e}")
     return ""
 
-# ──────────────── Async Ping Tester ────────────────
-async def run_ping_once(client: httpx.AsyncClient, host: str, retries: int = 3) -> dict:
-    if not host:
-        return {}
-
-    base = "https://check-host.net"
-
-    async with connection_limit:  # محدودیت تعداد اتصال
-        for attempt in range(1, retries + 1):
-            try:
-                r1 = await client.get(
-                    f"{base}/check-ping",
-                    params={"host": host},
-                    headers={"Accept": "application/json"},
-                )
-                if r1.status_code == 503:
-                    wait = random.uniform(2, 5)
-                    logging.warning(f"503 for {host}, retry {attempt}/{retries} after {wait:.1f}s")
-                    await asyncio.sleep(wait)
-                    continue
-
-                r1.raise_for_status()
-                req_id = r1.json().get("request_id")
-                if not req_id:
-                    return {}
-
-                for _ in range(10):
-                    await asyncio.sleep(2)
-                    r2 = await client.get(
-                        f"{base}/check-result/{req_id}",
-                        headers={"Accept": "application/json"},
-                    )
-                    if r2.status_code == 200 and r2.json():
-                        return r2.json()
-                break
-
-            except Exception as e:
-                logging.error(f"Ping error for {host} (attempt {attempt}): {e}")
-                await asyncio.sleep(2)
-
-    return {}
-
-def extract_latency_by_country(results: dict, country_nodes: dict[str, list[str]]) -> dict[str, float]:
-    latencies: dict[str, float] = {}
-    for country, nodes in country_nodes.items():
-        pings: list[float] = []
-        for node in nodes:
-            entries = results.get(node, [])
-            try:
-                for status, ping in entries[0]:
-                    if status == "OK":
-                        pings.append(ping)
-            except Exception:
-                continue
-        latencies[country] = sum(pings) / len(pings) if pings else float("inf")
-    return latencies
-
-async def get_nodes_by_country(client: httpx.AsyncClient) -> dict[str, list[str]]:
-    url = "https://check-host.net/nodes/hosts"
-    try:
-        r = await client.get(url)
-        r.raise_for_status()
-        data = r.json()
-    except Exception as e:
-        logging.error(f"Error fetching nodes list: {e}")
-        return {}
-
-    mapping: dict[str, list[str]] = {}
-    for node, info in data.get("nodes", {}).items():
-        loc = info.get("location", [])
-        if isinstance(loc, list) and loc:
-            mapping.setdefault(str(loc[0]).lower(), []).append(node)
-    return mapping
-
-async def save_to_file_async(path: str, lines: list[str]):
-    if not lines:
-        logging.warning(f"No lines to save: {path}")
-        return
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    async with aiofiles.open(path, "w", encoding="utf-8") as f:
-        await f.write("\n".join(lines))
-    logging.info(f"Saved: {path} ({len(lines)} lines)")
-
+# ──────────────── Shadowsocks Rename Fix ────────────────
 def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
     try:
         raw = link.split("ss://", 1)[1]
-        creds, _ = raw.split("@", 1)
-        method, pwd = b64_decode(creds).split(":", 1)
+        if "@" in raw:
+            # فرمت غیر Base64: ss://method:password@host:port
+            creds, _ = raw.split("@", 1)
+            method, pwd = creds.split(":", 1)
+        else:
+            # فرمت Base64
+            method, pwd = b64_decode(raw.split("#")[0]).split(":", 1)
         new_creds = b64_encode(f"{method}:{pwd}")
         return f"ss://{new_creds}@{ip}:{port}#{tag}"
     except Exception:
@@ -231,7 +164,7 @@ def rename_trojan_or_vless(link: str, ip: str, port: str, tag: str) -> str:
         out += f"#{tag}"
     return out
 
-def rename_line(link: str) -> str:
+async def rename_line(client: httpx.AsyncClient, link: str) -> str:
     proto = detect_protocol(link)
     host = extract_host(link, proto)
     if not host:
@@ -242,15 +175,10 @@ def rename_line(link: str) -> str:
     else:
         port = "443"
 
-    try:
-        ip = socket.gethostbyname(host)
-    except socket.gaierror as e:
-        logging.warning(f"DNS lookup failed for {host}: {e}")
-        ip = host
-
-    country = get_country_by_ip(ip)
+    ip = await resolve_dns(host)
+    country = await get_country_by_ip(client, ip)
     flag = country_flag(country)
-    tag = f"[{flag}{country}]::ShatalVPN-{random.randint(100000, 999999)}"
+    tag = f"{flag}ShatakVPN-{random.randint(100000, 999999)}"
 
     if proto == "vmess":
         try:
@@ -261,94 +189,73 @@ def rename_line(link: str) -> str:
         except Exception as e:
             logging.debug(f"vmess rename error: {e}")
             return link
-
     if proto == "ss":
         return rename_ss(link, ip, port, tag)
-
     if proto in ("vless", "trojan"):
         return rename_trojan_or_vless(link, ip, port, tag)
-
     return link
 
-# ──────────────── Batch Processing ────────────────
-async def process_in_batches(tasks, batch_size: int = 10):
+# ──────────────── Ping & Batching ────────────────
+async def run_ping_once(client: httpx.AsyncClient, host: str) -> dict:
+    base = "https://check-host.net"
+    async with connection_limit:
+        try:
+            async with asyncio.timeout(30):  # Timeout کلی
+                r1 = await client.get(f"{base}/check-ping", params={"host": host})
+                if r1.status_code == 503:
+                    await asyncio.sleep(random.uniform(2, 5))
+                    return {}
+                req_id = r1.json().get("request_id")
+                if not req_id:
+                    return {}
+                for _ in range(10):
+                    await asyncio.sleep(2)
+                    r2 = await client.get(f"{base}/check-result/{req_id}")
+                    if r2.status_code == 200 and r2.json():
+                        return r2.json()
+        except:
+            return {}
+    return {}
+
+async def process_in_batches(tasks, batch_size=BATCH_SIZE):
     results = []
     for i in range(0, len(tasks), batch_size):
         batch = tasks[i:i+batch_size]
         results.extend(await asyncio.gather(*batch))
-        await asyncio.sleep(1)  # بین هر Batch کمی فاصله برای کاهش فشار
+        await asyncio.sleep(1)
     return results
 
-# ──────────────── Main Flow ────────────────
+async def save_to_file_async(path: str, lines: list[str]):
+    if not lines:
+        return
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    async with aiofiles.open(path, "w", encoding="utf-8") as f:
+        await f.write("\n".join(lines))
+
+# ──────────────── Main ────────────────
 async def main_async():
-    async with httpx.AsyncClient(timeout=10) as client:
-        now = datetime.now(ZONE).strftime("%Y-%m-%d %H:%M:%S")
-        logging.info(f"[{now}] Starting download and processing…")
-
-        country_nodes = await get_nodes_by_country(client)
-        categorized: dict[str, dict[str, list[tuple[str, str]]]] = {}
-        all_pairs: list[tuple[str, str]] = []
-
-        # Fetch & categorize
+    async with httpx.AsyncClient(timeout=15) as client:
+        logging.info(f"Starting process with MAX_CONCURRENCY={MAX_CONCURRENCY}, BATCH_SIZE={BATCH_SIZE}")
+        all_pairs = []
         for url in URLS:
-            blob = maybe_base64_decode(fetch_data(url))
-            configs = re.findall(
-                r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)",
-                blob,
-            )
-            logging.info(f"Fetched {url} → {len(configs)} configs")
-
+            blob = maybe_base64_decode(await fetch_data(client, url))
+            configs = re.findall(r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)", blob)
+            logging.info(f"Fetched {len(configs)} configs from {url}")
             for link in configs:
                 proto = detect_protocol(link)
                 host = strip_port(extract_host(link, proto))
-                if not host:
-                    continue
-                all_pairs.append((link, host))
-                for country in country_nodes:
-                    categorized.setdefault(country, {
-                        "vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []
-                    })[proto].append((link, host))
+                if host:
+                    all_pairs.append((link, host))
 
-        # Prepare and run ping tasks in batches
         hosts = list({host for _, host in all_pairs})
-        ping_results = await process_in_batches(
-            [run_ping_once(client, h) for h in hosts],
-            batch_size=10  # هر بار ۱۰ هاست
-        )
+        ping_results = await process_in_batches([run_ping_once(client, h) for h in hosts])
         results = dict(zip(hosts, ping_results))
 
-        # Process per country
-        for country, groups in categorized.items():
-            logging.info(f"Processing country: {country}")
-            nodes = country_nodes.get(country, [])
-            latencies: dict[str, float] = {}
-
-            for host, res in results.items():
-                lat = extract_latency_by_country(res, {country: nodes}).get(country, float("inf"))
-                for link, h in all_pairs:
-                    if h == host:
-                        latencies[link] = lat
-
-            sorted_links = [l for l, _ in sorted(latencies.items(), key=lambda x: x[1])]
-            renamed_all = [rename_line(l) for l in sorted_links]
-
-            dest_dir = os.path.join(OUTPUT_DIR, country)
-            os.makedirs(dest_dir, exist_ok=True)
-
-            save_tasks = []
-            for proto, items in groups.items():
-                lst = [l for l in sorted_links if detect_protocol(l) == proto]
-                save_tasks.append(
-                    save_to_file_async(
-                        os.path.join(dest_dir, f"{proto}.txt"),
-                        [rename_line(l) for l in lst]
-                    )
-                )
-
-            save_tasks.append(save_to_file_async(os.path.join(dest_dir, "all.txt"), renamed_all))
-            save_tasks.append(save_to_file_async(os.path.join(dest_dir, "light.txt"), renamed_all[:30]))
-
-            await asyncio.gather(*save_tasks)
+        renamed_all = [await rename_line(client, l) for l, _ in all_pairs]
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        await save_to_file_async(os.path.join(OUTPUT_DIR, "all.txt"), renamed_all)
+        await save_to_file_async(os.path.join(OUTPUT_DIR, "light.txt"), renamed_all[:30])
+        logging.info("Processing complete.")
 
 if __name__ == "__main__":
     asyncio.run(main_async())
