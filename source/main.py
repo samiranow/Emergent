@@ -59,15 +59,23 @@ def rename_line(line: str) -> str:
         try:
             raw = line.split("://", 1)[1]
             decoded = json.loads(base64_decode(raw))
-            decoded["add"] = ip
+            decoded["add"] = ip  # host رو به ip تغییر می‌ده
+            decoded["ps"] = display  # اسم نمایشی رو جایگزین کن (اگر فیلد "remark" بود، به جاش استفاده کن)
             new_raw = base64_encode(json.dumps(decoded))
-            return f"{display} vmess://{new_raw}"
+            return f"vmess://{new_raw}"  # بدون اضافه کردن پیشوند
         except Exception:
-            return f"{display} {line}"
+            return line  # اگر خطا داشت، بدون تغییر برگردون
     elif proto in ["vless", "trojan", "ss"]:
-        return re.sub(r"@[^:]+", f"@{ip}", f"{display} {line}")
+        # host رو به ip تغییر بده
+        line = re.sub(r"@[^:]+", f"@{ip}", line)
+        # اسم نمایشی بعد از # رو جایگزین کن (اگر # نداشت، اضافه کن)
+        if '#' in line:
+            line = re.sub(r'#.*$', f'#{display}', line)
+        else:
+            line += f'#{display}'
+        return line
     else:
-        return f"{display} {line}"
+        return line  # برای پروتکل‌های ناشناخته، بدون تغییر
 
 async def main_async():
     logging.info(f"[{TIMESTAMP}] Starting download and processing with optimized ping strategy...")
