@@ -28,13 +28,63 @@ CHROME_UA = (
     "Chrome/138.0.0.0 Safari/537.36"
 )
 
-ZONE = zoneinfo.ZoneInfo("Asia/Tehran")
-TIMESTAMP = datetime.now(ZONE).strftime("%Y-%m-%d %H:%M:%S")
-
 # disable warnings for insecure HTTPS
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
+# تنظیم دقیق‌تر لاگ‌ها
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s] %(levelname)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+ZONE = zoneinfo.ZoneInfo("Asia/Tehran")
+
+
+# ──────────────── Helpers: Base64 & Geolocation Cache ────────────────
+geo_cache: dict[str, str] = {}
+
+
+def b64_decode(s: str) -> str:
+    pad = "=" * ((4 - len(s) % 4) % 4)
+    return base64.b64decode(s + pad).decode(errors="ignore")
+
+
+def b64_encode(s: str) -> str:
+    return base64.b64encode(s.encode()).decode()
+
+
+def country_flag(code: str) -> str:
+    """
+    تبدیل کد ISO دوحرفی به ایموجی پرچم؛
+    نامعتبر یا 'unknown' → 🏳️
+    """
+    if not code:
+        return "🏳️"
+    c = code.strip().upper()
+    if c == "UNKNOWN" or len(c) != 2 or not c.isalpha():
+        return "🏳️"
+    return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
+
+
+def get_country_by_ip(ip: str) -> str:
+    """
+    ذخیره‌سازی کش شده برای کاهش درخواست‌های مکرر.
+    """
+    if ip in geo_cache:
+        return geo_cache[ip]
+
+    try:
+        r = requests.get(f"https://ipwhois.app/json/{ip}", timeout=5)
+        if r.status_code == 200:
+            code = r.json().get("country_code", "unknown").lower()
+            geo_cache[ip] = code
+            return code
+    except Exception as e:
+        logging.warning(f"Geolocation lookup failed for {ip}: {e}")
+
+    geo_cache[ip] = "unknown"
+    return "unknown"
 
 
 # ──────────────── Fetch & Decode ────────────────
@@ -52,10 +102,9 @@ def fetch_data(url: str, timeout: int = 10) -> str:
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
-        padded = s + "=" * ((4 - len(s) % 4) % 4)
-        decoded = base64.b64decode(padded, validate=True).decode(errors="ignore").strip()
+        decoded = b64_decode(s)
         if any(proto in decoded for proto in ("vless://", "vmess://", "trojan://", "ss://")):
-            return decoded
+            return decoded.strip()
     except Exception:
         pass
     return s
@@ -63,14 +112,14 @@ def maybe_base64_decode(s: str) -> str:
 
 # ──────────────── Parser ────────────────
 def detect_protocol(link: str) -> str:
-    link = link.strip().lower()
-    if link.startswith("vless://"):
+    l = link.strip().lower()
+    if l.startswith("vless://"):
         return "vless"
-    if link.startswith("vmess://"):
+    if l.startswith("vmess://"):
         return "vmess"
-    if link.startswith("ss://"):
+    if l.startswith("ss://"):
         return "shadowsocks"
-    if link.startswith("trojan://"):
+    if l.startswith("trojan://"):
         return "trojan"
     return "unknown"
 
@@ -78,9 +127,7 @@ def detect_protocol(link: str) -> str:
 def extract_host(link: str, proto: str) -> str:
     try:
         if proto == "vmess":
-            b64 = link[8:]
-            padded = b64 + "=" * ((4 - len(b64) % 4) % 4)
-            cfg = json.loads(base64.b64decode(padded).decode(errors="ignore"))
+            cfg = json.loads(b64_decode(link[8:]))
             return cfg.get("add", "")
         if proto == "vless":
             m = re.search(r"vless://[^@]+@([^:/]+)", link)
@@ -91,8 +138,8 @@ def extract_host(link: str, proto: str) -> str:
         if proto == "trojan":
             m = re.search(r"trojan://[^@]+@([^:/?#]+)", link)
             return m.group(1) if m else ""
-    except Exception:
-        pass
+    except Exception as e:
+        logging.debug(f"extract_host error for [{proto}] {link}: {e}")
     return ""
 
 
@@ -104,14 +151,19 @@ async def run_ping_once(host: str, timeout: int = 10) -> dict:
     base = "https://check-host.net"
     async with httpx.AsyncClient(timeout=timeout) as client:
         try:
-            r1 = await client.get(f"{base}/check-ping", params={"host": host}, headers={"Accept": "application/json"})
+            r1 = await client.get(
+                f"{base}/check-ping",
+                params={"host": host},
+                headers={"Accept": "application/json"},
+            )
             r1.raise_for_status()
             req_id = r1.json().get("request_id")
             if not req_id:
                 return {}
             for _ in range(10):
                 await asyncio.sleep(2)
-                r2 = await client.get(f"{base}/check-result/{req_id}", headers={"Accept": "application/json"})
+                r2 = await client.get(f"{base}/check-result/{req_id}",
+                                      headers={"Accept": "application/json"})
                 if r2.status_code == 200 and r2.json():
                     return r2.json()
         except Exception as e:
@@ -119,19 +171,21 @@ async def run_ping_once(host: str, timeout: int = 10) -> dict:
     return {}
 
 
-def extract_latency_by_country(results: dict, country_nodes: dict[str, list[str]]) -> dict[str, float]:
-    latencies = {}
+def extract_latency_by_country(
+    results: dict, country_nodes: dict[str, list[str]]
+) -> dict[str, float]:
+    latencies: dict[str, float] = {}
     for country, nodes in country_nodes.items():
-        vals = []
+        pings: list[float] = []
         for node in nodes:
             entries = results.get(node, [])
             try:
                 for status, ping in entries[0]:
                     if status == "OK":
-                        vals.append(ping)
+                        pings.append(ping)
             except Exception:
                 continue
-        latencies[country] = sum(vals) / len(vals) if vals else float("inf")
+        latencies[country] = sum(pings) / len(pings) if pings else float("inf")
     return latencies
 
 
@@ -165,54 +219,13 @@ def save_to_file(path: str, lines: list[str]):
     logging.info(f"Saved: {path} ({len(lines)} lines)")
 
 
-# ──────────────── Helpers & Renaming ────────────────
-def country_flag(code: str) -> str:
-    """
-    تبدیل کد ISO دوحرفی به ایموجی پرچم متناظر.
-    برای نامعتبر یا 'unknown' پرچم سفید بازمی‌گرداند.
-    """
-    if not code:
-        return "🏳️"
-    c = code.strip().upper()
-    if c == "UNKNOWN" or len(c) != 2 or not c.isalpha():
-        return "🏳️"
-    return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
-
-
-def extract_configs(blob: str) -> list[str]:
-    return re.findall(r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)", blob)
-
-
-def base64_decode(s: str) -> str:
-    pad = "=" * ((4 - len(s) % 4) % 4)
-    return base64.b64decode(s + pad).decode(errors="ignore")
-
-
-def base64_encode(s: str) -> str:
-    return base64.b64encode(s.encode()).decode()
-
-
-def strip_port(host: str) -> str:
-    return host.split(":", 1)[0]
-
-
-def get_country_by_ip(ip: str) -> str:
-    try:
-        r = requests.get(f"https://ipwhois.app/json/{ip}", timeout=5)
-        if r.status_code == 200:
-            return r.json().get("country_code", "unknown").lower()
-    except Exception:
-        pass
-    return "unknown"
-
-
+# ──────────────── Renaming Helpers ────────────────
 def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
     try:
         raw = link.split("ss://", 1)[1]
         creds, _ = raw.split("@", 1)
-        decoded = base64.b64decode(creds + "=" * ((4 - len(creds) % 4) % 4)).decode()
-        method, pwd = decoded.split(":", 1)
-        new_creds = base64.b64encode(f"{method}:{pwd}".encode()).decode()
+        method, pwd = b64_decode(creds).split(":", 1)
+        new_creds = b64_encode(f"{method}:{pwd}")
         return f"ss://{new_creds}@{ip}:{port}#{tag}"
     except Exception:
         return link
@@ -233,7 +246,6 @@ def rename_line(link: str) -> str:
     if not host:
         return link
 
-    # جدا کردن پورت اگر موجود باشد
     if ":" in host:
         host, port = host.split(":", 1)
     else:
@@ -241,22 +253,22 @@ def rename_line(link: str) -> str:
 
     try:
         ip = socket.gethostbyname(host)
-    except Exception:
+    except socket.gaierror as e:
+        logging.warning(f"DNS lookup failed for {host}: {e}")
         ip = host
 
     country = get_country_by_ip(ip)
     flag = country_flag(country)
-    tag = f"[{flag}{country}]::ShatalVPN-{random.randint(100000,999999)}"
+    tag = f"[{flag}{country}]::ShatalVPN-{random.randint(100000, 999999)}"
 
     if proto == "vmess":
         try:
             raw = link.split("://", 1)[1]
-            cfg = json.loads(base64_decode(raw))
-            cfg["add"] = ip
-            cfg["port"] = int(port)
-            cfg["ps"] = tag
-            return f"vmess://{base64_encode(json.dumps(cfg))}#{tag}"
-        except Exception:
+            cfg = json.loads(b64_decode(raw))
+            cfg.update({"add": ip, "port": int(port), "ps": tag})
+            return f"vmess://{b64_encode(json.dumps(cfg))}#{tag}"
+        except Exception as e:
+            logging.debug(f"vmess rename error: {e}")
             return link
 
     if proto == "ss":
@@ -270,21 +282,25 @@ def rename_line(link: str) -> str:
 
 # ──────────────── Main Flow ────────────────
 async def main_async():
-    logging.info(f"[{TIMESTAMP}] Starting download and processing…")
+    now = datetime.now(ZONE).strftime("%Y-%m-%d %H:%M:%S")
+    logging.info(f"[{now}] Starting download and processing…")
 
     country_nodes = await get_nodes_by_country()
-    categorized: dict[str, dict[str, list[tuple[str,str]]]] = {}
-    all_pairs: list[tuple[str,str]] = []
+    categorized: dict[str, dict[str, list[tuple[str, str]]]] = {}
+    all_pairs: list[tuple[str, str]] = []
 
     # Fetch & categorize
     for url in URLS:
         blob = maybe_base64_decode(fetch_data(url))
-        cfgs = extract_configs(blob)
-        logging.info(f"Fetched {url} → {len(cfgs)} configs")
+        configs = re.findall(
+            r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)",
+            blob,
+        )
+        logging.info(f"Fetched {url} → {len(configs)} configs")
 
-        for link in cfgs:
+        for link in configs:
             proto = detect_protocol(link)
-            host = strip_port(extract_host(link, proto))
+            host = strip := extract_host(link, proto)
             if not host:
                 continue
             all_pairs.append((link, host))
@@ -293,14 +309,11 @@ async def main_async():
                     "vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []
                 })[proto].append((link, host))
 
-    # Ping each host
-    host_map: dict[str, list[str]] = {}
-    for link, host in all_pairs:
-        host_map.setdefault(host, []).append(link)
-
-    results: dict[str, dict] = {}
-    for host in host_map:
-        results[host] = await run_ping_once(host)
+    # Prepare ping tasks concurrently
+    hosts = list({host for _, host in all_pairs})
+    tasks = [run_ping_once(h) for h in hosts]
+    ping_results = await asyncio.gather(*tasks)
+    results = dict(zip(hosts, ping_results))
 
     # Process per country
     for country, groups in categorized.items():
@@ -310,7 +323,7 @@ async def main_async():
 
         for host, res in results.items():
             lat = extract_latency_by_country(res, {country: nodes}).get(country, float("inf"))
-            for link in host_map[host]:
+            for link in [l for l, h in all_pairs if h == host]:
                 latencies[link] = lat
 
         sorted_links = [l for l, _ in sorted(latencies.items(), key=lambda x: x[1])]
@@ -319,10 +332,12 @@ async def main_async():
         dest_dir = os.path.join(OUTPUT_DIR, country)
         os.makedirs(dest_dir, exist_ok=True)
 
-        # write per-protocol files
         for proto, items in groups.items():
             lst = [l for l in sorted_links if detect_protocol(l) == proto]
-            save_to_file(os.path.join(dest_dir, f"{proto}.txt"), [rename_line(l) for l in lst])
+            save_to_file(
+                os.path.join(dest_dir, f"{proto}.txt"),
+                [rename_line(l) for l in lst]
+            )
 
         save_to_file(os.path.join(dest_dir, "all.txt"), renamed_all)
         save_to_file(os.path.join(dest_dir, "light.txt"), renamed_all[:30])
