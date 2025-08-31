@@ -31,12 +31,21 @@ def strip_port(host: str) -> str:
 
 def get_country_by_ip(ip: str) -> str:
     try:
-        r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=5)
+        r = requests.get(f"https://ipwhois.app/json/{ip}", timeout=5)
         if r.status_code == 200:
-            return r.text.strip().lower()
+            data = r.json()
+            return data.get("country_code", "unknown").lower()
     except Exception:
         pass
     return "unknown"
+
+def rename_ss(line: str, ip: str, display: str) -> str:
+    line = re.sub(r'@[^:/#]+(:\d+)?', f'@{ip}', line)
+    if '#' in line:
+        line = re.sub(r'#.*$', f'#{display}', line)
+    else:
+        line += f'#{display}'
+    return line
 
 def rename_line(line: str) -> str:
     proto = detect_protocol(line)
@@ -44,7 +53,7 @@ def rename_line(line: str) -> str:
     if not host:
         return line
 
-    host = strip_port(host)  # حذف پورت از host
+    host = strip_port(host)
 
     try:
         ip = socket.gethostbyname(host)
@@ -70,7 +79,9 @@ def rename_line(line: str) -> str:
             return f"vmess://{new_raw}"
         except Exception:
             return line
-    elif proto in ["vless", "trojan", "ss"]:
+    elif proto == "ss":
+        return rename_ss(line, ip, display)
+    elif proto in ["vless", "trojan"]:
         line = re.sub(r"@[^:]+", f"@{ip}", line)
         if '#' in line:
             line = re.sub(r'#.*$', f'#{display}', line)
