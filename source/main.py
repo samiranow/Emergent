@@ -146,7 +146,7 @@ async def get_nodes_by_country() -> dict[str, list[str]]:
             logging.error(f"Error fetching nodes list: {e}")
             return {}
 
-    mapping = {}
+    mapping: dict[str, list[str]] = {}
     for node, info in data.get("nodes", {}).items():
         loc = info.get("location", [])
         if isinstance(loc, list) and loc:
@@ -166,6 +166,19 @@ def save_to_file(path: str, lines: list[str]):
 
 
 # ──────────────── Helpers & Renaming ────────────────
+def country_flag(code: str) -> str:
+    """
+    تبدیل کد ISO دوحرفی به ایموجی پرچم متناظر.
+    برای نامعتبر یا 'unknown' پرچم سفید بازمی‌گرداند.
+    """
+    if not code:
+        return "🏳️"
+    c = code.strip().upper()
+    if c == "UNKNOWN" or len(c) != 2 or not c.isalpha():
+        return "🏳️"
+    return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
+
+
 def extract_configs(blob: str) -> list[str]:
     return re.findall(r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)", blob)
 
@@ -197,7 +210,7 @@ def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
     try:
         raw = link.split("ss://", 1)[1]
         creds, _ = raw.split("@", 1)
-        decoded = base64.b64decode(creds + "=" * (-len(creds) % 4)).decode()
+        decoded = base64.b64decode(creds + "=" * ((4 - len(creds) % 4) % 4)).decode()
         method, pwd = decoded.split(":", 1)
         new_creds = base64.b64encode(f"{method}:{pwd}".encode()).decode()
         return f"ss://{new_creds}@{ip}:{port}#{tag}"
@@ -220,7 +233,7 @@ def rename_line(link: str) -> str:
     if not host:
         return link
 
-    # split port if present
+    # جدا کردن پورت اگر موجود باشد
     if ":" in host:
         host, port = host.split(":", 1)
     else:
@@ -232,12 +245,7 @@ def rename_line(link: str) -> str:
         ip = host
 
     country = get_country_by_ip(ip)
-    flag = {
-        "us": "🇺🇸", "de": "🇩🇪", "fr": "🇫🇷", "ir": "🇮🇷",
-        "nl": "🇳🇱", "gb": "🇬🇧", "ca": "🇨🇦", "ru": "🇷🇺",
-        "cn": "🇨🇳", "jp": "🇯🇵", "in": "🇮🇳", "sg": "🇸🇬",
-        "ae": "🇦🇪", "tr": "🇹🇷", "unknown": "🏳️"
-    }.get(country, "🏳️")
+    flag = country_flag(country)
     tag = f"[{flag}{country}]::ShatalVPN-{random.randint(100000,999999)}"
 
     if proto == "vmess":
@@ -285,7 +293,7 @@ async def main_async():
                     "vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []
                 })[proto].append((link, host))
 
-    # Ping each host once
+    # Ping each host
     host_map: dict[str, list[str]] = {}
     for link, host in all_pairs:
         host_map.setdefault(host, []).append(link)
@@ -311,7 +319,7 @@ async def main_async():
         dest_dir = os.path.join(OUTPUT_DIR, country)
         os.makedirs(dest_dir, exist_ok=True)
 
-        # write per-protocol
+        # write per-protocol files
         for proto, items in groups.items():
             lst = [l for l in sorted_links if detect_protocol(l) == proto]
             save_to_file(os.path.join(dest_dir, f"{proto}.txt"), [rename_line(l) for l in lst])
