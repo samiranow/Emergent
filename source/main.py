@@ -41,10 +41,12 @@ def get_country_by_ip(ip: str) -> str:
 
 def rename_ss(line: str, ip: str, display: str) -> str:
     line = re.sub(r'@[^:/#]+(:\d+)?', f'@{ip}', line)
-    if '#' in line:
-        line = re.sub(r'#.*$', f'#{display}', line)
-    else:
-        line += f'#{display}'
+    line = re.sub(r'#.*$', f'#{display}', line) if '#' in line else line + f'#{display}'
+    return line
+
+def rename_trojan_or_vless(line: str, ip: str, display: str) -> str:
+    line = re.sub(r'@[^:/#]+(:\d+)?', f'@{ip}', line)
+    line = re.sub(r'#.*$', f'#{display}', line) if '#' in line else line + f'#{display}'
     return line
 
 def rename_line(line: str) -> str:
@@ -76,18 +78,13 @@ def rename_line(line: str) -> str:
             decoded["add"] = ip
             decoded["ps"] = display
             new_raw = base64_encode(json.dumps(decoded))
-            return f"vmess://{new_raw}"
+            return f"vmess://{new_raw}#{display}"
         except Exception:
             return line
     elif proto == "ss":
         return rename_ss(line, ip, display)
     elif proto in ["vless", "trojan"]:
-        line = re.sub(r"@[^:]+", f"@{ip}", line)
-        if '#' in line:
-            line = re.sub(r'#.*$', f'#{display}', line)
-        else:
-            line += f'#{display}'
-        return line
+        return rename_trojan_or_vless(line, ip, display)
     else:
         return line
 
