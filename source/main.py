@@ -31,7 +31,6 @@ CHROME_UA = (
 # disable warnings for insecure HTTPS
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# تنظیم دقیق‌تر لاگ‌ها
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s] %(levelname)s: %(message)s",
@@ -41,18 +40,18 @@ logging.basicConfig(
 ZONE = zoneinfo.ZoneInfo("Asia/Tehran")
 
 
-# ──────────────── Helpers: Base64 & Geolocation Cache ────────────────
+# ──────────────── Helpers: Base64, Port Strip & Geolocation Cache ────────────────
 geo_cache: dict[str, str] = {}
-
 
 def b64_decode(s: str) -> str:
     pad = "=" * ((4 - len(s) % 4) % 4)
     return base64.b64decode(s + pad).decode(errors="ignore")
 
-
 def b64_encode(s: str) -> str:
     return base64.b64encode(s.encode()).decode()
 
+def strip_port(host: str) -> str:
+    return host.split(":", 1)[0]
 
 def country_flag(code: str) -> str:
     """
@@ -66,10 +65,9 @@ def country_flag(code: str) -> str:
         return "🏳️"
     return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
 
-
 def get_country_by_ip(ip: str) -> str:
     """
-    ذخیره‌سازی کش شده برای کاهش درخواست‌های مکرر.
+    کش نتایج جغرافیا برای کاهش درخواست‌های مکرر
     """
     if ip in geo_cache:
         return geo_cache[ip]
@@ -98,7 +96,6 @@ def fetch_data(url: str, timeout: int = 10) -> str:
         logging.error(f"Download error for {url}: {e}")
         return ""
 
-
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
@@ -122,7 +119,6 @@ def detect_protocol(link: str) -> str:
     if l.startswith("trojan://"):
         return "trojan"
     return "unknown"
-
 
 def extract_host(link: str, proto: str) -> str:
     try:
@@ -162,14 +158,15 @@ async def run_ping_once(host: str, timeout: int = 10) -> dict:
                 return {}
             for _ in range(10):
                 await asyncio.sleep(2)
-                r2 = await client.get(f"{base}/check-result/{req_id}",
-                                      headers={"Accept": "application/json"})
+                r2 = await client.get(
+                    f"{base}/check-result/{req_id}",
+                    headers={"Accept": "application/json"},
+                )
                 if r2.status_code == 200 and r2.json():
                     return r2.json()
         except Exception as e:
             logging.error(f"Ping error for {host}: {e}")
     return {}
-
 
 def extract_latency_by_country(
     results: dict, country_nodes: dict[str, list[str]]
@@ -187,7 +184,6 @@ def extract_latency_by_country(
                 continue
         latencies[country] = sum(pings) / len(pings) if pings else float("inf")
     return latencies
-
 
 async def get_nodes_by_country() -> dict[str, list[str]]:
     url = "https://check-host.net/nodes/hosts"
@@ -230,7 +226,6 @@ def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
     except Exception:
         return link
 
-
 def rename_trojan_or_vless(link: str, ip: str, port: str, tag: str) -> str:
     out = re.sub(r"@[^:/#]+(:\d+)?", f"@{ip}:{port}", link)
     if "#" in out:
@@ -238,7 +233,6 @@ def rename_trojan_or_vless(link: str, ip: str, port: str, tag: str) -> str:
     else:
         out += f"#{tag}"
     return out
-
 
 def rename_line(link: str) -> str:
     proto = detect_protocol(link)
@@ -300,7 +294,7 @@ async def main_async():
 
         for link in configs:
             proto = detect_protocol(link)
-            host = strip := extract_host(link, proto)
+            host = strip_port(extract_host(link, proto))
             if not host:
                 continue
             all_pairs.append((link, host))
@@ -319,12 +313,13 @@ async def main_async():
     for country, groups in categorized.items():
         logging.info(f"Processing country: {country}")
         nodes = country_nodes.get(country, [])
-        latencies = {}
+        latencies: dict[str, float] = {}
 
         for host, res in results.items():
             lat = extract_latency_by_country(res, {country: nodes}).get(country, float("inf"))
-            for link in [l for l, h in all_pairs if h == host]:
-                latencies[link] = lat
+            for link, h in all_pairs:
+                if h == host:
+                    latencies[link] = lat
 
         sorted_links = [l for l, _ in sorted(latencies.items(), key=lambda x: x[1])]
         renamed_all = [rename_line(l) for l in sorted_links]
@@ -341,7 +336,6 @@ async def main_async():
 
         save_to_file(os.path.join(dest_dir, "all.txt"), renamed_all)
         save_to_file(os.path.join(dest_dir, "light.txt"), renamed_all[:30])
-
 
 if __name__ == "__main__":
     asyncio.run(main_async())
