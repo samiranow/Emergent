@@ -40,9 +40,17 @@ def get_country_by_ip(ip: str) -> str:
     return "unknown"
 
 def rename_ss(line: str, ip: str, display: str) -> str:
-    line = re.sub(r'@[^:/#]+(:\d+)?', f'@{ip}', line)
-    line = re.sub(r'#.*$', f'#{display}', line) if '#' in line else line + f'#{display}'
-    return line
+    try:
+        raw = line.split("ss://")[1]
+        base, rest = raw.split("@")
+        host_port, *name = rest.split("#")
+        decoded = base64.b64decode(base + '=' * (-len(base) % 4)).decode()
+        method, password = decoded.split(":", 1)
+        new_base = base64.b64encode(f"{method}:{password}".encode()).decode()
+        port = host_port.split(":")[1]
+        return f"ss://{new_base}@{ip}:{port}#{display}"
+    except Exception:
+        return line
 
 def rename_trojan_or_vless(line: str, ip: str, display: str) -> str:
     line = re.sub(r'@[^:/#]+(:\d+)?', f'@{ip}', line)
