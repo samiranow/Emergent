@@ -41,13 +41,13 @@ def get_country_by_ip(ip: str) -> str:
 
 def rename_ss(line: str, ip: str, display: str) -> str:
     try:
-        raw = line.split("ss://")[1]
-        base, rest = raw.split("@")
-        host_port, *name = rest.split("#")
+        raw = line.split("ss://", 1)[1]
+        base, rest = raw.split("@", 1)
+        host_port = rest.split("#")[0]
         decoded = base64.b64decode(base + '=' * (-len(base) % 4)).decode()
         method, password = decoded.split(":", 1)
         new_base = base64.b64encode(f"{method}:{password}".encode()).decode()
-        port = host_port.split(":")[1]
+        port = host_port.split(":")[1] if ":" in host_port else "443"
         return f"ss://{new_base}@{ip}:{port}#{display}"
     except Exception:
         return line
