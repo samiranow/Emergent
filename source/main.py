@@ -130,11 +130,6 @@ _connection_limit = asyncio.Semaphore(5)
 
 # ──────────────── Ping Tester with Retry (uses shared client) ────────────────
 async def run_ping_once(client: httpx.AsyncClient, host: str, timeout: int = 10, retries: int = 3) -> dict:
-    """
-    با حداکثر ۵ اتصال همزمان (Semaphore) و یک httpx.AsyncClient مشترک
-    سعی می‌کند تا سه بار با تأخیر تصادفی (۲–۵ ثانیه) پینگ را ارسال کند.
-    در صورت 503 یا استثنا دوباره تلاش می‌کند.
-    """
     if not host:
         return {}
     base = "https://check-host.net"
@@ -223,30 +218,23 @@ def save_to_file(path: str, lines: list[str]):
 # ──────────────── Renaming Helpers ────────────────
 def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
     """
-    فیکس: هم لینک‌های Base64 و هم لینک‌های غیر Base64 را پشتیبانی می‌کند.
-    مثال‌ها:
-      - ss://YWVzLTI1Ni1nY206cGFzcw==@host:443#name
-      - ss://aes-256-gcm:pass@host:443#name
+    فیکس: همه‌ی لینک‌های Shadowsocks را درست rename می‌کند.
     """
     try:
         raw = link.split("ss://", 1)[1]
-        # جدا کردن بخش قبل از # (در صورت وجود)
         raw_no_hash = raw.split("#", 1)[0]
 
         if "@" in raw_no_hash:
-            # فرمت غیر Base64: method:password@host:port
             creds, _ = raw_no_hash.split("@", 1)
-            # اگر اشتباهاً creds خودش Base64 بود، decode کن
             try:
-                maybe = b64_decode(creds)
-                if ":" in maybe:
-                    method, pwd = maybe.split(":", 1)
+                decoded = b64_decode(creds)
+                if ":" in decoded:
+                    method, pwd = decoded.split(":", 1)
                 else:
                     method, pwd = creds.split(":", 1)
             except Exception:
                 method, pwd = creds.split(":", 1)
         else:
-            # فرمت Base64: base64(method:password)
             method, pwd = b64_decode(raw_no_hash).split(":", 1)
 
         new_creds = b64_encode(f"{method}:{pwd}")
