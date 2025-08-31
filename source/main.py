@@ -27,7 +27,6 @@ CHROME_UA = (
     "Chrome/138.0.0.0 Safari/537.36"
 )
 
-# disable warnings for insecure HTTPS
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logging.basicConfig(
@@ -207,7 +206,9 @@ async def get_nodes_by_country(client: httpx.AsyncClient) -> dict[str, list[str]
 
 # ──────────────── Output ────────────────
 def save_to_file(path: str, lines: list[str]):
-    # مطمئن می‌شویم مسیر وجود دارد و حتی اگر lines خالی باشد فایل ساخته شود
+    if not lines:
+        logging.warning(f"No lines to save: {path}")
+        return
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
@@ -216,14 +217,18 @@ def save_to_file(path: str, lines: list[str]):
 # ──────────────── Renaming Helpers ────────────────
 def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
     """
-    نسخه مطمئن: همه‌ی لینک‌های Shadowsocks با Base64 یا بدون Base64 rename می‌شوند
+    نسخه هوشمند rename برای Shadowsocks:
+    - Base64 کامل یا بدون Base64
+    - با یا بدون @
     """
     try:
         raw = link.split("ss://", 1)[1]
-        raw_no_hash = raw.split("#", 1)[0]
+        hash_tag = ""
+        if "#" in raw:
+            raw, hash_tag = raw.split("#", 1)
 
-        if "@" in raw_no_hash:
-            creds, _ = raw_no_hash.split("@", 1)
+        if "@" in raw:
+            creds, _ = raw.split("@", 1)
             try:
                 decoded = b64_decode(creds)
                 if ":" in decoded:
@@ -236,11 +241,16 @@ def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
                 else:
                     method, pwd = creds, "password"
         else:
-            method, pwd = b64_decode(raw_no_hash).split(":", 1)
+            decoded = b64_decode(raw)
+            if ":" in decoded:
+                method, pwd = decoded.split(":", 1)
+            else:
+                method, pwd = decoded, "password"
 
         new_creds = b64_encode(f"{method}:{pwd}")
         return f"ss://{new_creds}@{ip}:{port}#{tag}"
-    except Exception:
+    except Exception as e:
+        logging.warning(f"rename_ss failed: {e}")
         return link
 
 def rename_trojan_or_vless(link: str, ip: str, port: str, tag: str) -> str:
@@ -270,7 +280,7 @@ def rename_line(link: str) -> str:
 
     country = get_country_by_ip(ip)
     flag = country_flag(country)
-    tag = f"[{flag}{country}]::ShatalVPN-{random.randint(100000, 999999)}"
+    tag = f"{flag} ShatalVPN {random.randint(100000, 999999)}"
 
     if proto == "vmess":
         try:
