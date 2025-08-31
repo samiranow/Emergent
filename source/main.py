@@ -54,10 +54,6 @@ def strip_port(host: str) -> str:
     return host.split(":", 1)[0]
 
 def country_flag(code: str) -> str:
-    """
-    تبدیل کد ISO دوحرفی به ایموجی پرچم؛
-    نامعتبر یا 'unknown' → 🏳️
-    """
     if not code:
         return "🏳️"
     c = code.strip().upper()
@@ -66,12 +62,8 @@ def country_flag(code: str) -> str:
     return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
 
 def get_country_by_ip(ip: str) -> str:
-    """
-    کش نتایج جغرافیا برای کاهش درخواست‌های مکرر
-    """
     if ip in geo_cache:
         return geo_cache[ip]
-
     try:
         r = requests.get(f"https://ipwhois.app/json/{ip}", timeout=5)
         if r.status_code == 200:
@@ -80,7 +72,6 @@ def get_country_by_ip(ip: str) -> str:
             return code
     except Exception as e:
         logging.warning(f"Geolocation lookup failed for {ip}: {e}")
-
     geo_cache[ip] = "unknown"
     return "unknown"
 
@@ -139,34 +130,51 @@ def extract_host(link: str, proto: str) -> str:
     return ""
 
 
-# ──────────────── Ping Tester ────────────────
-async def run_ping_once(host: str, timeout: int = 10) -> dict:
+# ──────────────── Ping Tester with Retry ────────────────
+async def run_ping_once(host: str, timeout: int = 10, retries: int = 3) -> dict:
+    """
+    سعی می‌کند تا سه بار با تأخیر تصادفی (۲–۵ ثانیه) پینگ را ارسال کند.
+    در صورت 503 یا استثنا دوباره تلاش می‌کند.
+    """
     if not host:
         return {}
 
     base = "https://check-host.net"
     async with httpx.AsyncClient(timeout=timeout) as client:
-        try:
-            r1 = await client.get(
-                f"{base}/check-ping",
-                params={"host": host},
-                headers={"Accept": "application/json"},
-            )
-            r1.raise_for_status()
-            req_id = r1.json().get("request_id")
-            if not req_id:
-                return {}
-            for _ in range(10):
-                await asyncio.sleep(2)
-                r2 = await client.get(
-                    f"{base}/check-result/{req_id}",
+        for attempt in range(1, retries + 1):
+            try:
+                r1 = await client.get(
+                    f"{base}/check-ping",
+                    params={"host": host},
                     headers={"Accept": "application/json"},
                 )
-                if r2.status_code == 200 and r2.json():
-                    return r2.json()
-        except Exception as e:
-            logging.error(f"Ping error for {host}: {e}")
+                if r1.status_code == 503:
+                    wait = random.uniform(2, 5)
+                    logging.warning(f"503 for {host}, retry {attempt}/{retries} after {wait:.1f}s")
+                    await asyncio.sleep(wait)
+                    continue
+
+                r1.raise_for_status()
+                req_id = r1.json().get("request_id")
+                if not req_id:
+                    return {}
+
+                for _ in range(10):
+                    await asyncio.sleep(2)
+                    r2 = await client.get(
+                        f"{base}/check-result/{req_id}",
+                        headers={"Accept": "application/json"},
+                    )
+                    if r2.status_code == 200 and r2.json():
+                        return r2.json()
+                break
+
+            except Exception as e:
+                logging.error(f"Ping error for {host} (attempt {attempt}): {e}")
+                await asyncio.sleep(2)
+
     return {}
+
 
 def extract_latency_by_country(
     results: dict, country_nodes: dict[str, list[str]]
@@ -303,7 +311,7 @@ async def main_async():
                     "vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []
                 })[proto].append((link, host))
 
-    # Prepare ping tasks concurrently
+    # Prepare and run ping tasks concurrently
     hosts = list({host for _, host in all_pairs})
     tasks = [run_ping_once(h) for h in hosts]
     ping_results = await asyncio.gather(*tasks)
