@@ -19,18 +19,9 @@ from datetime import datetime
 # ──────────────── Configuration ────────────────
 URLS = [
     "https://www.v2nodes.com/subscriptions/country/de/?key=769B61EA877690D",
-    "https://raw.githubusercontent.com/itsyebekhe/PSG/main/lite/subscriptions/xray/normal/mix",
-    "https://raw.githubusercontent.com/HosseinKoofi/GO_V2rayCollector/main/mixed_iran.txt",
-    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/mix/sub.html",
-    "https://raw.githubusercontent.com/IranianCypherpunks/sub/main/config",
     "https://raw.githubusercontent.com/Rayan-Config/C-Sub/refs/heads/main/configs/proxy.txt",
-    "https://raw.githubusercontent.com/sashalsk/V2Ray/main/V2Config",
     "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
-    "https://raw.githubusercontent.com/itsyebekhe/HiN-VPN/main/subscription/normal/mix",
-    "https://raw.githubusercontent.com/sarinaesmailzadeh/V2Hub/main/merged",
-    "https://raw.githubusercontent.com/freev2rayconfig/V2RAY_SUBSCRIPTION_LINK/main/v2rayconfigs.txt",
     "https://raw.githubusercontent.com/Everyday-VPN/Everyday-VPN/main/subscription/main.txt",
-    "https://raw.githubusercontent.com/C4ssif3r/V2ray-sub/main/all.txt",
     "https://raw.githubusercontent.com/MahsaNetConfigTopic/config/refs/heads/main/xray_final.txt",
 ]
 
