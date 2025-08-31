@@ -7,6 +7,8 @@ import random
 import asyncio
 import logging
 import base64
+
+import aiofiles
 import requests
 import httpx
 import urllib3
@@ -43,15 +45,19 @@ ZONE = zoneinfo.ZoneInfo("Asia/Tehran")
 # ──────────────── Helpers: Base64, Port Strip & Geolocation Cache ────────────────
 geo_cache: dict[str, str] = {}
 
+
 def b64_decode(s: str) -> str:
     pad = "=" * ((4 - len(s) % 4) % 4)
     return base64.b64decode(s + pad).decode(errors="ignore")
 
+
 def b64_encode(s: str) -> str:
     return base64.b64encode(s.encode()).decode()
 
+
 def strip_port(host: str) -> str:
     return host.split(":", 1)[0]
+
 
 def country_flag(code: str) -> str:
     if not code:
@@ -60,6 +66,7 @@ def country_flag(code: str) -> str:
     if c == "UNKNOWN" or len(c) != 2 or not c.isalpha():
         return "🏳️"
     return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
+
 
 def get_country_by_ip(ip: str) -> str:
     if ip in geo_cache:
@@ -87,6 +94,7 @@ def fetch_data(url: str, timeout: int = 10) -> str:
         logging.error(f"Download error for {url}: {e}")
         return ""
 
+
 def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
@@ -111,6 +119,7 @@ def detect_protocol(link: str) -> str:
         return "trojan"
     return "unknown"
 
+
 def extract_host(link: str, proto: str) -> str:
     try:
         if proto == "vmess":
@@ -132,10 +141,6 @@ def extract_host(link: str, proto: str) -> str:
 
 # ──────────────── Ping Tester with Retry ────────────────
 async def run_ping_once(host: str, timeout: int = 10, retries: int = 3) -> dict:
-    """
-    سعی می‌کند تا سه بار با تأخیر تصادفی (۲–۵ ثانیه) پینگ را ارسال کند.
-    در صورت 503 یا استثنا دوباره تلاش می‌کند.
-    """
     if not host:
         return {}
 
@@ -193,6 +198,7 @@ def extract_latency_by_country(
         latencies[country] = sum(pings) / len(pings) if pings else float("inf")
     return latencies
 
+
 async def get_nodes_by_country() -> dict[str, list[str]]:
     url = "https://check-host.net/nodes/hosts"
     async with httpx.AsyncClient(timeout=10) as client:
@@ -212,14 +218,14 @@ async def get_nodes_by_country() -> dict[str, list[str]]:
     return mapping
 
 
-# ──────────────── Output ────────────────
-def save_to_file(path: str, lines: list[str]):
+# ──────────────── Async File Writer ────────────────
+async def save_to_file_async(path: str, lines: list[str]):
     if not lines:
         logging.warning(f"No lines to save: {path}")
         return
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+    async with aiofiles.open(path, "w", encoding="utf-8") as f:
+        await f.write("\n".join(lines))
     logging.info(f"Saved: {path} ({len(lines)} lines)")
 
 
@@ -234,6 +240,7 @@ def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
     except Exception:
         return link
 
+
 def rename_trojan_or_vless(link: str, ip: str, port: str, tag: str) -> str:
     out = re.sub(r"@[^:/#]+(:\d+)?", f"@{ip}:{port}", link)
     if "#" in out:
@@ -241,6 +248,7 @@ def rename_trojan_or_vless(link: str, ip: str, port: str, tag: str) -> str:
     else:
         out += f"#{tag}"
     return out
+
 
 def rename_line(link: str) -> str:
     proto = detect_protocol(link)
@@ -335,15 +343,27 @@ async def main_async():
         dest_dir = os.path.join(OUTPUT_DIR, country)
         os.makedirs(dest_dir, exist_ok=True)
 
+        # gather all save tasks
+        save_tasks = []
         for proto, items in groups.items():
             lst = [l for l in sorted_links if detect_protocol(l) == proto]
-            save_to_file(
-                os.path.join(dest_dir, f"{proto}.txt"),
-                [rename_line(l) for l in lst]
+            save_tasks.append(
+                save_to_file_async(
+                    os.path.join(dest_dir, f"{proto}.txt"),
+                    [rename_line(l) for l in lst]
+                )
             )
 
-        save_to_file(os.path.join(dest_dir, "all.txt"), renamed_all)
-        save_to_file(os.path.join(dest_dir, "light.txt"), renamed_all[:30])
+        save_tasks.append(
+            save_to_file_async(os.path.join(dest_dir, "all.txt"), renamed_all)
+        )
+        save_tasks.append(
+            save_to_file_async(os.path.join(dest_dir, "light.txt"), renamed_all[:30])
+        )
+
+        # write files in parallel
+        await asyncio.gather(*save_tasks)
+
 
 if __name__ == "__main__":
     asyncio.run(main_async())
