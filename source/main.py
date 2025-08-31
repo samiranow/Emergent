@@ -26,6 +26,9 @@ def base64_decode(s: str) -> str:
 def base64_encode(s: str) -> str:
     return base64.b64encode(s.encode()).decode()
 
+def strip_port(host: str) -> str:
+    return host.split(':')[0] if ':' in host else host
+
 def get_country_by_ip(ip: str) -> str:
     try:
         r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=5)
@@ -40,6 +43,8 @@ def rename_line(line: str) -> str:
     host = extract_host(line, proto)
     if not host:
         return line
+
+    host = strip_port(host)  # حذف پورت از host
 
     try:
         ip = socket.gethostbyname(host)
@@ -59,23 +64,21 @@ def rename_line(line: str) -> str:
         try:
             raw = line.split("://", 1)[1]
             decoded = json.loads(base64_decode(raw))
-            decoded["add"] = ip  # host رو به ip تغییر می‌ده
-            decoded["ps"] = display  # اسم نمایشی رو جایگزین کن (اگر فیلد "remark" بود، به جاش استفاده کن)
+            decoded["add"] = ip
+            decoded["ps"] = display
             new_raw = base64_encode(json.dumps(decoded))
-            return f"vmess://{new_raw}"  # بدون اضافه کردن پیشوند
+            return f"vmess://{new_raw}"
         except Exception:
-            return line  # اگر خطا داشت، بدون تغییر برگردون
+            return line
     elif proto in ["vless", "trojan", "ss"]:
-        # host رو به ip تغییر بده
         line = re.sub(r"@[^:]+", f"@{ip}", line)
-        # اسم نمایشی بعد از # رو جایگزین کن (اگر # نداشت، اضافه کن)
         if '#' in line:
             line = re.sub(r'#.*$', f'#{display}', line)
         else:
             line += f'#{display}'
         return line
     else:
-        return line  # برای پروتکل‌های ناشناخته، بدون تغییر
+        return line
 
 async def main_async():
     logging.info(f"[{TIMESTAMP}] Starting download and processing with optimized ping strategy...")
@@ -95,6 +98,7 @@ async def main_async():
             host = extract_host(line, proto)
             if not host:
                 continue
+            host = strip_port(host)
             all_lines_hosts.append((line, host))
             for country_code in country_nodes_dict.keys():
                 categorized_per_country.setdefault(
@@ -103,7 +107,6 @@ async def main_async():
                 )
                 categorized_per_country[country_code][proto].append((line, host))
 
-    # فقط یک بار پینگ برای هر host
     host_to_lines = {}
     for line, host in all_lines_hosts:
         host_to_lines.setdefault(host, []).append(line)
