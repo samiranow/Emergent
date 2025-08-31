@@ -1,3 +1,4 @@
 requests>=2.30
 httpx>=0.24
+aiofiles>=23.1.0
 emoji-country-flag
