@@ -10,8 +10,7 @@ import requests
 import httpx
 import urllib3
 import zoneinfo
-from urllib.parse import quote
-
+from urllib.parse import quote, urlsplit, urlunsplit
 from datetime import datetime
 
 # ──────────────── Configuration ────────────────
@@ -47,6 +46,14 @@ def b64_decode(s: str) -> str:
 
 def b64_encode(s: str) -> str:
     return base64.b64encode(s.encode()).decode()
+
+def b64url_decode(s: str) -> bytes:
+    # SSR uses URL-safe base64 without padding
+    pad = "=" * ((4 - len(s) % 4) % 4)
+    return base64.urlsafe_b64decode(s + pad)
+
+def b64url_encode(b: bytes) -> str:
+    return base64.urlsafe_b64encode(b).decode().rstrip("=")
 
 def strip_port(host: str) -> str:
     return host.split(":", 1)[0]
@@ -88,6 +95,7 @@ def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
         decoded = b64_decode(s)
+        # if it looks like a subscription (contains many scheme://), accept it
         if "://" in decoded:
             return decoded.strip()
     except Exception:
@@ -95,24 +103,66 @@ def maybe_base64_decode(s: str) -> str:
     return s
 
 # ──────────────── Parser ────────────────
+def normalize_proto(proto: str) -> str:
+    p = proto.lower()
+    if p in ("ss", "shadowsocks"):
+        return "shadowsocks"
+    if p in ("hy2", "hysteria2"):
+        return "hysteria2"
+    if p.startswith("hysteria"):
+        return "hysteria"
+    return p
+
 def detect_protocol(link: str) -> str:
-    """Return the scheme of a link (e.g., vmess, vless, ss, trojan, hysteria…)."""
     m = re.match(r"([a-z0-9+.-]+)://", link.strip().lower())
     if not m:
         return "unknown"
-    proto = m.group(1)
-    if proto == "ss":
-        return "shadowsocks"
-    return proto
+    return normalize_proto(m.group(1))
 
 def extract_host(link: str, proto: str) -> str:
+    """Return 'host:port' if possible, else ''."""
     try:
         if proto == "vmess":
-            cfg = json.loads(b64_decode(link[8:]))
-            return f"{cfg.get('add', '')}:{cfg.get('port', '')}"
-
-        from urllib.parse import urlsplit
-
+            # vmess://<base64>
+            cfg = json.loads(b64_decode(link.split("://", 1)[1]))
+            host = cfg.get("add", "")
+            port = str(cfg.get("port", "")) if cfg.get("port", "") != "" else ""
+            return f"{host}:{port}" if host and port else host or ""
+        if proto == "shadowsocks":
+            # Handle various SS forms
+            body = link.split("ss://", 1)[1]
+            # strip fragment
+            if "#" in body:
+                body = body.split("#", 1)[0]
+            if "@" in body:
+                creds_part, hostport = body.split("@", 1)
+                # creds_part might be base64 or plaintext method:pwd
+                try:
+                    creds = b64_decode(creds_part)
+                except Exception:
+                    creds = creds_part
+                # hostport is host:port
+                return hostport
+            else:
+                # could be base64(method:pwd@host:port)
+                try:
+                    decoded = b64_decode(body)
+                    if "@" in decoded:
+                        _creds, hostport = decoded.split("@", 1)
+                        return hostport
+                except Exception:
+                    pass
+                return ""
+        if proto == "ssr":
+            # ssr://<base64url(host:port:protocol:method:obfs:pwd_base64)/?...>
+            raw = link.split("ssr://", 1)[1]
+            decoded = b64url_decode(raw).decode(errors="ignore")
+            main = decoded.split("/?", 1)[0]
+            parts = main.split(":")
+            if len(parts) >= 2:
+                return f"{parts[0]}:{parts[1]}"
+            return ""
+        # URL-style protocols
         parsed = urlsplit(link)
         netloc = parsed.netloc
         if proto == "shadowsocks" and "@" in netloc:
@@ -168,9 +218,7 @@ async def run_ping_once(client: httpx.AsyncClient, host: str, timeout: int = 10,
 
     return {}
 
-def extract_latency_by_country(
-    results: dict, country_nodes: dict[str, list[str]]
-) -> dict[str, float]:
+def extract_latency_by_country(results: dict, country_nodes: dict[str, list[str]]) -> dict[str, float]:
     latencies: dict[str, float] = {}
     for country, nodes in country_nodes.items():
         pings: list[float] = []
@@ -213,13 +261,26 @@ def save_to_file(path: str, lines: list[str]):
     logging.info(f"Saved: {path} ({len(lines)} lines)")
 
 # ──────────────── Renaming Helpers ────────────────
+def _build_tag(ip: str) -> str:
+    country = get_country_by_ip(ip)
+    flag = country_flag(country)
+    return f"{flag} ShatakVPN {random.randint(100000, 999999)}"
+
+def _resolve_host(host: str) -> str:
+    try:
+        return socket.gethostbyname(host)
+    except socket.gaierror as e:
+        logging.warning(f"DNS lookup failed for {host}: {e}")
+        return host
 
 def rename_vmess(link: str, ip: str, port: str, tag: str) -> str:
     try:
         raw = link.split("://", 1)[1]
         cfg = json.loads(b64_decode(raw))
-        cfg.update({"add": ip, "port": int(port), "ps": tag})
-        return f"vmess://{b64_encode(json.dumps(cfg))}#{quote(tag)}"
+        cfg.update({"add": ip, "port": int(port) if port else 443, "ps": tag})
+        new_b64 = b64_encode(json.dumps(cfg, ensure_ascii=False))
+        # Keep fragment too for clients that display the fragment
+        return f"vmess://{new_b64}#{quote(tag)}"
     except Exception as e:
         logging.debug(f"vmess rename error: {e}")
         return link
@@ -227,37 +288,80 @@ def rename_vmess(link: str, ip: str, port: str, tag: str) -> str:
 def rename_shadowsocks(link: str, ip: str, port: str, tag: str) -> str:
     try:
         body = link.split("ss://", 1)[1]
+        fragment = ""
         if "#" in body:
-            body, _ = body.split("#", 1)
+            body, fragment = body.split("#", 1)
+
+        method = pwd = None
+        # Case A: ss://base64(method:pwd)@host:port
         if "@" in body:
-            creds, _ = body.split("@", 1)
+            creds_part, _hostport = body.split("@", 1)
             try:
-                method, pwd = b64_decode(creds).split(":", 1)
+                method, pwd = b64_decode(creds_part).split(":", 1)
             except Exception:
-                method, pwd = creds.split(":", 1)
+                # maybe plaintext "method:pwd"
+                method, pwd = creds_part.split(":", 1)
         else:
-            method, pwd = b64_decode(body).split(":", 1)
+            # Case B: ss://base64(method:pwd@host:port)
+            try:
+                decoded = b64_decode(body)
+                if "@" in decoded and ":" in decoded.split("@",1)[0]:
+                    creds, _hp = decoded.split("@", 1)
+                    method, pwd = creds.split(":", 1)
+                else:
+                    method, pwd = decoded.split(":", 1)
+            except Exception:
+                pass
+
+        if not (method and pwd):
+            return link
+
         new_creds = b64_encode(f"{method}:{pwd}")
-        return f"ss://{new_creds}@{ip}:{port}#{quote(tag)}"
+        new = f"ss://{new_creds}@{ip}:{port or '443'}#{quote(tag)}"
+        return new
     except Exception as e:
         logging.debug(f"shadowsocks rename error: {e}")
         return link
 
-def rename_generic(link: str, ip: str, port: str, tag: str) -> str:
-    """Rename any URL-style config by replacing host/port and appending tag."""
+def rename_ssr(link: str, ip: str, port: str, tag: str) -> str:
     try:
-        if "@" in link:
-            out = re.sub(r"@[^:/#]+(:\d+)?", f"@{ip}:{port}", link)
-        else:
-            out = re.sub(r"://[^:/#]+(:\d+)?", f"://{ip}:{port}", link)
-
-        if "#" in out:
-            out = re.sub(r"#.*$", f"#{quote(tag)}", out)
-        else:
-            out += f"#{quote(tag)}"
-        return out
+        raw = link.split("ssr://", 1)[1]
+        decoded = b64url_decode(raw).decode(errors="ignore")
+        # decoded format: host:port:protocol:method:obfs:pwd_base64/...?params
+        parts = decoded.split("/?", 1)
+        main = parts[0]
+        tail = "/?" + parts[1] if len(parts) > 1 else ""
+        fields = main.split(":")
+        if len(fields) < 6:
+            return link
+        fields[0] = ip
+        fields[1] = str(port or "443")
+        new_main = ":".join(fields)
+        new_decoded = new_main + tail
+        new_link = "ssr://" + b64url_encode(new_decoded.encode())
+        # Append fragment for clients that show it
+        return f"{new_link}#{quote(tag)}"
     except Exception as e:
-        logging.debug(f"rename_generic error: {e}")
+        logging.debug(f"ssr rename error: {e}")
+        return link
+
+def rename_url_like(link: str, ip: str, port: str, tag: str) -> str:
+    """Generic URL-style replacer: swap netloc host:port, keep query + path intact, replace fragment."""
+    try:
+        p = urlsplit(link)
+        # Handle possible userinfo in netloc (user:pass@host:port). We keep userinfo if exists.
+        userinfo = ""
+        hostport = p.netloc
+        if "@" in hostport:
+            userinfo, _hp = hostport.split("@", 1)
+            new_netloc = f"{userinfo}@{ip}:{port or '443'}"
+        else:
+            new_netloc = f"{ip}:{port or '443'}"
+        new_frag = quote(tag)
+        new_link = urlunsplit((p.scheme, new_netloc, p.path, p.query, new_frag))
+        return new_link
+    except Exception as e:
+        logging.debug(f"rename_url_like error: {e}")
         return link
 
 def rename_line(link: str) -> str:
@@ -271,21 +375,17 @@ def rename_line(link: str) -> str:
     else:
         host, port = host_port, "443"
 
-    try:
-        ip = socket.gethostbyname(host)
-    except socket.gaierror as e:
-        logging.warning(f"DNS lookup failed for {host}: {e}")
-        ip = host
-
-    country = get_country_by_ip(ip)
-    flag = country_flag(country)
-    tag = f"{flag} ShatalVPN {random.randint(100000, 999999)}"
+    ip = _resolve_host(host)
+    tag = _build_tag(ip)
 
     if proto == "vmess":
         return rename_vmess(link, ip, port, tag)
     if proto == "shadowsocks":
         return rename_shadowsocks(link, ip, port, tag)
-    return rename_generic(link, ip, port, tag)
+    if proto == "ssr":
+        return rename_ssr(link, ip, port, tag)
+    # vless / trojan / hysteria / hy2 / tuic / etc.
+    return rename_url_like(link, ip, port, tag)
 
 # ──────────────── Main Flow ────────────────
 async def main_async():
@@ -313,7 +413,7 @@ async def main_async():
                 for country in country_nodes:
                     categorized.setdefault(country, {}).setdefault(proto, []).append((link, host))
 
-        # Prepare and run ping tasks concurrently (capped at 5 by semaphore)
+        # Dedup hosts for pinging
         hosts = list({host for _, host in all_pairs})
         tasks = [run_ping_once(client, h) for h in hosts]
         ping_results = await asyncio.gather(*tasks)
@@ -325,26 +425,31 @@ async def main_async():
             nodes = country_nodes.get(country, [])
             latencies: dict[str, float] = {}
 
-            for host, res in results.items():
+            for host in hosts:
+                res = results.get(host, {})
                 lat = extract_latency_by_country(res, {country: nodes}).get(country, float("inf"))
+                # assign latency to each link that uses this host
                 for link, h in all_pairs:
                     if h == host:
                         latencies[link] = lat
 
-            # مرتب‌سازی بر اساس تاخیر
+            # Sort links by latency (inf goes to end)
             sorted_links = [l for l, _ in sorted(latencies.items(), key=lambda x: x[1])]
             renamed_all = [rename_line(l) for l in sorted_links]
 
             dest_dir = os.path.join(OUTPUT_DIR, country)
             os.makedirs(dest_dir, exist_ok=True)
 
+            # Per protocol files
             for proto, items in groups.items():
-                lst = [l for l in sorted_links if detect_protocol(l) == proto]
+                # keep original ordering by latency
+                proto_list = [l for l in sorted_links if detect_protocol(l) == proto]
                 save_to_file(
                     os.path.join(dest_dir, f"{proto}.txt"),
-                    [rename_line(l) for l in lst]
+                    [rename_line(l) for l in proto_list]
                 )
 
+            # Aggregates
             save_to_file(os.path.join(dest_dir, "all.txt"), renamed_all)
             save_to_file(os.path.join(dest_dir, "light.txt"), renamed_all[:30])
 
