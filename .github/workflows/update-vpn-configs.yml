@@ -3,7 +3,7 @@ name: Update VPN Configs
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */12 * * *'  # هر ۱۲ ساعت یک‌بار اجرا میشه
+    - cron: '0 * * * *'   # every hour at minute 00 (UTC)
 
 jobs:
   update-configs:
