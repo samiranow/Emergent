@@ -13,6 +13,7 @@ import zoneinfo
 import ipaddress
 from urllib.parse import quote, urlsplit, urlunsplit, unquote
 from datetime import datetime
+from functools import lru_cache
 
 # ============================== Configuration ==============================
 
@@ -259,6 +260,7 @@ async def run_ping_once(client: httpx.AsyncClient, host: str, timeout: int = 10,
     """
     Ping a host via check-host.net with retries.
     'host' must be a plain host/IP (no userinfo, no port).
+    Returns the raw JSON map of node -> results.
     """
     if not host:
         return {}
@@ -304,6 +306,7 @@ async def run_ping_once(client: httpx.AsyncClient, host: str, timeout: int = 10,
 def extract_latency_by_country(results: dict, country_nodes: dict[str, list[str]]) -> dict[str, float]:
     """
     Compute average latency per country based on check-host node results.
+    results: map[node] = list or nested arrays per API.
     """
     latencies: dict[str, float] = {}
     for country, nodes in country_nodes.items():
@@ -316,8 +319,23 @@ def extract_latency_by_country(results: dict, country_nodes: dict[str, list[str]
                         pings.append(ping)
             except Exception:
                 continue
-        latencies[country] = sum(pings) / len(pings) if pings else float("inf")
+        latencies[country] = (sum(pings) / len(pings)) if pings else float("inf")
     return latencies
+
+def extract_latency_global(results: dict) -> float:
+    """
+    Compute global average latency across *all* nodes for a single host.
+    If no OK pings exist, return +inf.
+    """
+    pings: list[float] = []
+    for node, entries in (results or {}).items():
+        try:
+            for status, ping in entries[0]:
+                if status == "OK":
+                    pings.append(ping)
+        except Exception:
+            continue
+    return (sum(pings) / len(pings)) if pings else float("inf")
 
 async def get_nodes_by_country(client: httpx.AsyncClient) -> dict[str, list[str]]:
     """
@@ -348,7 +366,7 @@ def save_to_file(path: str, lines: list[str]):
     if not lines:
         logging.warning(f"No lines to save: {path}")
         return
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
     logging.info(f"Saved: {path} ({len(lines)} lines)")
@@ -363,18 +381,19 @@ def _build_tag(ip: str) -> str:
     flag = country_flag(country)
     return f"{flag} ShatakVPN {random.randint(100000, 999999)}"
 
+def is_valid_hostname(label: str) -> bool:
+    return re.fullmatch(r"[A-Za-z0-9.-]+", label or "") is not None
+
 def _resolve_host(host: str) -> str:
     """
     Resolve a hostname to IPv4; if input is already an IP (v4/v6) or invalid hostname, return as-is.
-    Avoids IDNA errors by skipping exotic labels.
     """
     host = host.strip()
     if not host:
         return host
     if is_ip(host):
         return host
-    # Conservative allowlist for hostnames; skip resolution for weird labels
-    if not re.fullmatch(r"[A-Za-z0-9.-]+", host):
+    if not is_valid_hostname(host):
         logging.warning(f"Skip resolve invalid host: {host}")
         return host
     try:
@@ -384,9 +403,7 @@ def _resolve_host(host: str) -> str:
         return host
 
 def rename_vmess(link: str, ip: str, port: str, tag: str) -> str:
-    """
-    Update vmess JSON (add/port/ps) and keep a fragment for clients that display it.
-    """
+    """Update vmess JSON (add/port/ps) and keep a fragment for clients that display it."""
     try:
         raw = link.split("://", 1)[1]
         cfg = json.loads(b64_decode(raw))
@@ -437,12 +454,9 @@ def rename_shadowsocks(link: str, ip: str, port: str, tag: str) -> str:
         return link
 
 def rename_ssr(link: str, ip: str, port: str, tag: str) -> str:
-    """
-    Rewrite SSR main section host:port; if IPv6, keep original (SSR format is IPv4-centric).
-    """
+    """Rewrite SSR main section host:port; if IPv6, keep original (SSR format is IPv4-centric)."""
     try:
         if ":" in ip and not ip.startswith("["):
-            # IPv6 in SSR is ambiguous (colon-delimited main section)
             logging.debug("SSR IPv6 host detected; skipping rename to avoid ambiguity.")
             return link
 
@@ -474,7 +488,6 @@ def rename_url_like(link: str, ip: str, port: str, tag: str) -> str:
     """
     try:
         p = urlsplit(link)
-        userinfo = ""
         hostport = p.netloc
         hp = format_hostport(ip, port or "443")
         if "@" in hostport:
@@ -488,22 +501,8 @@ def rename_url_like(link: str, ip: str, port: str, tag: str) -> str:
         logging.debug(f"rename_url_like error: {e}")
         return link
 
-def rename_line(link: str) -> str:
-    """
-    Route to protocol-specific renamers; default to URL-like behavior.
-    """
-    proto = detect_protocol(link)
-    host_port = extract_host(link, proto)
-    if not host_port:
-        return link
-
-    host, port = split_host_port(host_port)
-    if not port:
-        port = "443"
-
-    ip = _resolve_host(host)
-    tag = _build_tag(ip)
-
+@lru_cache(maxsize=100_000)
+def _rename_cached(link: str, ip: str, port: str, tag: str, proto: str) -> str:
     if proto == "vmess":
         return rename_vmess(link, ip, port, tag)
     if proto == "shadowsocks":
@@ -512,19 +511,37 @@ def rename_line(link: str) -> str:
         return rename_ssr(link, ip, port, tag)
     return rename_url_like(link, ip, port, tag)
 
+def rename_line(link: str) -> str:
+    """Route to protocol-specific renamers; default to URL-like behavior."""
+    proto = detect_protocol(link)
+    host_port = extract_host(link, proto)
+    if not host_port:
+        return link
+    host, port = split_host_port(host_port)
+    if not port:
+        port = "443"
+    ip = _resolve_host(host)
+    tag = _build_tag(ip)
+    return _rename_cached(link, ip, port, tag, proto)
+
 # ============================== Main Flow ==================================
+
+def group_by_protocol(links: list[str]) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = {}
+    for l in links:
+        out.setdefault(detect_protocol(l), []).append(l)
+    return out
 
 async def main_async():
     now = datetime.now(ZONE).strftime("%Y-%m-%d %H:%M:%S")
     logging.info(f"[{now}] Starting download and processing…")
 
     async with httpx.AsyncClient() as client:
+        # 1) Discover nodes per country (used for country sorting)
         country_nodes = await get_nodes_by_country(client)
 
-        categorized: dict[str, dict[str, list[tuple[str, str]]]] = {}
+        # 2) Fetch all raw configs and collect (link, host) pairs
         all_pairs: list[tuple[str, str]] = []
-
-        # Fetch and parse all subscription sources
         for url in URLS:
             blob = maybe_base64_decode(fetch_data(url))
             configs = re.findall(r"[a-zA-Z][\w+.-]*://[^\s]+", blob)
@@ -539,45 +556,86 @@ async def main_async():
                 if not host:
                     continue
                 all_pairs.append((link, host))
-                for country in country_nodes:
-                    categorized.setdefault(country, {}).setdefault(proto, []).append((link, host))
 
-        # Deduplicate hosts and run ping checks (host only; no userinfo/port)
+        if not all_pairs:
+            logging.warning("No links parsed; abort.")
+            return
+
+        # 3) Deduplicate hosts and ping them once
         hosts = sorted({h for _, h in all_pairs if h})
         tasks = [run_ping_once(client, h) for h in hosts]
         ping_results = await asyncio.gather(*tasks)
-        results = dict(zip(hosts, ping_results))
+        results_by_host = dict(zip(hosts, ping_results))
 
-        # For each country, sort links by the country's average latency and emit files
-        for country, groups in categorized.items():
+        # Helper: map host -> global avg latency
+        host_global_lat: dict[str, float] = {
+            h: extract_latency_global(results_by_host.get(h, {})) for h in hosts
+        }
+
+        # 4) --------- GLOBAL OUTPUTS (root of OUTPUT_DIR) ----------
+        # Compute per-link latency based on *global* average across all nodes
+        link_global_lat: dict[str, float] = {}
+        for link, host in all_pairs:
+            lat = host_global_lat.get(host, float("inf"))
+            link_global_lat[link] = min(link_global_lat.get(link, float("inf")), lat)
+
+        # Rank globally
+        sorted_global_links = [l for l, _ in sorted(link_global_lat.items(), key=lambda x: x[1])]
+        renamed_global = [rename_line(l) for l in sorted_global_links]
+
+        # Global per-protocol splits
+        grouped_global = group_by_protocol(sorted_global_links)
+
+        # Write root files (global)
+        save_to_file(os.path.join(OUTPUT_DIR, "all.txt"), renamed_global)
+        save_to_file(os.path.join(OUTPUT_DIR, "light.txt"), renamed_global[:30])
+
+        for proto, proto_links in grouped_global.items():
+            save_to_file(
+                os.path.join(OUTPUT_DIR, f"{proto}.txt"),
+                [rename_line(l) for l in proto_links]
+            )
+
+        # Ensure a consistent set even if some protocols don't appear
+        for missing in ["vless", "vmess", "shadowsocks", "trojan", "unknown"]:
+            path = os.path.join(OUTPUT_DIR, f"{missing}.txt")
+            if not os.path.exists(path):
+                save_to_file(path, [])
+
+        # 5) --------- COUNTRY OUTPUTS (same behavior as before) ----------
+        # Note: original code placed every link into every country group; we keep it
+        #       so sorting differs per country based on per-country latencies.
+        # Build a quick index: for each host, we already have full results.
+        for country, nodes in country_nodes.items():
             logging.info(f"Processing country: {country}")
-            nodes = country_nodes.get(country, [])
-            latencies: dict[str, float] = {}
+            # For each link, compute latency using only nodes in this country
+            link_country_lat: dict[str, float] = {}
+            for link, host in all_pairs:
+                per_country = extract_latency_by_country(results_by_host.get(host, {}), {country: nodes})
+                lat = per_country.get(country, float("inf"))
+                prev = link_country_lat.get(link, float("inf"))
+                if lat < prev:
+                    link_country_lat[link] = lat
 
-            for host in hosts:
-                res = results.get(host, {})
-                lat = extract_latency_by_country(res, {country: nodes}).get(country, float("inf"))
-                for link, h in all_pairs:
-                    if h == host:
-                        latencies[link] = lat
+            sorted_links = [l for l, _ in sorted(link_country_lat.items(), key=lambda x: x[1])]
 
-            sorted_links = [l for l, _ in sorted(latencies.items(), key=lambda x: x[1])]
-            renamed_all = [rename_line(l) for l in sorted_links]
+            # Per-protocol grouping for country
+            grouped = group_by_protocol(sorted_links)
 
             dest_dir = os.path.join(OUTPUT_DIR, country)
             os.makedirs(dest_dir, exist_ok=True)
 
             # Per-protocol outputs
-            for proto, _items in groups.items():
-                proto_list = [l for l in sorted_links if detect_protocol(l) == proto]
+            for proto, proto_links in grouped.items():
                 save_to_file(
                     os.path.join(dest_dir, f"{proto}.txt"),
-                    [rename_line(l) for l in proto_list]
+                    [rename_line(l) for l in proto_links]
                 )
 
             # Aggregated outputs
-            save_to_file(os.path.join(dest_dir, "all.txt"), renamed_all)
-            save_to_file(os.path.join(dest_dir, "light.txt"), renamed_all[:30])
+            renamed_all_country = [rename_line(l) for l in sorted_links]
+            save_to_file(os.path.join(dest_dir, "all.txt"), renamed_all_country)
+            save_to_file(os.path.join(dest_dir, "light.txt"), renamed_all_country[:30])
 
 if __name__ == "__main__":
     asyncio.run(main_async())
