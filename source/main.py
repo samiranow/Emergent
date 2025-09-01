@@ -10,63 +10,65 @@ import requests
 import httpx
 import urllib3
 import zoneinfo
-from urllib.parse import quote, urlsplit, urlunsplit
+import ipaddress
+from urllib.parse import quote, urlsplit, urlunsplit, unquote
 from datetime import datetime
 
-# ──────────────── Configuration ────────────────
+# ============================== Configuration ==============================
+
 URLS = [
-    "https://www.v2nodes.com/subscriptions/country/al/?key=769B61EA877690D",  # Albania
-    "https://www.v2nodes.com/subscriptions/country/ar/?key=769B61EA877690D",  # Argentina
-    "https://www.v2nodes.com/subscriptions/country/au/?key=769B61EA877690D",  # Australia
-    "https://www.v2nodes.com/subscriptions/country/at/?key=769B61EA877690D",  # Austria
-    "https://www.v2nodes.com/subscriptions/country/bh/?key=769B61EA877690D",  # Bahrain
-    "https://www.v2nodes.com/subscriptions/country/be/?key=769B61EA877690D",  # Belgium
-    "https://www.v2nodes.com/subscriptions/country/bo/?key=769B61EA877690D",  # Bolivia
-    "https://www.v2nodes.com/subscriptions/country/br/?key=769B61EA877690D",  # Brazil
-    "https://www.v2nodes.com/subscriptions/country/bg/?key=769B61EA877690D",  # Bulgaria
-    "https://www.v2nodes.com/subscriptions/country/ca/?key=769B61EA877690D",  # Canada
-    "https://www.v2nodes.com/subscriptions/country/cn/?key=769B61EA877690D",  # China
-    "https://www.v2nodes.com/subscriptions/country/co/?key=769B61EA877690D",  # Colombia
-    "https://www.v2nodes.com/subscriptions/country/cy/?key=769B61EA877690D",  # Cyprus
-    "https://www.v2nodes.com/subscriptions/country/cz/?key=769B61EA877690D",  # Czechia
-    "https://www.v2nodes.com/subscriptions/country/dk/?key=769B61EA877690D",  # Denmark
-    "https://www.v2nodes.com/subscriptions/country/ee/?key=769B61EA877690D",  # Estonia
-    "https://www.v2nodes.com/subscriptions/country/fi/?key=769B61EA877690D",  # Finland
-    "https://www.v2nodes.com/subscriptions/country/fr/?key=769B61EA877690D",  # France
-    "https://www.v2nodes.com/subscriptions/country/de/?key=769B61EA877690D",  # Germany
-    "https://www.v2nodes.com/subscriptions/country/gt/?key=769B61EA877690D",  # Guatemala
-    "https://www.v2nodes.com/subscriptions/country/hk/?key=769B61EA877690D",  # Hong Kong
-    "https://www.v2nodes.com/subscriptions/country/hu/?key=769B61EA877690D",  # Hungary
-    "https://www.v2nodes.com/subscriptions/country/is/?key=769B61EA877690D",  # Iceland
-    "https://www.v2nodes.com/subscriptions/country/in/?key=769B61EA877690D",  # India
-    "https://www.v2nodes.com/subscriptions/country/id/?key=769B61EA877690D",  # Indonesia
-    "https://www.v2nodes.com/subscriptions/country/il/?key=769B61EA877690D",  # Israel
-    "https://www.v2nodes.com/subscriptions/country/it/?key=769B61EA877690D",  # Italy
-    "https://www.v2nodes.com/subscriptions/country/jp/?key=769B61EA877690D",  # Japan
-    "https://www.v2nodes.com/subscriptions/country/kz/?key=769B61EA877690D",  # Kazakhstan
-    "https://www.v2nodes.com/subscriptions/country/lv/?key=769B61EA877690D",  # Latvia
-    "https://www.v2nodes.com/subscriptions/country/my/?key=769B61EA877690D",  # Malaysia
-    "https://www.v2nodes.com/subscriptions/country/md/?key=769B61EA877690D",  # Moldova
-    "https://www.v2nodes.com/subscriptions/country/no/?key=769B61EA877690D",  # Norway
-    "https://www.v2nodes.com/subscriptions/country/pe/?key=769B61EA877690D",  # Peru
-    "https://www.v2nodes.com/subscriptions/country/pl/?key=769B61EA877690D",  # Poland
-    "https://www.v2nodes.com/subscriptions/country/pt/?key=769B61EA877690D",  # Portugal
-    "https://www.v2nodes.com/subscriptions/country/pr/?key=769B61EA877690D",  # Puerto Rico
-    "https://www.v2nodes.com/subscriptions/country/ro/?key=769B61EA877690D",  # Romania
-    "https://www.v2nodes.com/subscriptions/country/ru/?key=769B61EA877690D",  # Russia
-    "https://www.v2nodes.com/subscriptions/country/sg/?key=769B61EA877690D",  # Singapore
-    "https://www.v2nodes.com/subscriptions/country/kr/?key=769B61EA877690D",  # South Korea
-    "https://www.v2nodes.com/subscriptions/country/es/?key=769B61EA877690D",  # Spain
-    "https://www.v2nodes.com/subscriptions/country/se/?key=769B61EA877690D",  # Sweden
-    "https://www.v2nodes.com/subscriptions/country/ch/?key=769B61EA877690D",  # Switzerland
-    "https://www.v2nodes.com/subscriptions/country/tw/?key=769B61EA877690D",  # Taiwan
-    "https://www.v2nodes.com/subscriptions/country/th/?key=769B61EA877690D",  # Thailand
-    "https://www.v2nodes.com/subscriptions/country/nl/?key=769B61EA877690D",  # Netherlands
-    "https://www.v2nodes.com/subscriptions/country/tr/?key=769B61EA877690D",  # Türkiye
-    "https://www.v2nodes.com/subscriptions/country/ua/?key=769B61EA877690D",  # Ukraine
-    "https://www.v2nodes.com/subscriptions/country/gb/?key=769B61EA877690D",  # United Kingdom
-    "https://www.v2nodes.com/subscriptions/country/us/?key=769B61EA877690D",  # United States
-    "https://www.v2nodes.com/subscriptions/country/vn/?key=769B61EA877690D",  # Vietnam
+    "https://www.v2nodes.com/subscriptions/country/al/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/ar/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/au/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/at/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/bh/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/be/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/bo/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/br/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/bg/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/ca/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/cn/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/co/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/cy/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/cz/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/dk/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/ee/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/fi/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/fr/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/de/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/gt/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/hk/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/hu/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/is/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/in/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/id/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/il/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/it/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/jp/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/kz/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/lv/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/my/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/md/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/no/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/pe/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/pl/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/pt/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/pr/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/ro/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/ru/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/sg/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/kr/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/es/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/se/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/ch/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/tw/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/th/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/nl/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/tr/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/ua/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/gb/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/us/?key=769B61EA877690D",
+    "https://www.v2nodes.com/subscriptions/country/vn/?key=769B61EA877690D",
 ]
 
 OUTPUT_DIR = "configs"
@@ -88,7 +90,8 @@ logging.basicConfig(
 
 ZONE = zoneinfo.ZoneInfo("Asia/Tehran")
 
-# ──────────────── Helpers: Base64, Port Strip & Geolocation Cache ────────────────
+# ============================== Base64 / Geo ===============================
+
 geo_cache: dict[str, str] = {}
 
 def b64_decode(s: str) -> str:
@@ -99,21 +102,17 @@ def b64_encode(s: str) -> str:
     return base64.b64encode(s.encode()).decode()
 
 def b64url_decode(s: str) -> bytes:
-    # SSR uses URL-safe base64 without padding
     pad = "=" * ((4 - len(s) % 4) % 4)
     return base64.urlsafe_b64decode(s + pad)
 
 def b64url_encode(b: bytes) -> str:
     return base64.urlsafe_b64encode(b).decode().rstrip("=")
 
-def strip_port(host: str) -> str:
-    return host.split(":", 1)[0]
-
 def country_flag(code: str) -> str:
     if not code:
         return "🏳️"
     c = code.strip().upper()
-    if c == "UNKNOWN" or len(c) != 2 or not c.isalpha():
+    if len(c) != 2 or not c.isalpha():
         return "🏳️"
     return chr(ord(c[0]) + 127397) + chr(ord(c[1]) + 127397)
 
@@ -131,7 +130,8 @@ def get_country_by_ip(ip: str) -> str:
     geo_cache[ip] = "unknown"
     return "unknown"
 
-# ──────────────── Fetch & Decode ────────────────
+# ============================== Fetch / Decode =============================
+
 def fetch_data(url: str, timeout: int = 10) -> str:
     headers = {"User-Agent": CHROME_UA}
     try:
@@ -146,14 +146,14 @@ def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
         decoded = b64_decode(s)
-        # if it looks like a subscription (contains many scheme://), accept it
         if "://" in decoded:
             return decoded.strip()
     except Exception:
         pass
     return s
 
-# ──────────────── Parser ────────────────
+# ============================== Parsing / Netloc ===========================
+
 def normalize_proto(proto: str) -> str:
     p = proto.lower()
     if p in ("ss", "shadowsocks"):
@@ -170,42 +170,70 @@ def detect_protocol(link: str) -> str:
         return "unknown"
     return normalize_proto(m.group(1))
 
+def is_ip(s: str) -> bool:
+    try:
+        ipaddress.ip_address(s)
+        return True
+    except ValueError:
+        return False
+
+def split_host_port(raw_hostport: str) -> tuple[str, str]:
+    """
+    Extract host and port from a netloc or 'host:port' string.
+    - Strips userinfo if present (user:pass@host:port)
+    - Handles IPv6 with or without brackets
+    - Returns (host, port_or_empty)
+    """
+    hp = unquote(raw_hostport.strip())
+    if "@" in hp:
+        hp = hp.split("@", 1)[1]
+    if hp.startswith("["):
+        m = re.match(r"^\[(.+?)\](?::(\d+))?$", hp)
+        if m:
+            return m.group(1), (m.group(2) or "")
+    if hp.count(":") > 1:
+        return hp, ""  # likely raw IPv6 without port
+    if ":" in hp:
+        h, p = hp.rsplit(":", 1)
+        return h, p
+    return hp, ""
+
+def format_hostport(host: str, port: str | int | None) -> str:
+    """Build a valid netloc host:port, adding brackets for IPv6."""
+    p = str(port) if port else "443"
+    h = f"[{host}]" if (":" in host and not host.startswith("[")) else host
+    return f"{h}:{p}"
+
 def extract_host(link: str, proto: str) -> str:
-    """Return 'host:port' if possible, else ''."""
+    """
+    Return 'host:port' (no userinfo) if possible, else ''.
+    Handles vmess/ss/ssr explicitly; falls back to URL parsing for URL-like schemes.
+    """
     try:
         if proto == "vmess":
-            # vmess://<base64>
             cfg = json.loads(b64_decode(link.split("://", 1)[1]))
-            host = cfg.get("add", "")
-            port = str(cfg.get("port", "")) if cfg.get("port", "") != "" else ""
+            host = str(cfg.get("add", "")).strip()
+            port_val = cfg.get("port", "")
+            port = str(port_val).strip() if port_val != "" else ""
             return f"{host}:{port}" if host and port else host or ""
+
         if proto == "shadowsocks":
-            # Handle various SS forms
             body = link.split("ss://", 1)[1]
-            # strip fragment
             if "#" in body:
                 body = body.split("#", 1)[0]
             if "@" in body:
-                creds_part, hostport = body.split("@", 1)
-                # creds_part might be base64 or plaintext method:pwd
-                try:
-                    creds = b64_decode(creds_part)
-                except Exception:
-                    creds = creds_part
-                # hostport is host:port
+                _creds, hostport = body.split("@", 1)
                 return hostport
-            else:
-                # could be base64(method:pwd@host:port)
-                try:
-                    decoded = b64_decode(body)
-                    if "@" in decoded:
-                        _creds, hostport = decoded.split("@", 1)
-                        return hostport
-                except Exception:
-                    pass
-                return ""
+            try:
+                decoded = b64_decode(body)
+                if "@" in decoded:
+                    _creds, hostport = decoded.split("@", 1)
+                    return hostport
+            except Exception:
+                pass
+            return ""
+
         if proto == "ssr":
-            # ssr://<base64url(host:port:protocol:method:obfs:pwd_base64)/?...>
             raw = link.split("ssr://", 1)[1]
             decoded = b64url_decode(raw).decode(errors="ignore")
             main = decoded.split("/?", 1)[0]
@@ -213,21 +241,25 @@ def extract_host(link: str, proto: str) -> str:
             if len(parts) >= 2:
                 return f"{parts[0]}:{parts[1]}"
             return ""
-        # URL-style protocols
-        parsed = urlsplit(link)
-        netloc = parsed.netloc
-        if proto == "shadowsocks" and "@" in netloc:
+
+        p = urlsplit(link)
+        netloc = p.netloc
+        if "@" in netloc:
             netloc = netloc.split("@", 1)[1]
         return netloc
     except Exception as e:
         logging.debug(f"extract_host error for [{proto}] {link}: {e}")
-    return ""
+        return ""
 
-# ──────────────── Semaphore: limit httpx connections (max 5) ────────────────
+# ============================== Async Ping =================================
+
 _connection_limit = asyncio.Semaphore(5)
 
-# ──────────────── Ping Tester with Retry (uses shared client) ────────────────
 async def run_ping_once(client: httpx.AsyncClient, host: str, timeout: int = 10, retries: int = 3) -> dict:
+    """
+    Ping a host via check-host.net with retries.
+    'host' must be a plain host/IP (no userinfo, no port).
+    """
     if not host:
         return {}
     base = "https://check-host.net"
@@ -270,6 +302,9 @@ async def run_ping_once(client: httpx.AsyncClient, host: str, timeout: int = 10,
     return {}
 
 def extract_latency_by_country(results: dict, country_nodes: dict[str, list[str]]) -> dict[str, float]:
+    """
+    Compute average latency per country based on check-host node results.
+    """
     latencies: dict[str, float] = {}
     for country, nodes in country_nodes.items():
         pings: list[float] = []
@@ -285,6 +320,9 @@ def extract_latency_by_country(results: dict, country_nodes: dict[str, list[str]
     return latencies
 
 async def get_nodes_by_country(client: httpx.AsyncClient) -> dict[str, list[str]]:
+    """
+    Fetch check-host nodes and group them by country code.
+    """
     url = "https://check-host.net/nodes/hosts"
     try:
         r = await client.get(url, timeout=10)
@@ -301,8 +339,12 @@ async def get_nodes_by_country(client: httpx.AsyncClient) -> dict[str, list[str]
             mapping.setdefault(str(loc[0]).lower(), []).append(node)
     return mapping
 
-# ──────────────── Output ────────────────
+# ============================== Output =====================================
+
 def save_to_file(path: str, lines: list[str]):
+    """
+    Save a list of configuration lines to a file, creating directories if needed.
+    """
     if not lines:
         logging.warning(f"No lines to save: {path}")
         return
@@ -311,52 +353,72 @@ def save_to_file(path: str, lines: list[str]):
         f.write("\n".join(lines))
     logging.info(f"Saved: {path} ({len(lines)} lines)")
 
-# ──────────────── Renaming Helpers ────────────────
+# ============================== Renaming ===================================
+
 def _build_tag(ip: str) -> str:
+    """
+    Build a uniform display name: <flag> ShatakVPN <random>.
+    """
     country = get_country_by_ip(ip)
     flag = country_flag(country)
     return f"{flag} ShatakVPN {random.randint(100000, 999999)}"
 
 def _resolve_host(host: str) -> str:
+    """
+    Resolve a hostname to IPv4; if input is already an IP (v4/v6) or invalid hostname, return as-is.
+    Avoids IDNA errors by skipping exotic labels.
+    """
+    host = host.strip()
+    if not host:
+        return host
+    if is_ip(host):
+        return host
+    # Conservative allowlist for hostnames; skip resolution for weird labels
+    if not re.fullmatch(r"[A-Za-z0-9.-]+", host):
+        logging.warning(f"Skip resolve invalid host: {host}")
+        return host
     try:
         return socket.gethostbyname(host)
-    except socket.gaierror as e:
+    except (socket.gaierror, UnicodeError) as e:
         logging.warning(f"DNS lookup failed for {host}: {e}")
         return host
 
 def rename_vmess(link: str, ip: str, port: str, tag: str) -> str:
+    """
+    Update vmess JSON (add/port/ps) and keep a fragment for clients that display it.
+    """
     try:
         raw = link.split("://", 1)[1]
         cfg = json.loads(b64_decode(raw))
         cfg.update({"add": ip, "port": int(port) if port else 443, "ps": tag})
         new_b64 = b64_encode(json.dumps(cfg, ensure_ascii=False))
-        # Keep fragment too for clients that display the fragment
         return f"vmess://{new_b64}#{quote(tag)}"
     except Exception as e:
         logging.debug(f"vmess rename error: {e}")
         return link
 
 def rename_shadowsocks(link: str, ip: str, port: str, tag: str) -> str:
+    """
+    Support both SS forms:
+    - ss://base64(method:password)@host:port#name
+    - ss://base64(method:password@host:port)#name
+    """
     try:
         body = link.split("ss://", 1)[1]
-        fragment = ""
         if "#" in body:
-            body, fragment = body.split("#", 1)
+            body = body.split("#", 1)[0]
 
         method = pwd = None
-        # Case A: ss://base64(method:pwd)@host:port
         if "@" in body:
             creds_part, _hostport = body.split("@", 1)
             try:
                 method, pwd = b64_decode(creds_part).split(":", 1)
             except Exception:
-                # maybe plaintext "method:pwd"
                 method, pwd = creds_part.split(":", 1)
         else:
-            # Case B: ss://base64(method:pwd@host:port)
             try:
                 decoded = b64_decode(body)
-                if "@" in decoded and ":" in decoded.split("@",1)[0]:
+                if "@" in decoded and ":" in decoded.split("@", 1)[0]:
                     creds, _hp = decoded.split("@", 1)
                     method, pwd = creds.split(":", 1)
                 else:
@@ -368,17 +430,24 @@ def rename_shadowsocks(link: str, ip: str, port: str, tag: str) -> str:
             return link
 
         new_creds = b64_encode(f"{method}:{pwd}")
-        new = f"ss://{new_creds}@{ip}:{port or '443'}#{quote(tag)}"
-        return new
+        hp = format_hostport(ip, port or "443")
+        return f"ss://{new_creds}@{hp}#{quote(tag)}"
     except Exception as e:
         logging.debug(f"shadowsocks rename error: {e}")
         return link
 
 def rename_ssr(link: str, ip: str, port: str, tag: str) -> str:
+    """
+    Rewrite SSR main section host:port; if IPv6, keep original (SSR format is IPv4-centric).
+    """
     try:
+        if ":" in ip and not ip.startswith("["):
+            # IPv6 in SSR is ambiguous (colon-delimited main section)
+            logging.debug("SSR IPv6 host detected; skipping rename to avoid ambiguity.")
+            return link
+
         raw = link.split("ssr://", 1)[1]
         decoded = b64url_decode(raw).decode(errors="ignore")
-        # decoded format: host:port:protocol:method:obfs:pwd_base64/...?params
         parts = decoded.split("/?", 1)
         main = parts[0]
         tail = "/?" + parts[1] if len(parts) > 1 else ""
@@ -390,41 +459,47 @@ def rename_ssr(link: str, ip: str, port: str, tag: str) -> str:
         new_main = ":".join(fields)
         new_decoded = new_main + tail
         new_link = "ssr://" + b64url_encode(new_decoded.encode())
-        # Append fragment for clients that show it
         return f"{new_link}#{quote(tag)}"
     except Exception as e:
         logging.debug(f"ssr rename error: {e}")
         return link
 
 def rename_url_like(link: str, ip: str, port: str, tag: str) -> str:
-    """Generic URL-style replacer: swap netloc host:port, keep query + path intact, replace fragment."""
+    """
+    Generic URL-style replacer:
+    - Preserve userinfo if present
+    - Replace host:port (with IPv6 brackets when needed)
+    - Preserve path/query
+    - Replace fragment with encoded tag
+    """
     try:
         p = urlsplit(link)
-        # Handle possible userinfo in netloc (user:pass@host:port). We keep userinfo if exists.
         userinfo = ""
         hostport = p.netloc
+        hp = format_hostport(ip, port or "443")
         if "@" in hostport:
             userinfo, _hp = hostport.split("@", 1)
-            new_netloc = f"{userinfo}@{ip}:{port or '443'}"
+            new_netloc = f"{userinfo}@{hp}"
         else:
-            new_netloc = f"{ip}:{port or '443'}"
+            new_netloc = hp
         new_frag = quote(tag)
-        new_link = urlunsplit((p.scheme, new_netloc, p.path, p.query, new_frag))
-        return new_link
+        return urlunsplit((p.scheme, new_netloc, p.path, p.query, new_frag))
     except Exception as e:
         logging.debug(f"rename_url_like error: {e}")
         return link
 
 def rename_line(link: str) -> str:
+    """
+    Route to protocol-specific renamers; default to URL-like behavior.
+    """
     proto = detect_protocol(link)
     host_port = extract_host(link, proto)
     if not host_port:
         return link
 
-    if ":" in host_port:
-        host, port = host_port.rsplit(":", 1)
-    else:
-        host, port = host_port, "443"
+    host, port = split_host_port(host_port)
+    if not port:
+        port = "443"
 
     ip = _resolve_host(host)
     tag = _build_tag(ip)
@@ -435,10 +510,10 @@ def rename_line(link: str) -> str:
         return rename_shadowsocks(link, ip, port, tag)
     if proto == "ssr":
         return rename_ssr(link, ip, port, tag)
-    # vless / trojan / hysteria / hy2 / tuic / etc.
     return rename_url_like(link, ip, port, tag)
 
-# ──────────────── Main Flow ────────────────
+# ============================== Main Flow ==================================
+
 async def main_async():
     now = datetime.now(ZONE).strftime("%Y-%m-%d %H:%M:%S")
     logging.info(f"[{now}] Starting download and processing…")
@@ -449,7 +524,7 @@ async def main_async():
         categorized: dict[str, dict[str, list[tuple[str, str]]]] = {}
         all_pairs: list[tuple[str, str]] = []
 
-        # Fetch & categorize
+        # Fetch and parse all subscription sources
         for url in URLS:
             blob = maybe_base64_decode(fetch_data(url))
             configs = re.findall(r"[a-zA-Z][\w+.-]*://[^\s]+", blob)
@@ -457,20 +532,23 @@ async def main_async():
 
             for link in configs:
                 proto = detect_protocol(link)
-                host = strip_port(extract_host(link, proto))
+                hostport = extract_host(link, proto)
+                if not hostport:
+                    continue
+                host, _port = split_host_port(hostport)
                 if not host:
                     continue
                 all_pairs.append((link, host))
                 for country in country_nodes:
                     categorized.setdefault(country, {}).setdefault(proto, []).append((link, host))
 
-        # Dedup hosts for pinging
-        hosts = list({host for _, host in all_pairs})
+        # Deduplicate hosts and run ping checks (host only; no userinfo/port)
+        hosts = sorted({h for _, h in all_pairs if h})
         tasks = [run_ping_once(client, h) for h in hosts]
         ping_results = await asyncio.gather(*tasks)
         results = dict(zip(hosts, ping_results))
 
-        # Process per country
+        # For each country, sort links by the country's average latency and emit files
         for country, groups in categorized.items():
             logging.info(f"Processing country: {country}")
             nodes = country_nodes.get(country, [])
@@ -479,28 +557,25 @@ async def main_async():
             for host in hosts:
                 res = results.get(host, {})
                 lat = extract_latency_by_country(res, {country: nodes}).get(country, float("inf"))
-                # assign latency to each link that uses this host
                 for link, h in all_pairs:
                     if h == host:
                         latencies[link] = lat
 
-            # Sort links by latency (inf goes to end)
             sorted_links = [l for l, _ in sorted(latencies.items(), key=lambda x: x[1])]
             renamed_all = [rename_line(l) for l in sorted_links]
 
             dest_dir = os.path.join(OUTPUT_DIR, country)
             os.makedirs(dest_dir, exist_ok=True)
 
-            # Per protocol files
-            for proto, items in groups.items():
-                # keep original ordering by latency
+            # Per-protocol outputs
+            for proto, _items in groups.items():
                 proto_list = [l for l in sorted_links if detect_protocol(l) == proto]
                 save_to_file(
                     os.path.join(dest_dir, f"{proto}.txt"),
                     [rename_line(l) for l in proto_list]
                 )
 
-            # Aggregates
+            # Aggregated outputs
             save_to_file(os.path.join(dest_dir, "all.txt"), renamed_all)
             save_to_file(os.path.join(dest_dir, "light.txt"), renamed_all[:30])
 
