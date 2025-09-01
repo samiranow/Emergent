@@ -38,7 +38,7 @@
       backdrop-filter: blur(16px);
       animation: fadeIn .6s ease-out;
     }
-    .container::before{ /* subtle neon border */
+    .container::before{
       content:""; position:absolute; inset:-1px; border-radius: 20px; padding:1px; background:
         linear-gradient(135deg, rgba(124,58,237,.6), rgba(59,130,246,.6)); -webkit-mask:
         linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
@@ -47,7 +47,6 @@
     h1 { text-align:center; margin-bottom: .25rem; font-weight:700; color:#fff; letter-spacing:-0.02em; }
     .kicker { text-align:center; margin-bottom: 1rem; color: var(--muted); font-size: .95rem; }
 
-    /* badges row */
     .badge-row { display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin-bottom:1rem; }
     .btn-ghost { --b:rgba(255,255,255,.16); color:var(--fg)!important; border:1px solid var(--b)!important; background:rgba(255,255,255,.04)!important; }
     .chip { display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .6rem; border-radius:999px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); font-size:.85rem; white-space:nowrap; }
@@ -69,11 +68,13 @@
     .toolbar { display:flex; gap:.5rem; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom:.75rem; }
     #language-select { width: 160px; }
 
-    /* keep button widths stable across languages */
+    /* ثابت‌سازی دکمه‌ها بین زبان‌ها */
+    .btn-group, .btn-group-sm { flex-wrap: nowrap; }
     .btn-icon { display:inline-flex; align-items:center; gap:.45rem; white-space:nowrap; }
     .btn-icon .label { display:inline-block; width: 88px; overflow:hidden; text-overflow:ellipsis; text-align:left; font-weight:600; font-size:.85rem; }
-    .btn-icon .ico { font-size:1rem; }
-    .btn-group-sm>.btn, .btn-sm { padding:.35rem .5rem; }
+    .btn-icon .ico { font-size:1rem; flex:0 0 auto; }
+    .btn-group-sm>.btn, .btn-sm { padding:.35rem .6rem; }
+    .form-select, .btn { font-size: .95rem; }
 
     .error-message{ color:#f87171; text-align:center; font-weight:500; }
     .loading-spinner { text-align:center; font-size:1.2rem; }
@@ -85,9 +86,6 @@
     [dir="rtl"] { text-align:right; }
     canvas { position: fixed; inset:0; width:100%; height:100%; z-index:-1; opacity:.22; }
     @media (prefers-reduced-motion: reduce){ .config-card:hover { transform:none; } }
-    /* prevent wrapping/growing on i18n */
-    .btn-group, .btn-group-sm { flex-wrap: nowrap; }
-    .form-select, .btn { font-size: .95rem; }
   </style>
 </head>
 <body>
@@ -97,7 +95,7 @@
     <div class="toolbar">
       <div>
         <h1 id="title" class="mb-0">ConfigForge V2Ray</h1>
-        <div class="kicker" id="kicker">Speed‑tested subscription links · VLESS · VMess · Shadowsocks · Trojan</div>
+        <div class="kicker" id="kicker">Speed-tested subscription links · VLESS · VMess · Shadowsocks · Trojan</div>
       </div>
       <select id="language-select" class="form-select" aria-label="Language switcher">
         <option value="en">English</option>
@@ -118,12 +116,12 @@
       </select>
     </div>
 
-    <!-- Badges (stars, release + live health) -->
+    <!-- Badges -->
     <div class="badge-row">
       <a class="btn btn-sm btn-ghost" href="https://github.com/ShatakVPN/ConfigForge-V2Ray" target="_blank" rel="noopener">⭐ <span data-i18n="star">Star</span></a>
       <a class="btn btn-sm btn-ghost" href="https://github.com/ShatakVPN/ConfigForge-V2Ray/releases" target="_blank" rel="noopener">📦 <span data-i18n="releases">Releases</span></a>
       <span id="speed-chip" class="chip" title="Speed test status"><i>⚡</i><b id="speed-label">Speed test</b><span id="speed-dot" style="display:inline-block; width:.55rem; height:.55rem; border-radius:50%; background:var(--warn);"></span></span>
-      <span id="last-updated" class="chip" title="Last updated (UTC)"><i>🕒</i><b data-i18n="updated">Updated</b><span id="updated-when">—</span></span>
+      <span id="last-updated" class="chip" title="Last updated (UTC)"><i>🕒</i><b id="updated-label">Updated</b><span id="updated-when"> —</span></span>
     </div>
 
     <p class="description" id="description">Pick a country or use global subscriptions. Click a card to copy the raw subscription URL.</p>
@@ -141,9 +139,9 @@
     </ul>
 
     <div class="tab-content" id="myTabContent">
-      <!-- CONFIGS TAB -->
+      <!-- CONFIGS -->
       <div class="tab-pane fade show active" id="configs" role="tabpanel" aria-labelledby="configs-tab">
-        <!-- Global subscriptions quick access -->
+        <!-- Global -->
         <div class="card-lite mb-3">
           <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <strong id="global-heading">Global subscriptions</strong>
@@ -203,7 +201,7 @@
         <div id="configs-list" class="grid mt-3" aria-live="polite"></div>
       </div>
 
-      <!-- HOW TO TAB -->
+      <!-- HOW TO -->
       <div class="tab-pane fade" id="howto" role="tabpanel" aria-labelledby="howto-tab">
         <div class="card-lite">
           <h3 class="h5 mb-3" id="howto-heading">Quick import</h3>
@@ -227,7 +225,7 @@
                 <strong>iOS</strong>
                 <ul class="mb-0">
                   <li><a href="https://apps.apple.com/us/app/shadowrocket/id932747118" target="_blank" rel="noopener">Shadowrocket</a></li>
-                  <li><a href="https://apps.apple.com/us/app/quantumult-x/id1443988620" target="_blank" rel="noopener">Quantumult X</a></li>
+                  <li><a href="https://apps.apple.com/us/app/quantumult-x/id1443988620" target="_blank" rel="noopener">Quantumult X</a></li>
                 </ul>
               </div>
             </div>
@@ -254,7 +252,7 @@
         </div>
       </div>
 
-      <!-- CONTACT TAB -->
+      <!-- CONTACT -->
       <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
         <div class="card-lite p-3 text-center">
           <p id="contact-text">Reach us on GitHub or email.</p>
@@ -265,7 +263,7 @@
 
   </div>
 
-  <footer id="footer">Built with ❤️ by <a href="https://github.com/ShatakVPN" target="_blank" rel="noopener">ShatakVPN</a> · Powered by <a href="https://github.com" target="_blank" rel="noopener">GitHub</a> & <a href="https://check-host.net" target="_blank" rel="noopener">Check‑Host</a></footer>
+  <footer id="footer">Built with ❤️ by <a href="https://github.com/ShatakVPN" target="_blank" rel="noopener">ShatakVPN</a> · Powered by <a href="https://github.com" target="_blank" rel="noopener">GitHub</a> & <a href="https://check-host.net" target="_blank" rel="noopener">Check-Host</a></footer>
 
   <!-- Toasts -->
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
@@ -281,37 +279,40 @@
     // Twemoji
     twemoji.parse(document.body, { folder: 'svg', ext: '.svg', base: 'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/2/' });
 
-    // i18n (full set)
+    // ===== i18n =====
     const translations = {
-      en: { title:'ConfigForge V2Ray', kicker:'Speed‑tested subscription links · VLESS · VMess · Shadowsocks · Trojan', description:'Pick a country or use global subscriptions. Click a card to copy the raw subscription URL.', configsTab:'Get Configs', howtoTab:'How to Use', contactTab:'Contact', selectCountry:'Select Country', countryLabel:'Country', getBtns:'Get Configs', noConfigs:'No configs found for this country.', error:'Error fetching configs. Please try again later.', copied:'Subscription URL copied.', globalHeading:'Global subscriptions', globalHint:'Works in most clients. Click to copy URL.', howtoHeading:'Quick import', howtoSteps:['Copy a subscription URL from a card.','Open your client (v2rayNG, V2RayN, Shadowrocket, etc.).','Find Subscriptions → Add → paste URL → Update.'], contactText:'Reach us on GitHub or email.', star:'Star', releases:'Releases', updated:'Updated', speed:'Speed test', speedReady:'Online', speedOffline:'Offline', btnCopy:'Copy', btnOpen:'Open' },
+      en: { title:'ConfigForge V2Ray', kicker:'Speed-tested subscription links · VLESS · VMess · Shadowsocks · Trojan', description:'Pick a country or use global subscriptions. Click a card to copy the raw subscription URL.', configsTab:'Get Configs', howtoTab:'How to Use', contactTab:'Contact', selectCountry:'Select Country', countryLabel:'Country', getBtns:'Get Configs', noConfigs:'No configs found for this country.', error:'Error fetching configs. Please try again later.', copied:'Subscription URL copied.', globalHeading:'Global subscriptions', globalHint:'Works in most clients. Click to copy URL.', howtoHeading:'Quick import', howtoSteps:['Copy a subscription URL from a card.','Open your client (v2rayNG, V2RayN, Shadowrocket, etc.).','Find Subscriptions → Add → paste URL → Update.'], contactText:'Reach us on GitHub or email.', star:'Star', releases:'Releases', updated:'Updated', speed:'Speed test', speedReady:'Online', speedOffline:'Offline', btnCopy:'Copy', btnOpen:'Open' },
       fa: { title:'ConfigForge V2Ray', kicker:'ساب‌های تست‌شده · VLESS · VMess · Shadowsocks · Trojan', description:'کشور را انتخاب کنید یا از ساب‌های عمومی استفاده کنید. روی کارت کلیک کنید تا لینک کپی شود.', configsTab:'دریافت کانفیگ', howtoTab:'روش استفاده', contactTab:'ارتباط', selectCountry:'انتخاب کشور', countryLabel:'کشور', getBtns:'دریافت کانفیگ', noConfigs:'برای این کشور فایلی پیدا نشد.', error:'خطا در دریافت فایل‌ها. بعداً تلاش کنید.', copied:'لینک اشتراک کپی شد.', globalHeading:'اشتراک‌های عمومی', globalHint:'در اکثر کلاینت‌ها کار می‌کند. کلیک = کپی لینک.', howtoHeading:'ورود سریع', howtoSteps:['یک لینک اشتراک را از کارت کپی کنید.','کلاینت خود را باز کنید (v2rayNG، V2RayN، Shadowrocket و …).','Subscriptions → Add → پیست لینک → Update.'], contactText:'در گیت‌هاب یا ایمیل پیام بدهید.', star:'ستاره', releases:'ریلیزها', updated:'بروزرسانی', speed:'تست سرعت', speedReady:'آنلاین', speedOffline:'آفلاین', btnCopy:'کپی', btnOpen:'باز کردن' },
       zh: { title:'ConfigForge V2Ray', kicker:'经过测速的订阅链接 · VLESS · VMess · Shadowsocks · Trojan', description:'选择国家或使用全局订阅。点击卡片复制原始订阅链接。', configsTab:'获取配置', howtoTab:'使用方法', contactTab:'联系我们', selectCountry:'选择国家', countryLabel:'国家/地区', getBtns:'获取配置', noConfigs:'未找到此国家的配置。', error:'获取配置时出错，请稍后再试。', copied:'订阅链接已复制。', globalHeading:'全局订阅', globalHint:'适用于大多数客户端。点击复制链接。', howtoHeading:'快速导入', howtoSteps:['从卡片复制订阅链接。','打开客户端（v2rayNG、V2RayN、Shadowrocket 等）。','找到 Subscriptions → Add → 粘贴链接 → Update。'], contactText:'通过 GitHub 或邮箱联系。', star:'收藏', releases:'发布', updated:'更新时间', speed:'测速', speedReady:'在线', speedOffline:'离线', btnCopy:'复制', btnOpen:'打开' },
       es: { title:'ConfigForge V2Ray', kicker:'Enlaces de suscripción probados · VLESS · VMess · Shadowsocks · Trojan', description:'Elige un país o usa suscripciones globales. Haz clic para copiar la URL.', configsTab:'Obtener Configs', howtoTab:'Cómo Usar', contactTab:'Contacto', selectCountry:'Seleccionar País', countryLabel:'País', getBtns:'Obtener', noConfigs:'No hay configuraciones para este país.', error:'Error al obtener configuraciones. Inténtalo más tarde.', copied:'Enlace copiado.', globalHeading:'Suscripciones globales', globalHint:'Funciona en la mayoría de clientes. Clic para copiar.', howtoHeading:'Importación rápida', howtoSteps:['Copia un enlace de suscripción.','Abre tu cliente (v2rayNG, V2RayN, Shadowrocket, etc.).','Subscriptions → Add → pega URL → Update.'], contactText:'Contáctanos por GitHub o email.', star:'Star', releases:'Releases', updated:'Actualizado', speed:'Test de velocidad', speedReady:'En línea', speedOffline:'Fuera de línea', btnCopy:'Copiar', btnOpen:'Abrir' },
       fr: { title:'ConfigForge V2Ray', kicker:'Abonnements testés · VLESS · VMess · Shadowsocks · Trojan', description:'Choisissez un pays ou utilisez les abonnements globaux. Cliquez pour copier l’URL.', configsTab:'Obtenir', howtoTab:'Mode d’emploi', contactTab:'Contact', selectCountry:'Sélectionner un pays', countryLabel:'Pays', getBtns:'Obtenir', noConfigs:'Aucune configuration trouvée.', error:'Erreur de récupération. Réessayez plus tard.', copied:'Lien copié.', globalHeading:'Abonnements globaux', globalHint:'Fonctionne dans la plupart des clients.', howtoHeading:'Import rapide', howtoSteps:['Copiez un lien.','Ouvrez votre client.','Subscriptions → Add → collez → Update.'], contactText:'Contact via GitHub ou email.', star:'Étoile', releases:'Versions', updated:'Mise à jour', speed:'Test vitesse', speedReady:'En ligne', speedOffline:'Hors ligne', btnCopy:'Copier', btnOpen:'Ouvrir' },
-      de: { title:'ConfigForge V2Ray', kicker:'Geschwindigkeitsgetestete Abos · VLESS · VMess · Shadowsocks · Trojan', description:'Land wählen oder globale Abos nutzen. Klick zum Kopieren.', configsTab:'Configs holen', howtoTab:'Anleitung', contactTab:'Kontakt', selectCountry:'Land wählen', countryLabel:'Land', getBtns:'Abrufen', noConfigs:'Keine Konfigurationen gefunden.', error:'Fehler beim Abrufen.', copied:'Abo-Link kopiert.', globalHeading:'Globale Abos', globalHint:'Funktioniert in den meisten Clients.', howtoHeading:'Schnellimport', howtoSteps:['Link kopieren.','Client öffnen.','Subscriptions → Add → URL einfügen → Update.'], contactText:'Kontakt über GitHub oder E‑Mail.', star:'Stern', releases:'Releases', updated:'Aktualisiert', speed:'Speedtest', speedReady:'Online', speedOffline:'Offline', btnCopy:'Kopieren', btnOpen:'Öffnen' },
+      de: { title:'ConfigForge V2Ray', kicker:'Geschwindigkeitsgetestete Abos · VLESS · VMess · Shadowsocks · Trojan', description:'Land wählen oder globale Abos nutzen. Klick zum Kopieren.', configsTab:'Configs holen', howtoTab:'Anleitung', contactTab:'Kontakt', selectCountry:'Land wählen', countryLabel:'Land', getBtns:'Abrufen', noConfigs:'Keine Konfigurationen gefunden.', error:'Fehler beim Abrufen.', copied:'Abo-Link kopiert.', globalHeading:'Globale Abos', globalHint:'Funktioniert in den meisten Clients.', howtoHeading:'Schnellimport', howtoSteps:['Link kopieren.','Client öffnen.','Subscriptions → Add → URL einfügen → Update.'], contactText:'Kontakt über GitHub oder E-Mail.', star:'Stern', releases:'Releases', updated:'Aktualisiert', speed:'Speedtest', speedReady:'Online', speedOffline:'Offline', btnCopy:'Kopieren', btnOpen:'Öffnen' },
       ru: { title:'ConfigForge V2Ray', kicker:'Проверенные подписки · VLESS · VMess · Shadowsocks · Trojan', description:'Выберите страну или используйте глобальные подписки. Клик — копирование ссылки.', configsTab:'Получить', howtoTab:'Как использовать', contactTab:'Контакты', selectCountry:'Выбрать страну', countryLabel:'Страна', getBtns:'Получить', noConfigs:'Ничего не найдено.', error:'Ошибка при получении.', copied:'Ссылка скопирована.', globalHeading:'Глобальные подписки', globalHint:'Работает в большинстве клиентов.', howtoHeading:'Быстрый импорт', howtoSteps:['Скопируйте ссылку.','Откройте клиент.','Subscriptions → Add → вставить URL → Update.'], contactText:'Связь через GitHub или email.', star:'Избранное', releases:'Релизы', updated:'Обновлено', speed:'Тест скорости', speedReady:'Онлайн', speedOffline:'Офлайн', btnCopy:'Копия', btnOpen:'Открыть' },
       ar: { title:'ConfigForge V2Ray', kicker:'روابط اشتراك مختبرة · VLESS · VMess · Shadowsocks · Trojan', description:'اختر الدولة أو استخدم الاشتراكات العامة. انقر لنسخ الرابط.', configsTab:'الحصول على الإعدادات', howtoTab:'طريقة الاستخدام', contactTab:'اتصل بنا', selectCountry:'اختر الدولة', countryLabel:'الدولة', getBtns:'جلب', noConfigs:'لا توجد إعدادات.', error:'حدث خطأ في الجلب.', copied:'تم نسخ الرابط.', globalHeading:'الاشتراكات العامة', globalHint:'تعمل مع معظم العملاء.', howtoHeading:'استيراد سريع', howtoSteps:['انسخ الرابط.','افتح التطبيق.','Subscriptions → Add → لصق الرابط → Update.'], contactText:'تواصل عبر GitHub أو البريد.', star:'نجمة', releases:'الإصدارات', updated:'آخر تحديث', speed:'اختبار السرعة', speedReady:'متصل', speedOffline:'غير متصل', btnCopy:'نسخ', btnOpen:'فتح' },
       ja: { title:'ConfigForge V2Ray', kicker:'速度テスト済みのサブスクリプション · VLESS · VMess · Shadowsocks · Trojan', description:'国を選ぶかグローバルを使用。カードをクリックでURLをコピー。', configsTab:'取得', howtoTab:'使い方', contactTab:'連絡先', selectCountry:'国を選択', countryLabel:'国', getBtns:'取得', noConfigs:'見つかりません。', error:'取得エラー。後で再試行。', copied:'コピーしました。', globalHeading:'グローバル', globalHint:'多くのクライアントで動作。', howtoHeading:'クイック導入', howtoSteps:['リンクをコピー。','クライアントを開く。','Subscriptions → Add → 貼り付け → Update.'], contactText:'GitHub またはメールで連絡。', star:'スター', releases:'リリース', updated:'更新', speed:'速度テスト', speedReady:'オンライン', speedOffline:'オフライン', btnCopy:'コピー', btnOpen:'開く' },
       ko: { title:'ConfigForge V2Ray', kicker:'속도 테스트된 구독 링크 · VLESS · VMess · Shadowsocks · Trojan', description:'국가를 선택하거나 글로벌 구독 사용. 카드 클릭 시 URL 복사.', configsTab:'가져오기', howtoTab:'사용 방법', contactTab:'문의', selectCountry:'국가 선택', countryLabel:'국가', getBtns:'가져오기', noConfigs:'구성이 없습니다.', error:'가져오기 오류.', copied:'복사됨.', globalHeading:'글로벌 구독', globalHint:'대부분의 클라이언트에서 작동.', howtoHeading:'빠른 가져오기', howtoSteps:['링크 복사','클라이언트 열기','Subscriptions → Add → 붙여넣기 → Update'], contactText:'GitHub 또는 이메일.', star:'즐겨찾기', releases:'릴리스', updated:'업데이트', speed:'속도 테스트', speedReady:'온라인', speedOffline:'오프라인', btnCopy:'복사', btnOpen:'열기' },
       hi: { title:'ConfigForge V2Ray', kicker:'स्पीड-टेस्टेड सब्सक्रिप्शन लिंक · VLESS · VMess · Shadowsocks · Trojan', description:'देश चुनें या ग्लोबल सब्सक्रिप्शन उपयोग करें। कार्ड पर क्लिक कर URL कॉपी करें।', configsTab:'प्राप्त करें', howtoTab:'कैसे उपयोग करें', contactTab:'संपर्क', selectCountry:'देश चुनें', countryLabel:'देश', getBtns:'लाओ', noConfigs:'कोई कॉन्फ़िग नहीं मिला।', error:'प्राप्ति त्रुटि।', copied:'लिंक कॉपी हुआ।', globalHeading:'ग्लोबल सब्सक्रिप्शन', globalHint:'अधिकांश क्लाइंट में काम करता है।', howtoHeading:'त्वरित इंपोर्ट', howtoSteps:['लिंक कॉपी करें।','क्लाइंट खोलें।','Subscriptions → Add → URL पेस्ट → Update.'], contactText:'GitHub या ईमेल से संपर्क करें।', star:'स्टार', releases:'रिलीज़', updated:'अपडेट', speed:'स्पीड टेस्ट', speedReady:'ऑनलाइन', speedOffline:'ऑफ़लाइन', btnCopy:'कॉपी', btnOpen:'खोलें' },
-      pt: { title:'ConfigForge V2Ray', kicker:'Assinaturas testadas · VLESS · VMess · Shadowsocks · Trojan', description:'Escolha um país ou use assinaturas globais. Clique para copiar.', configsTab:'Buscar', howtoTab:'Como usar', contactTab:'Contato', selectCountry:'Selecionar país', countryLabel:'País', getBtns:'Buscar', noConfigs:'Nada encontrado.', error:'Erro ao buscar.', copied:'Link copiado.', globalHeading:'Assinaturas globais', globalHint:'Funciona na maioria dos clientes.', howtoHeading:'Importação rápida', howtoSteps:['Copie o link.','Abra o cliente.','Subscriptions → Add → colar → Update.'], contactText:'Fale pelo GitHub ou e‑mail.', star:'Star', releases:'Releases', updated:'Atualizado', speed:'Teste de velocidade', speedReady:'Online', speedOffline:'Offline', btnCopy:'Copiar', btnOpen:'Abrir' },
+      pt: { title:'ConfigForge V2Ray', kicker:'Assinaturas testadas · VLESS · VMess · Shadowsocks · Trojan', description:'Escolha um país ou use assinaturas globais. Clique para copiar.', configsTab:'Buscar', howtoTab:'Como usar', contactTab:'Contato', selectCountry:'Selecionar país', countryLabel:'País', getBtns:'Buscar', noConfigs:'Nada encontrado.', error:'Erro ao buscar.', copied:'Link copiado.', globalHeading:'Assinaturas globais', globalHint:'Funciona na maioria dos clientes.', howtoHeading:'Importação rápida', howtoSteps:['Copie o link.','Abra o cliente.','Subscriptions → Add → colar → Update.'], contactText:'Fale pelo GitHub ou e-mail.', star:'Star', releases:'Releases', updated:'Atualizado', speed:'Teste de velocidade', speedReady:'Online', speedOffline:'Offline', btnCopy:'Copiar', btnOpen:'Abrir' },
       it: { title:'ConfigForge V2Ray', kicker:'Link di abbonamento testati · VLESS · VMess · Shadowsocks · Trojan', description:'Scegli un paese o usa le sottoscrizioni globali. Clicca per copiare.', configsTab:'Ottieni', howtoTab:'Come si usa', contactTab:'Contatti', selectCountry:'Seleziona Paese', countryLabel:'Paese', getBtns:'Ottieni', noConfigs:'Nessuna config trovata.', error:'Errore di recupero.', copied:'Link copiato.', globalHeading:'Sottoscrizioni globali', globalHint:'Funziona con la maggior parte dei client.', howtoHeading:'Import rapido', howtoSteps:['Copia il link.','Apri il client.','Subscriptions → Add → incolla → Update.'], contactText:'Contattaci su GitHub o email.', star:'Stella', releases:'Rilasci', updated:'Aggiornato', speed:'Test velocità', speedReady:'Online', speedOffline:'Offline', btnCopy:'Copia', btnOpen:'Apri' },
-      tr: { title:'ConfigForge V2Ray', kicker:'Hız testi yapılmış abonelikler · VLESS · VMess · Shadowsocks · Trojan', description:'Ülke seçin veya global abonelikleri kullanın. Karta tıklayınca kopyalanır.', configsTab:'Al', howtoTab:'Kullanım', contactTab:'İletişim', selectCountry:'Ülke seç', countryLabel:'Ülke', getBtns:'Al', noConfigs:'Bulunamadı.', error:'Alma hatası.', copied:'Bağlantı kopyalandı.', globalHeading:'Global abonelikler', globalHint:'Çoğu istemcide çalışır.', howtoHeading:'Hızlı içe aktarma', howtoSteps:['Bağlantıyı kopyalayın.','İstemciyi açın.','Subscriptions → Add → yapıştır → Update.'], contactText:'GitHub veya e‑posta.', star:'Yıldız', releases:'Sürümler', updated:'Güncellendi', speed:'Hız testi', speedReady:'Çevrimiçi', speedOffline:'Çevrimdışı', btnCopy:'Kopya', btnOpen:'Aç' },
+      tr: { title:'ConfigForge V2Ray', kicker:'Hız testi yapılmış abonelikler · VLESS · VMess · Shadowsocks · Trojan', description:'Ülke seçin veya global abonelikleri kullanın. Karta tıklayınca kopyalanır.', configsTab:'Al', howtoTab:'Kullanım', contactTab:'İletişim', selectCountry:'Ülke seç', countryLabel:'Ülke', getBtns:'Al', noConfigs:'Bulunamadı.', error:'Alma hatası.', copied:'Bağlantı kopyalandı.', globalHeading:'Global abonelikler', globalHint:'Çoğu istemcide çalışır.', howtoHeading:'Hızlı içe aktarma', howtoSteps:['Bağlantıyı kopyalayın.','İstemciyi açın.','Subscriptions → Add → yapıştır → Update.'], contactText:'GitHub veya e-posta.', star:'Yıldız', releases:'Sürümler', updated:'Güncellendi', speed:'Hız testi', speedReady:'Çevrimiçi', speedOffline:'Çevrimdışı', btnCopy:'Kopya', btnOpen:'Aç' },
       nl: { title:'ConfigForge V2Ray', kicker:'Snelheid-geteste abonnementen · VLESS · VMess · Shadowsocks · Trojan', description:'Kies een land of gebruik globale abonnementen. Klik om te kopiëren.', configsTab:'Ophalen', howtoTab:'Handleiding', contactTab:'Contact', selectCountry:'Land kiezen', countryLabel:'Land', getBtns:'Ophalen', noConfigs:'Geen configs gevonden.', error:'Fout bij ophalen.', copied:'Link gekopieerd.', globalHeading:'Globale abonnementen', globalHint:'Werkt in de meeste clients.', howtoHeading:'Snel importeren', howtoSteps:['Kopieer de link.','Open de client.','Subscriptions → Add → plak URL → Update.'], contactText:'Contact via GitHub of mail.', star:'Ster', releases:'Releases', updated:'Bijgewerkt', speed:'Snelheidstest', speedReady:'Online', speedOffline:'Offline', btnCopy:'Kopiëren', btnOpen:'Openen' }
     };
 
+    // Helper to read current language safely
     const prefersLang = (localStorage.getItem('cfg-lang') || navigator.language.substring(0,2) || 'en');
     let currentLang = translations[prefersLang] ? prefersLang : 'en';
-
-    function t(key){ return (translations[currentLang] && translations[currentLang][key]) || translations['en'][key] || key; }
+    function t(key){
+      return (translations[currentLang] && translations[currentLang][key]) || translations['en'][key] || key;
+    }
     function setText(id, text){ const el = document.getElementById(id); if(el) el.textContent = text; }
-    function setHTML(id, html){ const el = document.getElementById(id); if(el) el.innerHTML = html; }
 
     function updateLanguage(lang){
       currentLang = translations[lang] ? lang : 'en';
       localStorage.setItem('cfg-lang', currentLang);
       document.documentElement.lang = currentLang;
       document.documentElement.dir = ['fa','ar'].includes(currentLang) ? 'rtl' : 'ltr';
+
+      // static labels
       setText('title', t('title'));
       setText('kicker', t('kicker'));
       setText('configs-tab', t('configsTab'));
@@ -326,26 +327,28 @@
       setText('description', t('description'));
       setText('contact-text', t('contactText'));
 
-      // badge small labels
-      document.querySelector('[data-i18n="star"]').textContent = t('star');
-      document.querySelector('[data-i18n="releases"]').textContent = t('releases');
-      document.querySelector('#last-updated b').textContent = t('updated');
-      document.querySelector('#speed-label').textContent = t('speed');
+      // badges
+      const starEl = document.querySelector('[data-i18n="star"]');
+      const relEl  = document.querySelector('[data-i18n="releases"]');
+      if(starEl) starEl.textContent = t('star');
+      if(relEl)  relEl.textContent = t('releases');
+      setText('updated-label', t('updated'));
+      // speed label will be updated by populateGlobal too
 
       // steps
       const steps = translations[currentLang].howtoSteps || translations['en'].howtoSteps;
       const ol = document.getElementById('howto-steps');
       if(ol){ ol.innerHTML = steps.map(s=>`<li>${s}</li>`).join(''); }
-      // update labels inside existing cards to avoid rebuild/layout shift
-      document.querySelectorAll('[data-i18n-btn="copy"]').forEach(el => el.textContent = t('btnCopy'
+
+      // update existing card button labels (no rebuild, no layout shift)
+      document.querySelectorAll('[data-i18n-btn="copy"]').forEach(el => el.textContent = t('btnCopy'));
+      document.querySelectorAll('[data-i18n-btn="open"]').forEach(el => el.textContent = t('btnOpen'));
+
+      // re-render emojis for flags
+      twemoji.parse(document.body);
     }
 
-    // init language
-    updateLanguage(currentLang);
-    document.getElementById('language-select').value = currentLang;
-    document.getElementById('language-select').addEventListener('change', e=> updateLanguage(e.target.value));
-
-    // Toast helper
+    // ===== Toast =====
     const toastEl = document.getElementById('toast');
     const toastBody = document.getElementById('toast-body');
     let bsToast = null;
@@ -355,40 +358,33 @@
       bsToast.show();
     }
 
-    // Utilities
+    // ===== Data =====
     const CONFIG_ROOT = 'https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs';
     const FILES = ['all.txt','light.txt','vless.txt','vmess.txt','shadowsocks.txt','trojan.txt','unknown.txt'];
 
-    async function headExists(url){ try { const r = await fetch(url, { method:'HEAD', cache:'no-store' }); return r.ok; } catch { return false; } }
+    async function headExists(url){
+      try { const r = await fetch(url, { method:'HEAD', cache:'no-store' }); return r.ok; }
+      catch { return false; }
+    }
 
     function makeCard(label, url){
       const div = document.createElement('div');
       div.className = 'config-card card-lite';
-      div.tabIndex = 0; // keyboard accessible
+      div.tabIndex = 0;
       div.innerHTML = `<div class="d-flex align-items-center justify-content-between gap-2">
         <span class="text-truncate" title="${label}">${label}</span>
         <div class="btn-group btn-group-sm">
-          <button class="btn btn-ghost btn-sm btn-icon" data-action="copy" aria-label="${t('btnCopy')}"><span class="ico">📋</span><span class="label" data-i18n-btn="copy">${t('btnCopy')}</span></button>
-          <a class="btn btn-ghost btn-sm btn-icon" href="${url}" target="_blank" rel="noopener" aria-label="${t('btnOpen')}"><span class="ico">🔗</span><span class="label" data-i18n-btn="open">${t('btnOpen')}</span></a>
+          <button class="btn btn-ghost btn-sm btn-icon" data-action="copy" aria-label="${t('btnCopy')}">
+            <span class="ico">📋</span><span class="label" data-i18n-btn="copy">${t('btnCopy')}</span>
+          </button>
+          <a class="btn btn-ghost btn-sm btn-icon" href="${url}" target="_blank" rel="noopener" aria-label="${t('btnOpen')}">
+            <span class="ico">🔗</span><span class="label" data-i18n-btn="open">${t('btnOpen')}</span>
+          </a>
         </div>
       </div>`;
       div.addEventListener('click', (e)=>{
         const target = e.target.closest('[data-action="copy"]');
         if(target){ navigator.clipboard.writeText(url).then(()=> showToast(t('copied'))); }
-      });
-      div.addEventListener('keyup', (e)=>{ if(e.key === 'Enter'){ navigator.clipboard.writeText(url).then(()=> showToast(t('copied'))); }});
-      return div;
-    }">${label}</span>
-        <div class="btn-group btn-group-sm">
-          <button class="btn btn-ghost btn-sm btn-icon" data-action="copy" aria-label="${t('btnCopy')}"><span class="ico">📋</span><span class="label">${t('btnCopy')}</span></button>
-          <a class="btn btn-ghost btn-sm btn-icon" href="${url}" target="_blank" rel="noopener" aria-label="${t('btnOpen')}"><span class="ico">🔗</span><span class="label">${t('btnOpen')}</span></a>
-        </div>
-      </div>`;
-      div.addEventListener('click', (e)=>{
-        const target = e.target.closest('[data-action="copy"]');
-        if(target){
-          navigator.clipboard.writeText(url).then(()=> showToast(t('copied')));
-        }
       });
       div.addEventListener('keyup', (e)=>{ if(e.key === 'Enter'){ navigator.clipboard.writeText(url).then(()=> showToast(t('copied'))); }});
       return div;
@@ -401,11 +397,12 @@
       const checks = await Promise.all(urls.map(([,u])=> headExists(u)));
       wrap.innerHTML = '';
       urls.forEach(([f,u], i)=>{ if(checks[i]) wrap.appendChild(makeCard(f, u)); });
-      // update speed badge: online if at least one file is present globally
+      // speed badge state
       const ok = checks.some(Boolean);
       const dot = document.getElementById('speed-dot');
-      dot.style.background = ok ? 'var(--ok)' : 'var(--err)';
-      document.getElementById('speed-label').textContent = t('speed') + ' · ' + (ok ? t('speedReady') : t('speedOffline'));
+      if(dot) dot.style.background = ok ? 'var(--ok)' : 'var(--err)';
+      const lbl = document.getElementById('speed-label');
+      if(lbl) lbl.textContent = t('speed') + ' · ' + (ok ? t('speedReady') : t('speedOffline'));
     }
 
     async function populateCountry(country){
@@ -419,56 +416,68 @@
       urls.forEach(([f,u], i)=>{ if(checks[i]) list.appendChild(makeCard(f, u)); });
     }
 
-    // Country autodetect (best-effort)
+    // ===== init =====
+    // language
+    updateLanguage(currentLang);
+    document.getElementById('language-select').value = currentLang;
+    document.getElementById('language-select').addEventListener('change', e=> updateLanguage(e.target.value));
+
+    // autodetect country
     fetch('https://ipapi.co/json/').then(r=>r.json()).then(data=>{
       const code = (data.country_code||'').toLowerCase();
       const sel = document.getElementById('country-select');
       if(code && sel.querySelector(`option[value="${code}"]`)) sel.value = code;
     }).catch(()=>{});
 
-    // Last updated indicator
+    // last updated
     (async function(){
       try {
-        // try HEAD global all.txt first
         let r = await fetch(`${CONFIG_ROOT}/all.txt`, { method:'HEAD', cache:'no-store' });
-        if(!r.ok){ // fallback: GET to capture Date/Last-Modified
-          r = await fetch(`${CONFIG_ROOT}/all.txt`, { cache:'no-store' });
-        }
+        if(!r.ok){ r = await fetch(`${CONFIG_ROOT}/all.txt`, { cache:'no-store' }); }
         const lm = r.headers.get('last-modified') || r.headers.get('date');
-        if(lm){ document.getElementById('updated-when').textContent = ` ${new Date(lm).toUTCString()}`; }
+        if(lm){ document.getElementById('updated-when').textContent = ' ' + new Date(lm).toUTCString(); }
       } catch {
         document.getElementById('updated-when').textContent = ' —';
       }
     })();
 
-    // Populate global on load
+    // global list
     populateGlobal();
 
-    // Deep-linking via query params (?lang=fa&country=de)
+    // deep-link (?lang=fa&country=de)
     (function(){
       const params = new URLSearchParams(location.search);
       const lang = params.get('lang');
       const country = params.get('country');
       if(lang) { updateLanguage(lang); document.getElementById('language-select').value = lang; }
-      if(country) { const sel = document.getElementById('country-select'); if(sel.querySelector(`option[value="${country}"]`)) { sel.value = country; populateCountry(country); } }
+      if(country) {
+        const sel = document.getElementById('country-select');
+        if(sel.querySelector(`option[value="${country}"]`)) { sel.value = country; populateCountry(country); }
+      }
     })();
 
-    // Button handler
+    // button handler
     document.getElementById('get-configs').addEventListener('click', ()=>{
       const country = document.getElementById('country-select').value;
       if(!country){ showToast(t('selectCountry')); return; }
       populateCountry(country);
     });
 
-    // Particles (subtle)
+    // particles
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
     resize();
-    const particles = Array.from({length: 60}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.8+0.8, vx: (Math.random()-.5)*.35, vy: (Math.random()-.5)*.35, a: Math.random()*Math.PI*2 }));
+    const particles = Array.from({length: 60}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.8+0.8, vx: (Math.random()-.5)*.35, vy: (Math.random()-.5)*.35 }));
     function tick(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      for(const p of particles){ p.x+=p.vx; p.y+=p.vy; p.a+=.01; if(p.x<0||p.x>canvas.width) p.vx*=-1; if(p.y<0||p.y>canvas.height) p.vy*=-1; ctx.fillStyle='rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); }
+      for(const p of particles){
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>canvas.width) p.vx*=-1;
+        if(p.y<0||p.y>canvas.height) p.vy*=-1;
+        ctx.fillStyle='rgba(255,255,255,.75)';
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+      }
       requestAnimationFrame(tick);
     }
     tick();
