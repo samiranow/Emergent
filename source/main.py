@@ -15,7 +15,58 @@ from datetime import datetime
 
 # ──────────────── Configuration ────────────────
 URLS = [
-    "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/all_configs.txt",
+    "https://www.v2nodes.com/subscriptions/country/al/?key=769B61EA877690D",  # Albania
+    "https://www.v2nodes.com/subscriptions/country/ar/?key=769B61EA877690D",  # Argentina
+    "https://www.v2nodes.com/subscriptions/country/au/?key=769B61EA877690D",  # Australia
+    "https://www.v2nodes.com/subscriptions/country/at/?key=769B61EA877690D",  # Austria
+    "https://www.v2nodes.com/subscriptions/country/bh/?key=769B61EA877690D",  # Bahrain
+    "https://www.v2nodes.com/subscriptions/country/be/?key=769B61EA877690D",  # Belgium
+    "https://www.v2nodes.com/subscriptions/country/bo/?key=769B61EA877690D",  # Bolivia
+    "https://www.v2nodes.com/subscriptions/country/br/?key=769B61EA877690D",  # Brazil
+    "https://www.v2nodes.com/subscriptions/country/bg/?key=769B61EA877690D",  # Bulgaria
+    "https://www.v2nodes.com/subscriptions/country/ca/?key=769B61EA877690D",  # Canada
+    "https://www.v2nodes.com/subscriptions/country/cn/?key=769B61EA877690D",  # China
+    "https://www.v2nodes.com/subscriptions/country/co/?key=769B61EA877690D",  # Colombia
+    "https://www.v2nodes.com/subscriptions/country/cy/?key=769B61EA877690D",  # Cyprus
+    "https://www.v2nodes.com/subscriptions/country/cz/?key=769B61EA877690D",  # Czechia
+    "https://www.v2nodes.com/subscriptions/country/dk/?key=769B61EA877690D",  # Denmark
+    "https://www.v2nodes.com/subscriptions/country/ee/?key=769B61EA877690D",  # Estonia
+    "https://www.v2nodes.com/subscriptions/country/fi/?key=769B61EA877690D",  # Finland
+    "https://www.v2nodes.com/subscriptions/country/fr/?key=769B61EA877690D",  # France
+    "https://www.v2nodes.com/subscriptions/country/de/?key=769B61EA877690D",  # Germany
+    "https://www.v2nodes.com/subscriptions/country/gt/?key=769B61EA877690D",  # Guatemala
+    "https://www.v2nodes.com/subscriptions/country/hk/?key=769B61EA877690D",  # Hong Kong
+    "https://www.v2nodes.com/subscriptions/country/hu/?key=769B61EA877690D",  # Hungary
+    "https://www.v2nodes.com/subscriptions/country/is/?key=769B61EA877690D",  # Iceland
+    "https://www.v2nodes.com/subscriptions/country/in/?key=769B61EA877690D",  # India
+    "https://www.v2nodes.com/subscriptions/country/id/?key=769B61EA877690D",  # Indonesia
+    "https://www.v2nodes.com/subscriptions/country/il/?key=769B61EA877690D",  # Israel
+    "https://www.v2nodes.com/subscriptions/country/it/?key=769B61EA877690D",  # Italy
+    "https://www.v2nodes.com/subscriptions/country/jp/?key=769B61EA877690D",  # Japan
+    "https://www.v2nodes.com/subscriptions/country/kz/?key=769B61EA877690D",  # Kazakhstan
+    "https://www.v2nodes.com/subscriptions/country/lv/?key=769B61EA877690D",  # Latvia
+    "https://www.v2nodes.com/subscriptions/country/my/?key=769B61EA877690D",  # Malaysia
+    "https://www.v2nodes.com/subscriptions/country/md/?key=769B61EA877690D",  # Moldova
+    "https://www.v2nodes.com/subscriptions/country/no/?key=769B61EA877690D",  # Norway
+    "https://www.v2nodes.com/subscriptions/country/pe/?key=769B61EA877690D",  # Peru
+    "https://www.v2nodes.com/subscriptions/country/pl/?key=769B61EA877690D",  # Poland
+    "https://www.v2nodes.com/subscriptions/country/pt/?key=769B61EA877690D",  # Portugal
+    "https://www.v2nodes.com/subscriptions/country/pr/?key=769B61EA877690D",  # Puerto Rico
+    "https://www.v2nodes.com/subscriptions/country/ro/?key=769B61EA877690D",  # Romania
+    "https://www.v2nodes.com/subscriptions/country/ru/?key=769B61EA877690D",  # Russia
+    "https://www.v2nodes.com/subscriptions/country/sg/?key=769B61EA877690D",  # Singapore
+    "https://www.v2nodes.com/subscriptions/country/kr/?key=769B61EA877690D",  # South Korea
+    "https://www.v2nodes.com/subscriptions/country/es/?key=769B61EA877690D",  # Spain
+    "https://www.v2nodes.com/subscriptions/country/se/?key=769B61EA877690D",  # Sweden
+    "https://www.v2nodes.com/subscriptions/country/ch/?key=769B61EA877690D",  # Switzerland
+    "https://www.v2nodes.com/subscriptions/country/tw/?key=769B61EA877690D",  # Taiwan
+    "https://www.v2nodes.com/subscriptions/country/th/?key=769B61EA877690D",  # Thailand
+    "https://www.v2nodes.com/subscriptions/country/nl/?key=769B61EA877690D",  # Netherlands
+    "https://www.v2nodes.com/subscriptions/country/tr/?key=769B61EA877690D",  # Türkiye
+    "https://www.v2nodes.com/subscriptions/country/ua/?key=769B61EA877690D",  # Ukraine
+    "https://www.v2nodes.com/subscriptions/country/gb/?key=769B61EA877690D",  # United Kingdom
+    "https://www.v2nodes.com/subscriptions/country/us/?key=769B61EA877690D",  # United States
+    "https://www.v2nodes.com/subscriptions/country/vn/?key=769B61EA877690D",  # Vietnam
 ]
 
 OUTPUT_DIR = "configs"
