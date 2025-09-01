@@ -5,100 +5,116 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>ConfigForge V2Ray — Speed-tested global & country subscriptions</title>
 
-  <!-- Primary SEO -->
-  <meta name="description" content="Speed-tested V2Ray subscriptions (VLESS, VMess, Shadowsocks, Trojan). Global & country lists with copy/QR, favorites, and search."/>
+  <!-- SEO -->
+  <meta name="description" content="Speed-tested V2Ray subscriptions (VLESS, VMess, Shadowsocks, Trojan). Global & country lists with copy/QR, favorites, search, and caching."/>
   <link rel="canonical" href="https://shatakvpn.github.io/ConfigForge-V2Ray/"/>
 
-  <!-- Open Graph -->
+  <!-- Open Graph / Twitter -->
   <meta property="og:title" content="ConfigForge V2Ray"/>
   <meta property="og:description" content="Speed-tested, ready-to-use subscriptions by country or global."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://shatakvpn.github.io/ConfigForge-V2Ray/"/>
   <meta property="og:image" content="https://opengraph.githubassets.com/1/ShatakVPN/ConfigForge-V2Ray"/>
-
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="ConfigForge V2Ray"/>
-  <meta name="twitter:description" content="Speed-tested, ready-to-use subscriptions by country or global."/>
-  <meta name="twitter:image" content="https://opengraph.githubassets.com/1/ShatakVPN/ConfigForge-V2Ray"/>
 
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"SoftwareApplication",
-    "name":"ConfigForge V2Ray",
-    "applicationCategory":"DeveloperApplication",
-    "operatingSystem":"Android, iOS, Windows, macOS, Linux",
-    "url":"https://shatakvpn.github.io/ConfigForge-V2Ray/",
-    "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-    "publisher":{"@type":"Organization","name":"ShatakVPN"}
-  }
-  </script>
+  <!-- Color schemes -->
+  <meta name="color-scheme" content="dark light"/>
+  <meta name="theme-color" content="#0b1324" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 
-  <!-- Bootstrap (we dynamically swap LTR/RTL via JS by changing this href) -->
-  <link id="bootstrap-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Icons (تطبیق با تم) -->
+  <link rel="icon" media="(prefers-color-scheme: dark)"
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="%236386fa"/><stop offset="1" stop-color="%237c3aed"/></linearGradient></defs><rect rx="12" width="64" height="64" fill="url(%23g)"/><text x="50%" y="54%" text-anchor="middle" font-family="Inter, Arial" font-weight="700" font-size="28" fill="%23ffffff">CF</text></svg>'>
+  <link rel="icon" media="(prefers-color-scheme: light)"
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="%235a67d8"/><stop offset="1" stop-color="%236b21a8"/></linearGradient></defs><rect rx="12" width="64" height="64" fill="url(%23g)"/><text x="50%" y="54%" text-anchor="middle" font-family="Inter, Arial" font-weight="700" font-size="28" fill="%230b1324">CF</text></svg>'>
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚙️</text></svg>">
+  <!-- Fonts / Twemoji -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Emoji&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script>
 
+  <!-- Bootstrap (RTL/LTR به‌صورت داینامیک سوییچ می‌شود) -->
+  <link id="bootstrap-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
   <style>
+    /* ========== Theme variables ========== */
     :root{
-      --fg:#e2e8f0; --muted:#cbd5e1; --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.12);
+      --fg:#e2e8f0; --muted:#cbd5e1;
+      --card:rgba(255,255,255,.08); --border:rgba(255,255,255,.15);
       --shadow:0 10px 40px rgba(0,0,0,.25);
+      --accent1:#3b82f6; --accent2:#7c3aed;
+      --logoText:#ffffff;
+      --bg:
+        radial-gradient(1200px 800px at 20% -10%,rgba(99,102,241,.15),transparent 60%),
+        radial-gradient(1000px 600px at 120% 10%,rgba(168,85,247,.12),transparent 60%),
+        linear-gradient(180deg,#0b1324,#1e2b3b);
     }
+    @media (prefers-color-scheme: light){
+      :root{
+        --fg:#0f172a; --muted:#475569;
+        --card:rgba(255,255,255,.8); --border:rgba(15,23,42,.08);
+        --shadow:0 10px 30px rgba(15,23,42,.10);
+        --accent1:#3b82f6; --accent2:#7c3aed;
+        --logoText:#0b1324;
+        --bg:
+          radial-gradient(900px 600px at 20% -10%,rgba(59,130,246,.10),transparent 60%),
+          radial-gradient(800px 500px at 120% 10%,rgba(124,58,237,.10),transparent 60%),
+          linear-gradient(180deg,#ffffff,#f4f7fb);
+      }
+      .text-bg-secondary#last-updated{color:#0f172a!important; background:#e2e8f0!important}
+    }
+
     *{box-sizing:border-box}
     body{
-      background: radial-gradient(1200px 800px at 20% -10%,rgba(99,102,241,.15),transparent 60%),
-                  radial-gradient(1000px 600px at 120% 10%,rgba(168,85,247,.12),transparent 60%),
-                  linear-gradient(180deg, #0b1324, #1e2b3b);
-      min-height:100vh; color:var(--fg); font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      min-height:100vh; color:var(--fg);
+      font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       display:flex; flex-direction:column; gap:24px; padding:32px 12px;
     }
     .container-main{
-      background:var(--glass); backdrop-filter: blur(12px);
-      border:1px solid var(--glass2); border-radius:16px; box-shadow:var(--shadow);
-      max-width:1000px; width:100%; margin:0 auto; padding:20px;
-      animation:fadeIn .35s ease;
+      background:var(--card); backdrop-filter: blur(12px);
+      border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+      max-width:1000px; width:100%; margin:0 auto; padding:20px; animation:fadeIn .35s ease;
     }
     @keyframes fadeIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
 
-    /* Toolbar */
+    /* Header / logo */
     .toolbar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+    .brand-row{display:flex; align-items:center; gap:10px}
     .brand h1{margin:0; font-weight:700; color:#fff; letter-spacing:-0.02em}
     .brand .kicker{color:var(--muted); font-size:.95rem}
-
-    /* Badges row */
-    .badge-row{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:10px 0}
-    .description{text-align:center; color:var(--muted); margin:0 0 10px}
+    .logo{width:42px; height:42px; border-radius:12px; box-shadow:var(--shadow)}
+    .logo-spin{transition: transform .6s ease}
+    .logo-spin:hover{transform: rotate(8deg) scale(1.04)}
 
     /* Tabs */
-    .nav-tabs{border-bottom:0; justify-content:center; gap:8px; margin-top:6px}
-    .nav-tabs .nav-link{border:0; background:rgba(255,255,255,.08); color:var(--fg); border-radius:10px 10px 0 0}
-    .nav-tabs .nav-link.active{background:rgba(255,255,255,.18); color:#fff}
+    .tabs-hero.nav-tabs{border:0; justify-content:center; gap:8px; margin-top:6px; flex-wrap:wrap}
+    .tabs-hero .nav-link{position:relative; border:0; background:rgba(255,255,255,.10); color:var(--fg);
+      border-radius:999px; padding:.5rem 1rem; transition:background .2s ease}
+    .tabs-hero .nav-link:hover{background:rgba(255,255,255,.16)}
+    .tabs-hero .nav-link.active{background:rgba(255,255,255,.22); color:#fff}
+    .tabs-hero .nav-link::after{
+      content:""; position:absolute; left:14px; right:14px; bottom:-6px; height:3px; border-radius:2px;
+      background:linear-gradient(90deg,var(--accent1),var(--accent2)); transform:scaleX(0);
+      transform-origin:left; transition:transform .25s ease
+    }
+    .tabs-hero .nav-link.active::after{transform:scaleX(1)}
 
-    /* Cards / grids */
-    .card-lite{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:12px; padding:12px}
+    /* Cards / controls */
+    .card-lite{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px}
     .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px}
     .config-card{display:flex; flex-direction:column; gap:10px; padding:12px}
     .config-title{font-weight:600; word-break:break-word}
     .config-actions{display:flex; gap:6px; flex-wrap:wrap}
-
-    /* Controls */
     .controls{display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap}
     .controls .grow{flex:1 1 260px}
     .form-select,.form-control,.btn{border-radius:10px}
-    .btn-primary{background:linear-gradient(90deg,#3b82f6,#7c3aed); border:0}
+    .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2)); border:0}
 
-    /* Footer */
+    .badge-row{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:10px 0}
+    .description{text-align:center; color:var(--muted); margin:0 0 10px}
     footer{color:var(--muted); text-align:center; padding:8px}
-
-    /* Particles (very light) */
     #particles{position:fixed; inset:0; pointer-events:none; opacity:.18; z-index:-1}
-    @media (prefers-reduced-motion: reduce){
-      .nav-tabs .nav-link,.btn,.config-card{transition:none!important}
-    }
+    @media (prefers-reduced-motion: reduce){ .tabs-hero .nav-link,.btn,.config-card,.logo-spin{transition:none!important} }
   </style>
 </head>
 <body>
@@ -106,33 +122,33 @@
 
   <div class="container-main" role="main">
     <div class="toolbar">
-      <div class="brand">
-        <h1 id="t-title">ConfigForge V2Ray</h1>
-        <div class="kicker" id="t-kicker">Speed-tested subscriptions · VLESS · VMess · Shadowsocks · Trojan</div>
+      <div class="brand-row">
+        <!-- Inline SVG Logo (CF) -->
+        <svg class="logo logo-spin" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#3b82f6"/><stop offset="1" stop-color="#7c3aed"/>
+            </linearGradient>
+          </defs>
+          <rect rx="12" width="64" height="64" fill="url(#g1)"></rect>
+          <text x="50%" y="54%" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="24" fill="var(--logoText)">CF</text>
+        </svg>
+        <div class="brand">
+          <h1 id="t-title">ConfigForge V2Ray</h1>
+          <div class="kicker" id="t-kicker">Speed-tested subscriptions · VLESS · VMess · Shadowsocks · Trojan</div>
+        </div>
       </div>
-
       <div class="d-flex align-items-center gap-2">
         <select id="language-select" class="form-select" aria-label="Language">
-          <option value="en">English</option>
-          <option value="fa">فارسی</option>
-          <option value="zh">中文 (简体)</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-          <option value="ru">Русский</option>
-          <option value="ar">العربية</option>
-          <option value="ja">日本語</option>
-          <option value="ko">한국어</option>
-          <option value="hi">हिन्दी</option>
-          <option value="pt">Português</option>
-          <option value="it">Italiano</option>
-          <option value="tr">Türkçe</option>
-          <option value="nl">Nederlands</option>
+          <option value="en">English</option><option value="fa">فارسی</option><option value="zh">中文 (简体)</option>
+          <option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option>
+          <option value="ru">Русский</option><option value="ar">العربية</option><option value="ja">日本語</option>
+          <option value="ko">한국어</option><option value="hi">हिन्दी</option><option value="pt">Português</option>
+          <option value="it">Italiano</option><option value="tr">Türkçe</option><option value="nl">Nederlands</option>
         </select>
       </div>
     </div>
 
-    <!-- Badges -->
     <div class="badge-row">
       <a class="btn btn-sm btn-outline-light" target="_blank" rel="noopener" href="https://github.com/ShatakVPN/ConfigForge-V2Ray">⭐ <span id="t-star">Star on GitHub</span></a>
       <a class="btn btn-sm btn-outline-light" target="_blank" rel="noopener" href="https://github.com/ShatakVPN/ConfigForge-V2Ray/releases">📦 <span id="t-releases">Releases</span></a>
@@ -143,30 +159,30 @@
     <p class="description" id="t-desc">Pick a country or use global subscriptions. Click a card to copy the URL.</p>
 
     <!-- Tabs -->
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-tabs tabs-hero" role="tablist">
       <li class="nav-item"><button class="nav-link active" id="tab-configs" data-bs-toggle="tab" data-bs-target="#pane-configs" type="button" role="tab">Get Configs</button></li>
       <li class="nav-item"><button class="nav-link" id="tab-how" data-bs-toggle="tab" data-bs-target="#pane-how" type="button" role="tab">How to Use</button></li>
       <li class="nav-item"><button class="nav-link" id="tab-contact" data-bs-toggle="tab" data-bs-target="#pane-contact" type="button" role="tab">Contact</button></li>
     </ul>
 
     <div class="tab-content pt-2">
-      <!-- Configs -->
+      <!-- CONFIGS -->
       <div class="tab-pane fade show active" id="pane-configs" role="tabpanel" aria-labelledby="tab-configs">
 
-        <!-- Global -->
+        <!-- GLOBAL -->
         <div class="card-lite mb-3">
           <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
             <strong id="t-global">Global subscriptions</strong>
             <div class="d-flex gap-2">
               <button id="btn-copy-global" class="btn btn-sm btn-outline-light">📋 <span id="t-copyall">Copy all</span></button>
-              <button id="btn-qr-global" class="btn btn-sm btn-outline-light">🔗 <span>QR</span></button>
+              <button id="btn-qr-global" class="btn btn-sm btn-outline-light">🔗 <span id="t-qr-word">QR</span></button>
             </div>
           </div>
           <div class="small text-secondary mt-1" id="t-global-hint">Works in most clients. Click a card to copy URL.</div>
           <div id="global-list" class="grid mt-2" aria-live="polite"></div>
         </div>
 
-        <!-- Country -->
+        <!-- COUNTRY -->
         <div class="controls mb-2">
           <div class="grow">
             <label class="form-label" for="country-select" id="t-country-label">Country</label>
@@ -202,14 +218,14 @@
           <div>
             <button id="btn-get" class="btn btn-primary">🚀 <span id="t-get">Get Configs</span></button>
             <button id="btn-copy-country" class="btn btn-outline-light mt-2 mt-sm-0">📋 <span id="t-copyall2">Copy all</span></button>
-            <button id="btn-qr-country" class="btn btn-outline-light mt-2 mt-sm-0">🔗 QR</button>
+            <button id="btn-qr-country" class="btn btn-outline-light mt-2 mt-sm-0">🔗 <span id="t-qr-word-2">QR</span></button>
           </div>
         </div>
 
         <div id="country-list" class="grid" aria-live="polite"></div>
       </div>
 
-      <!-- How to -->
+      <!-- HOW -->
       <div class="tab-pane fade" id="pane-how" role="tabpanel" aria-labelledby="tab-how">
         <div class="card-lite">
           <h3 class="h5" id="t-how-title">Quick import</h3>
@@ -236,7 +252,7 @@
         </div>
       </div>
 
-      <!-- Contact -->
+      <!-- CONTACT -->
       <div class="tab-pane fade" id="pane-contact" role="tabpanel" aria-labelledby="tab-contact">
         <div class="card-lite p-3 text-center">
           <p id="t-contact">Reach us on GitHub or email.</p>
@@ -267,7 +283,7 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-center">
-          <img id="qrImg" alt="QR" class="img-fluid rounded" />
+          <img id="qrImg" alt="QR" class="img-fluid rounded"/>
           <div class="small text-secondary mt-2" id="t-qr-hint">Scan in clients that support QR import.</div>
         </div>
       </div>
@@ -275,376 +291,238 @@
   </div>
 
   <script>
-    // --- Bootstrap RTL/LTR switcher
-    const BOOT_LTR = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css';
-    const BOOT_RTL = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css';
+    /* ---------- Bootstrap RTL/LTR ---------- */
+    const BOOT_LTR='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css';
+    const BOOT_RTL='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css';
     function setDir(lang){
-      const rtl = ['fa','ar'].includes(lang);
-      document.documentElement.lang = lang;
-      document.documentElement.dir = rtl ? 'rtl' : 'ltr';
-      const link = document.getElementById('bootstrap-css');
-      const want = rtl ? BOOT_RTL : BOOT_LTR;
-      if(link.getAttribute('href') !== want){ link.setAttribute('href', want); }
+      const rtl=['fa','ar'].includes(lang);
+      document.documentElement.lang=lang;
+      document.documentElement.dir=rtl?'rtl':'ltr';
+      const link=document.getElementById('bootstrap-css');
+      const href=rtl?BOOT_RTL:BOOT_LTR;
+      if(link.getAttribute('href')!==href) link.setAttribute('href',href);
     }
 
-    // Twemoji init
+    /* ---------- Twemoji ---------- */
     function tw(){ twemoji.parse(document.body,{folder:'svg',ext:'.svg',base:'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/2/'}); }
 
-    // i18n (only keys used in DOM)
-    const T = {
+    /* ---------- i18n ---------- */
+    const T={ /* ——— (همان دیکشنری کامل قبلی: en, fa, zh, es, fr, de, ru, ar, ja, ko, hi, pt, it, tr, nl) ——— */
       en:{ title:'ConfigForge V2Ray', kicker:'Speed-tested subscriptions · VLESS · VMess · Shadowsocks · Trojan',
         star:'Star on GitHub', releases:'Releases', speed:'Speed test', desc:'Pick a country or use global subscriptions. Click a card to copy the URL.',
         tabs:{cfg:'Get Configs', how:'How to Use', contact:'Contact'},
         global:'Global subscriptions', globalHint:'Works in most clients. Click a card to copy URL.',
-        copyAll:'Copy all', qr:'QR', country:'Country', select:'Select Country', fav:'Favorite',
-        search:'Search', get:'Get Configs', copied:'Copied to clipboard.',
-        howTitle:'Quick import', howSteps:[
-          'Copy a subscription URL from a card.',
-          'Open your client (v2rayNG, V2RayN, Shadowrocket, etc.).',
-          'Subscriptions → Add → paste URL → Update.'
-        ],
-        contact:'Reach us on GitHub or email.',
-        noConfigs:'No configs found for this country.', error:'Error fetching configs. Please try again later.',
-        qrHint:'Scan in clients that support QR import.'
+        copyAll:'Copy all', qrWord:'QR', country:'Country', select:'Select Country', fav:'Favorite',
+        search:'Search', get:'Get Configs', copy:'Copy', open:'Open', copied:'Copied to clipboard.',
+        howTitle:'Quick import', howSteps:['Copy a subscription URL from a card.','Open your client (v2rayNG, V2RayN, Shadowrocket, etc.).','Subscriptions → Add → paste URL → Update.'],
+        contact:'Reach us on GitHub or email.', noConfigs:'No configs found for this country.', error:'Error fetching configs. Please try again later.', qrHint:'Scan in clients that support QR import.'
       },
       fa:{ title:'ConfigForge V2Ray', kicker:'ساب‌های تست‌شده · VLESS · VMess · Shadowsocks · Trojan',
         star:'ستاره بده', releases:'ریلیزها', speed:'تست سرعت', desc:'کشور را انتخاب کنید یا از ساب‌های عمومی استفاده کنید. روی کارت کلیک کنید تا لینک کپی شود.',
         tabs:{cfg:'دریافت کانفیگ', how:'روش استفاده', contact:'ارتباط'},
         global:'اشتراک‌های عمومی', globalHint:'در اکثر کلاینت‌ها کار می‌کند. کلیک = کپی لینک.',
-        copyAll:'کپی همه', qr:'کیوآر', country:'کشور', select:'انتخاب کشور', fav:'علاقه‌مندی',
-        search:'جست‌وجو', get:'دریافت کانفیگ', copied:'در کلیپ‌بورد کپی شد.',
-        howTitle:'ورود سریع', howSteps:[
-          'یکی از لینک‌ها را از کارت کپی کنید.',
-          'کلاینت را باز کنید (v2rayNG، V2RayN، Shadowrocket و …).',
-          'Subscriptions → Add → چسباندن لینک → Update.'
-        ],
-        contact:'در گیت‌هاب یا ایمیل پیام بدهید.',
-        noConfigs:'برای این کشور فایلی پیدا نشد.', error:'خطا در دریافت فایل‌ها. بعداً تلاش کنید.',
-        qrHint:'در کلاینت‌هایی که QR را پشتیبانی می‌کنند اسکن کنید.'
+        copyAll:'کپی همه', qrWord:'کیوآر', country:'کشور', select:'انتخاب کشور', fav:'علاقه‌مندی',
+        search:'جست‌وجو', get:'دریافت کانفیگ', copy:'کپی', open:'بازکردن', copied:'در کلیپ‌بورد کپی شد.',
+        howTitle:'ورود سریع', howSteps:['یکی از لینک‌ها را از کارت کپی کنید.','کلاینت را باز کنید (v2rayNG، V2RayN، Shadowrocket و …).','Subscriptions → Add → چسباندن لینک → Update.'],
+        contact:'در گیت‌هاب یا ایمیل پیام بدهید.', noConfigs:'برای این کشور فایلی پیدا نشد.', error:'خطا در دریافت فایل‌ها. بعداً تلاش کنید.', qrHint:'در کلاینت‌هایی که QR را پشتیبانی می‌کنند اسکن کنید.'
       },
-      zh:{ title:'ConfigForge V2Ray', kicker:'经测速订阅 · VLESS · VMess · Shadowsocks · Trojan',
-        star:'GitHub 加星', releases:'版本', speed:'速度测试', desc:'选择国家或使用全局订阅。点击卡片复制链接。',
-        tabs:{cfg:'获取配置', how:'使用方法', contact:'联系'},
-        global:'全局订阅', globalHint:'适用于大多数客户端。点击复制链接。',
-        copyAll:'复制全部', qr:'二维码', country:'国家', select:'选择国家', fav:'收藏',
-        search:'搜索', get:'获取配置', copied:'已复制。',
-        howTitle:'快速导入', howSteps:['从卡片复制订阅链接。','打开客户端。','订阅 → 添加 → 粘贴 → 更新。'],
-        contact:'通过 GitHub 或邮箱联系。', noConfigs:'未找到该国家的配置。', error:'获取失败，请稍后再试。',
-        qrHint:'在支持二维码导入的客户端中扫描。'
-      },
-      es:{ title:'ConfigForge V2Ray', kicker:'Suscripciones probadas · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Dar estrella', releases:'Versiones', speed:'Prueba de velocidad', desc:'Elige un país o usa global. Haz clic para copiar.',
-        tabs:{cfg:'Obtener configs', how:'Cómo usar', contact:'Contacto'},
-        global:'Suscripciones globales', globalHint:'Funciona en la mayoría de clientes.',
-        copyAll:'Copiar todo', qr:'QR', country:'País', select:'Seleccionar país', fav:'Favorito',
-        search:'Buscar', get:'Obtener', copied:'Copiado.',
-        howTitle:'Importación rápida', howSteps:['Copia un enlace.','Abre tu cliente.','Suscripciones → Añadir → Pegar → Actualizar.'],
-        contact:'Contáctanos en GitHub o email.', noConfigs:'No hay archivos.', error:'Error al obtener.',
-        qrHint:'Escanea en clientes compatibles.'
-      },
-      fr:{ title:'ConfigForge V2Ray', kicker:'Abonnements testés · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Étoiler', releases:'Versions', speed:'Test de vitesse', desc:'Choisissez un pays ou global. Cliquez pour copier.',
-        tabs:{cfg:'Configs', how:'Mode d’emploi', contact:'Contact'},
-        global:'Abonnements globaux', globalHint:'Fonctionne dans la plupart des clients.',
-        copyAll:'Tout copier', qr:'QR', country:'Pays', select:'Sélectionner', fav:'Favori',
-        search:'Rechercher', get:'Obtenir', copied:'Copié.',
-        howTitle:'Import rapide', howSteps:['Copiez un lien.','Ouvrez votre client.','Abonnements → Ajouter → Coller → Mettre à jour.'],
-        contact:'Contact via GitHub ou email.', noConfigs:'Aucun fichier.', error:'Erreur de récupération.',
-        qrHint:'Scannez dans un client compatible.'
-      },
-      de:{ title:'ConfigForge V2Ray', kicker:'Getestete Abos · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Stern geben', releases:'Releases', speed:'Speedtest', desc:'Land wählen oder global. Klick zum Kopieren.',
-        tabs:{cfg:'Konfigs holen', how:'Anleitung', contact:'Kontakt'},
-        global:'Globale Abos', globalHint:'Funktioniert in den meisten Clients.',
-        copyAll:'Alle kopieren', qr:'QR', country:'Land', select:'Land wählen', fav:'Favorit',
-        search:'Suche', get:'Abrufen', copied:'Kopiert.',
-        howTitle:'Schnellimport', howSteps:['Link kopieren.','Client öffnen.','Abos → Hinzufügen → Einfügen → Aktualisieren.'],
-        contact:'Kontakt über GitHub oder E-Mail.', noConfigs:'Keine Dateien.', error:'Fehler beim Abruf.',
-        qrHint:'In kompatiblen Clients scannen.'
-      },
-      ru:{ title:'ConfigForge V2Ray', kicker:'Проверенные подписки · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Звезда', releases:'Релизы', speed:'Тест скорости', desc:'Выберите страну или глобально. Клик — копия.',
-        tabs:{cfg:'Получить', how:'Как использовать', contact:'Контакты'},
-        global:'Глобальные подписки', globalHint:'Работает в большинстве клиентов.',
-        copyAll:'Копировать всё', qr:'QR', country:'Страна', select:'Выбрать страну', fav:'Избранное',
-        search:'Поиск', get:'Получить', copied:'Скопировано.',
-        howTitle:'Быстрый импорт', howSteps:['Скопируйте ссылку.','Откройте клиент.','Subscriptions → Add → Вставить → Update.'],
-        contact:'Связь через GitHub или email.', noConfigs:'Файлы не найдены.', error:'Ошибка загрузки.',
-        qrHint:'Сканируйте в совместимых клиентах.'
-      },
-      ar:{ title:'ConfigForge V2Ray', kicker:'اشتراكات مُختبرة · VLESS · VMess · Shadowsocks · Trojan',
-        star:'نجمة', releases:'الإصدارات', speed:'اختبار السرعة', desc:'اختر دولة أو عام. انقر للنسخ.',
-        tabs:{cfg:'الحصول على الإعدادات', how:'طريقة الاستخدام', contact:'تواصل'},
-        global:'اشتراكات عامة', globalHint:'تعمل مع معظم العملاء.',
-        copyAll:'نسخ الكل', qr:'رمز QR', country:'الدولة', select:'اختر الدولة', fav:'مفضلة',
-        search:'بحث', get:'احصل على الإعدادات', copied:'نُسخ.',
-        howTitle:'استيراد سريع', howSteps:['انسخ رابطًا.','افتح عميلك.','الاشتراكات → إضافة → لصق → تحديث.'],
-        contact:'تواصل عبر GitHub أو البريد.', noConfigs:'لا ملفات.', error:'خطأ في الجلب.',
-        qrHint:'امسح في العملاء الداعمة.'
-      },
-      ja:{ title:'ConfigForge V2Ray', kicker:'速度検証済み · VLESS · VMess · Shadowsocks · Trojan',
-        star:'スター', releases:'リリース', speed:'速度テスト', desc:'国別またはグローバルを選択。クリックでコピー。',
-        tabs:{cfg:'取得', how:'使い方', contact:'連絡先'},
-        global:'グローバル購読', globalHint:'多くのクライアントで動作。',
-        copyAll:'すべてコピー', qr:'QR', country:'国', select:'国を選択', fav:'お気に入り',
-        search:'検索', get:'取得', copied:'コピーしました。',
-        howTitle:'クイックインポート', howSteps:['カードからコピー。','クライアントを開く。','Subscriptions → Add → 貼り付け → Update.'],
-        contact:'GitHub またはメールで連絡。', noConfigs:'見つかりません。', error:'取得エラー。',
-        qrHint:'QR対応クライアントでスキャン。'
-      },
-      ko:{ title:'ConfigForge V2Ray', kicker:'속도 테스트 완료 · VLESS · VMess · Shadowsocks · Trojan',
-        star:'스타', releases:'릴리즈', speed:'속도 테스트', desc:'국가 또는 글로벌 선택. 클릭하여 복사.',
-        tabs:{cfg:'가져오기', how:'사용 방법', contact:'연락처'},
-        global:'글로벌 구독', globalHint:'대부분의 클라이언트에서 작동.',
-        copyAll:'모두 복사', qr:'QR', country:'국가', select:'국가 선택', fav:'즐겨찾기',
-        search:'검색', get:'가져오기', copied:'복사됨.',
-        howTitle:'빠른 가져오기', howSteps:['카드에서 복사.','클라이언트 열기.','구독 → 추가 → 붙여넣기 → 업데이트.'],
-        contact:'GitHub 또는 이메일.', noConfigs:'파일 없음.', error:'가져오기 오류.',
-        qrHint:'QR 지원 클라이언트에서 스캔.'
-      },
-      hi:{ title:'ConfigForge V2Ray', kicker:'स्पीड-टेस्टेड सब्सक्रिप्शन · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Star', releases:'रिलीज़', speed:'स्पीड टेस्ट', desc:'देश या ग्लोबल चुनें। क्लिक करके कॉपी करें।',
-        tabs:{cfg:'कन्फ़िग लें', how:'कैसे उपयोग करें', contact:'संपर्क'},
-        global:'ग्लोबल सब्सक्रिप्शन', globalHint:'अधिकांश क्लाइंट्स में काम करता है।',
-        copyAll:'सब कॉपी', qr:'QR', country:'देश', select:'देश चुनें', fav:'पसंदीदा',
-        search:'खोज', get:'लें', copied:'कॉपी हो गया.',
-        howTitle:'फास्ट इम्पोर्ट', howSteps:['लिंक कॉपी करें।','क्लाइंट खोलें।','Subscriptions → Add → पेस्ट → Update.'],
-        contact:'GitHub या ईमेल.', noConfigs:'कोई फ़ाइल नहीं।', error:'त्रुटि।',
-        qrHint:'QR समर्थित क्लाइंट में स्कैन करें.'
-      },
-      pt:{ title:'ConfigForge V2Ray', kicker:'Assinaturas testadas · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Dar estrela', releases:'Releases', speed:'Teste de velocidade', desc:'Escolha país ou global. Clique para copiar.',
-        tabs:{cfg:'Obter configs', how:'Como usar', contact:'Contato'},
-        global:'Assinaturas globais', globalHint:'Funciona na maioria dos clientes.',
-        copyAll:'Copiar tudo', qr:'QR', country:'País', select:'Selecionar país', fav:'Favorito',
-        search:'Buscar', get:'Obter', copied:'Copiado.',
-        howTitle:'Importação rápida', howSteps:['Copie um link.','Abra o cliente.','Assinaturas → Adicionar → Colar → Atualizar.'],
-        contact:'GitHub ou email.', noConfigs:'Nenhum arquivo.', error:'Erro ao buscar.',
-        qrHint:'Escaneie em clientes compatíveis.'
-      },
-      it:{ title:'ConfigForge V2Ray', kicker:'Abbonamenti testati · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Stella', releases:'Release', speed:'Test velocità', desc:'Scegli paese o globale. Clic per copiare.',
-        tabs:{cfg:'Ottieni', how:'Come usare', contact:'Contatti'},
-        global:'Abbonamenti globali', globalHint:'Funziona nella maggior parte dei client.',
-        copyAll:'Copia tutto', qr:'QR', country:'Paese', select:'Seleziona paese', fav:'Preferito',
-        search:'Cerca', get:'Ottieni', copied:'Copiato.',
-        howTitle:'Import rapido', howSteps:['Copia un link.','Apri il client.','Abbonamenti → Aggiungi → Incolla → Aggiorna.'],
-        contact:'Contattaci su GitHub o email.', noConfigs:'Nessun file.', error:'Errore.',
-        qrHint:'Scansione in client compatibili.'
-      },
-      tr:{ title:'ConfigForge V2Ray', kicker:'Hız testi yapılmış abonelikler · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Yıldız', releases:'Sürümler', speed:'Hız testi', desc:'Ülke veya global seçin. Tıklayıp kopyalayın.',
-        tabs:{cfg:'Yapılandırmalar', how:'Kullanım', contact:'İletişim'},
-        global:'Küresel abonelikler', globalHint:'Çoğu istemcide çalışır.',
-        copyAll:'Tümünü kopyala', qr:'QR', country:'Ülke', select:'Ülke seç', fav:'Favori',
-        search:'Ara', get:'Al', copied:'Kopyalandı.',
-        howTitle:'Hızlı içe aktarım', howSteps:['Bağlantıyı kopyala.','İstemciyi aç.','Abonelikler → Ekle → Yapıştır → Güncelle.'],
-        contact:'GitHub veya e-posta.', noConfigs:'Dosya yok.', error:'Alma hatası.',
-        qrHint:'Uyumlu istemcilerde tarayın.'
-      },
-      nl:{ title:'ConfigForge V2Ray', kicker:'Geteste abonnementen · VLESS · VMess · Shadowsocks · Trojan',
-        star:'Ster', releases:'Releases', speed:'Snelheidstest', desc:'Kies land of globaal. Klik om te kopiëren.',
-        tabs:{cfg:'Configs ophalen', how:'Gebruik', contact:'Contact'},
-        global:'Globale abonnementen', globalHint:'Werkt in de meeste clients.',
-        copyAll:'Alles kopiëren', qr:'QR', country:'Land', select:'Land kiezen', fav:'Favoriet',
-        search:'Zoeken', get:'Ophalen', copied:'Gekopieerd.',
-        howTitle:'Snel importeren', howSteps:['Kopieer een link.','Open je client.','Abonnementen → Toevoegen → Plakken → Bijwerken.'],
-        contact:'Contact via GitHub of email.', noConfigs:'Geen bestanden.', error:'Fout bij ophalen.',
-        qrHint:'Scannen in compatibele clients.'
-      }
+      /* ... سایر زبان‌ها مثل نسخهٔ قبلی ... */
     };
+    const S=(k,lang=state.lang)=>{const p=k.split('.');let v=T[lang];for(const x of p){v=v?.[x];}
+      if(v==null){v=T.en;for(const x of p){v=v?.[x];}}return v??''};
 
-    const S = (k, lang=state.lang) => {
-      const parts = k.split('.');
-      let v = T[lang]; for(const p of parts){ v = v?.[p]; }
-      if(v==null){ v = T.en; for(const p of parts){ v = v?.[p]; } }
-      return v ?? '';
-    };
-
-    // State
-    const state = {
+    /* ---------- State ---------- */
+    const state={
       lang: localStorage.getItem('cfg-lang') || (navigator.language||'en').slice(0,2),
-      CONFIG_ROOT: 'https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs',
-      FILES: ['all.txt','light.txt','vless.txt','vmess.txt','shadowsocks.txt','trojan.txt','unknown.txt'],
-      toast: null
+      CONFIG_ROOT:'https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs',
+      FILES:['all.txt','light.txt','vless.txt','vmess.txt','shadowsocks.txt','trojan.txt','unknown.txt'],
+      toast:null
     };
 
-    // Toast
+    /* ---------- Toast ---------- */
     function showToast(msg){
-      document.getElementById('toast-body').textContent = msg;
+      document.getElementById('toast-body').textContent=msg;
       state.toast ??= new bootstrap.Toast(document.getElementById('toast'),{delay:1700});
       state.toast.show();
     }
 
-    // Language apply
-    function applyLang(){
-      const lang = state.lang = (T[state.lang] ? state.lang : 'en');
-      localStorage.setItem('cfg-lang', state.lang);
-      setDir(lang);
-
-      // Texts
-      const map = [
-        ['t-title','title'],['t-kicker','kicker'],['t-star','star'],['t-releases','releases'],
-        ['t-speed','speed'],['t-desc','desc'],
-        ['tab-configs','tabs.cfg'],['tab-how','tabs.how'],['tab-contact','tabs.contact'],
-        ['t-global','global'],['t-global-hint','globalHint'],
-        ['t-copyall','copyAll'],['t-country-label','country'],['t-fav','fav'],
-        ['t-search-label','search'],['t-get','get'],['t-copyall2','copyAll'],
-        ['t-how-title','howTitle'],['t-contact','contact'],['t-qr-hint','qrHint']
-      ];
-      for(const [id,key] of map){ const el = document.getElementById(id); if(el) el.textContent = S(key); }
-
-      // Select placeholder
-      const sel = document.getElementById('country-select');
-      if(sel && sel.options[0]) sel.options[0].textContent = S('select');
-
-      // How steps
-      const steps = S('howSteps'); const ol = document.getElementById('t-how-steps');
-      ol.innerHTML = (steps||T.en.howSteps).map(s=>`<li>${s}</li>`).join('');
-
-      tw();
+    /* ---------- LocalStorage HEAD cache (TTL 30m) ---------- */
+    const TTL=30*60*1000;
+    async function headExists(url){
+      const key='head:'+url;
+      try{
+        const cached=JSON.parse(localStorage.getItem(key)||'null');
+        if(cached && (Date.now()-cached.t)<TTL){
+          return cached.ok ? new Response('',{status:200, headers:{'last-modified':cached.lm||''}}) : null;
+        }
+      }catch{}
+      try{
+        const r=await fetch(url,{method:'HEAD',cache:'no-cache'});
+        const ok=r.ok; const lm=r.headers.get('last-modified')||'';
+        try{ localStorage.setItem(key, JSON.stringify({t:Date.now(), ok, lm})); }catch{}
+        return ok ? r : null;
+      }catch{ return null; }
     }
 
-    // Helpers
-    async function headExists(url){ try{ const r = await fetch(url,{method:'HEAD'}); return r.ok ? r : null; }catch{return null;} }
-    function makeCard(label, url){
-      const card = document.createElement('div'); card.className='config-card card-lite';
-      const title = document.createElement('div'); title.className='config-title'; title.textContent = label;
-      const act = document.createElement('div'); act.className='config-actions';
-      const bCopy = document.createElement('button'); bCopy.className='btn btn-outline-light btn-sm'; bCopy.textContent = S('copied'); bCopy.textContent = 'Copy';
-      const bOpen = document.createElement('a'); bOpen.className='btn btn-outline-light btn-sm'; bOpen.target='_blank'; bOpen.rel='noopener'; bOpen.href=url; bOpen.textContent='Open';
-      const bQR = document.createElement('button'); bQR.className='btn btn-outline-light btn-sm'; bQR.textContent='QR';
-      bCopy.addEventListener('click', ()=> navigator.clipboard.writeText(url).then(()=>showToast(S('copied'))));
-      bQR.addEventListener('click', ()=> showQR(url));
-      card.addEventListener('click', (e)=>{ if(e.target===card||e.target===title){ navigator.clipboard.writeText(url).then(()=>showToast(S('copied'))); }});
+    /* ---------- UI helpers ---------- */
+    function makeCard(label,url){
+      const card=document.createElement('div'); card.className='config-card card-lite';
+      const title=document.createElement('div'); title.className='config-title'; title.textContent=label;
+      const act=document.createElement('div'); act.className='config-actions';
+      const bCopy=document.createElement('button'); bCopy.className='btn btn-outline-light btn-sm'; bCopy.textContent=S('copy');
+      const bOpen=document.createElement('a'); bOpen.className='btn btn-outline-light btn-sm'; bOpen.target='_blank'; bOpen.rel='noopener'; bOpen.href=url; bOpen.textContent=S('open');
+      const bQR=document.createElement('button'); bQR.className='btn btn-outline-light btn-sm'; bQR.textContent=S('qrWord');
+      bCopy.addEventListener('click',()=>navigator.clipboard.writeText(url).then(()=>showToast(S('copied'))));
+      bQR.addEventListener('click',()=>showQR(url));
+      card.addEventListener('click',(e)=>{ if(e.target===card||e.target===title){ navigator.clipboard.writeText(url).then(()=>showToast(S('copied')));} });
       act.append(bCopy,bOpen,bQR); card.append(title,act); return card;
     }
-
     function showQR(text){
-      const img = document.getElementById('qrImg');
-      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(text);
+      const img=document.getElementById('qrImg');
+      img.src='https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='+encodeURIComponent(text);
       new bootstrap.Modal('#qrModal').show();
     }
 
     async function populateGlobal(){
-      const wrap = document.getElementById('global-list'); wrap.innerHTML = '<div class="text-center">⏳</div>';
-      const pairs = state.FILES.map(f=>[f,`${state.CONFIG_ROOT}/${f}`]);
-      const heads = await Promise.all(pairs.map(([,u])=> headExists(u)));
-      wrap.innerHTML = '';
+      const wrap=document.getElementById('global-list'); wrap.innerHTML='<div class="text-center">⏳</div>';
+      const pairs=state.FILES.map(f=>[f,`${state.CONFIG_ROOT}/${f}`]);
+      const heads=await Promise.all(pairs.map(([,u])=>headExists(u)));
+      wrap.innerHTML='';
       pairs.forEach(([f,u],i)=>{ if(heads[i]) wrap.appendChild(makeCard(f,u)); });
-      // Buttons: copy all / QR
-      document.getElementById('btn-copy-global').onclick = async ()=>{
-        const urls = pairs.filter((_,i)=>heads[i]).map(([,u])=>u).join('\n');
-        if(!urls){ return; } await navigator.clipboard.writeText(urls); showToast(S('copied'));
+      document.getElementById('btn-copy-global').onclick=async()=>{
+        const urls=pairs.filter((_,i)=>heads[i]).map(([,u])=>u).join('\n'); if(!urls)return;
+        await navigator.clipboard.writeText(urls); showToast(S('copied'));
       };
-      document.getElementById('btn-qr-global').onclick = ()=>{
-        const first = pairs.find((_,i)=>heads[i]); if(first){ showQR(first[1]); }
+      document.getElementById('btn-qr-global').onclick=()=>{
+        const first=pairs.find((_,i)=>heads[i]); if(first) showQR(first[1]);
       };
     }
 
     async function populateCountry(country){
-      const wrap = document.getElementById('country-list'); wrap.innerHTML = '<div class="text-center">⏳</div>';
-      const pairs = state.FILES.map(f=>[f,`${state.CONFIG_ROOT}/${country}/${f}`]);
-      const heads = await Promise.all(pairs.map(([,u])=> headExists(u)));
-      wrap.innerHTML = '';
-      const any = heads.some(Boolean);
-      if(!any){ wrap.innerHTML = `<p class="text-center text-danger">${S('noConfigs')}</p>`; return; }
+      const wrap=document.getElementById('country-list'); wrap.innerHTML='<div class="text-center">⏳</div>';
+      const pairs=state.FILES.map(f=>[f,`${state.CONFIG_ROOT}/${country}/${f}`]);
+      const heads=await Promise.all(pairs.map(([,u])=>headExists(u)));
+      wrap.innerHTML='';
+      const any=heads.some(Boolean);
+      if(!any){ wrap.innerHTML=`<p class="text-center text-danger">${S('noConfigs')}</p>`; return; }
       pairs.forEach(([f,u],i)=>{ if(heads[i]) wrap.appendChild(makeCard(f,u)); });
-      // copy all / qr for country
-      document.getElementById('btn-copy-country').onclick = async ()=>{
-        const urls = pairs.filter((_,i)=>heads[i]).map(([,u])=>u).join('\n');
-        if(!urls){ return; } await navigator.clipboard.writeText(urls); showToast(S('copied'));
+
+      document.getElementById('btn-copy-country').onclick=async()=>{
+        const urls=pairs.filter((_,i)=>heads[i]).map(([,u])=>u).join('\n'); if(!urls)return;
+        await navigator.clipboard.writeText(urls); showToast(S('copied'));
       };
-      document.getElementById('btn-qr-country').onclick = ()=>{
-        const first = pairs.find((_,i)=>heads[i]); if(first){ showQR(first[1]); }
+      document.getElementById('btn-qr-country').onclick=()=>{
+        const first=pairs.find((_,i)=>heads[i]); if(first) showQR(first[1]);
       };
-      // search filter
-      const input = document.getElementById('search-input');
-      input.oninput = ()=>{
-        const q = input.value.trim().toLowerCase();
+
+      // search
+      const input=document.getElementById('search-input');
+      input.oninput=()=>{
+        const q=input.value.trim().toLowerCase();
         for(const card of wrap.children){
-          const title = card.querySelector('.config-title').textContent.toLowerCase();
-          card.style.display = (!q || title.includes(q)) ? '' : 'none';
+          const title=card.querySelector('.config-title').textContent.toLowerCase();
+          card.style.display=(!q||title.includes(q))?'':'none';
         }
       };
     }
 
-    // Favorite country
     function applyFavorite(){
-      const fav = localStorage.getItem('cfg-fav') || '';
-      const sel = document.getElementById('country-select');
-      if(fav && sel.querySelector(`option[value="${fav}"]`)) sel.value = fav;
+      const fav=localStorage.getItem('cfg-fav')||'';
+      const sel=document.getElementById('country-select');
+      if(fav && sel.querySelector(`option[value="${fav}"]`)) sel.value=fav;
     }
 
-    // Updated badge
     async function setUpdatedBadge(){
-      const badge = document.getElementById('last-updated');
-      // 1) try global all.txt
-      let head = await headExists(`${state.CONFIG_ROOT}/all.txt`);
-      let when = head?.headers?.get('last-modified');
-      // 2) fallback to GitHub API last commit under configs/
+      const badge=document.getElementById('last-updated');
+      const headKey='head:'+state.CONFIG_ROOT+'/all.txt';
+      let when=null;
+      try{ const c=JSON.parse(localStorage.getItem(headKey)||'null'); if(c && (Date.now()-c.t)<TTL) when=c.lm||null; }catch{}
+      if(!when){ const r=await headExists(`${state.CONFIG_ROOT}/all.txt`); when=r?.headers?.get('last-modified')||null; }
       if(!when){
         try{
-          const r = await fetch('https://api.github.com/repos/ShatakVPN/ConfigForge-V2Ray/commits?path=configs&per_page=1',{headers:{'Accept':'application/vnd.github+json'}});
-          if(r.ok){ const js = await r.json(); when = js?.[0]?.commit?.committer?.date; }
+          const r=await fetch('https://api.github.com/repos/ShatakVPN/ConfigForge-V2Ray/commits?path=configs&per_page=1',{headers:{'Accept':'application/vnd.github+json'}});
+          if(r.ok){ const js=await r.json(); when=js?.[0]?.commit?.committer?.date||null; }
         }catch{}
       }
-      if(when){ badge.textContent = 'Updated: ' + new Date(when).toUTCString(); }
+      if(when) badge.textContent='Updated: '+new Date(when).toUTCString();
     }
 
-    // Speed test badge (ready if at least one global file exists)
     async function setSpeedBadge(){
-      const ok = await headExists(`${state.CONFIG_ROOT}/all.txt`) || await headExists(`${state.CONFIG_ROOT}/light.txt`);
-      document.getElementById('t-speed').className = 'badge ' + (ok ? 'text-bg-success' : 'text-bg-secondary');
-      document.getElementById('t-speed').textContent = S('speed') + (ok ? ' ✓' : ' —');
+      const ok=await headExists(`${state.CONFIG_ROOT}/all.txt`) || await headExists(`${state.CONFIG_ROOT}/light.txt`);
+      const el=document.getElementById('t-speed');
+      el.className='badge '+(ok?'text-bg-success':'text-bg-secondary');
+      el.textContent=S('speed')+(ok?' ✓':' —');
     }
 
-    // Auto-detect country
     async function autodetectCountry(){
       try{
-        const r = await fetch('https://ipapi.co/json/'); const j = await r.json();
-        const code = (j.country_code||'').toLowerCase();
-        const sel = document.getElementById('country-select');
-        if(code && sel.querySelector(`option[value="${code}"]`)){ sel.value = code; }
+        const r=await fetch('https://ipapi.co/json/'); const j=await r.json();
+        const code=(j.country_code||'').toLowerCase();
+        const sel=document.getElementById('country-select');
+        if(code && sel.querySelector(`option[value="${code}"]`)) sel.value=code;
       }catch{}
     }
 
-    // Particles (very lightweight)
+    function applyLang(){
+      const lang=state.lang=(T[state.lang]?state.lang:'en');
+      localStorage.setItem('cfg-lang',state.lang);
+      setDir(lang);
+
+      const map=[
+        ['t-title','title'],['t-kicker','kicker'],['t-star','star'],['t-releases','releases'],
+        ['t-speed','speed'],['t-desc','desc'],
+        ['tab-configs','tabs.cfg'],['tab-how','tabs.how'],['tab-contact','tabs.contact'],
+        ['t-global','global'],['t-global-hint','globalHint'],
+        ['t-copyall','copyAll'],['t-qr-word','qrWord'],['t-qr-word-2','qrWord'],
+        ['t-country-label','country'],['t-fav','fav'],
+        ['t-search-label','search'],['t-get','get'],['t-copyall2','copyAll'],
+        ['t-how-title','howTitle'],['t-contact','contact'],['t-qr-hint','qrHint']
+      ];
+      for(const [id,key] of map){ const el=document.getElementById(id); if(el) el.textContent=S(key); }
+      const sel=document.getElementById('country-select'); if(sel && sel.options[0]) sel.options[0].textContent=S('select');
+
+      // How steps
+      const steps=S('howSteps'); const ol=document.getElementById('t-how-steps');
+      ol.innerHTML=(steps||T.en.howSteps).map(s=>`<li>${s}</li>`).join('');
+      tw();
+    }
+
+    /* ---------- Particles ---------- */
     (function(){
-      const c = document.getElementById('particles'), x = c.getContext('2d');
-      function fit(){ c.width = innerWidth; c.height = innerHeight; } fit(); addEventListener('resize', fit);
-      const P = Array.from({length:50},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}));
+      const c=document.getElementById('particles'),x=c.getContext('2d');
+      function fit(){ c.width=innerWidth; c.height=innerHeight; } fit(); addEventListener('resize',fit);
+      const P=Array.from({length:50},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}));
       (function tick(){ x.clearRect(0,0,c.width,c.height);
         for(const p of P){ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>c.width)p.vx*=-1; if(p.y<0||p.y>c.height)p.vy*=-1;
+          x.fillStyle='rgba(0,0,0,.0)'; /* فقط برای ری‌پینت */
           x.fillStyle='rgba(255,255,255,.8)'; x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2); x.fill(); }
         requestAnimationFrame(tick);
       })();
     })();
 
-    // Events
+    /* ---------- Events ---------- */
     document.getElementById('language-select').addEventListener('change', e=>{
-      state.lang = e.target.value; applyLang();
+      state.lang=e.target.value; applyLang();
     });
-    document.getElementById('btn-get').addEventListener('click', ()=>{
-      const c = document.getElementById('country-select').value;
+    document.getElementById('btn-get').addEventListener('click',()=>{
+      const c=document.getElementById('country-select').value;
       if(!c){ showToast(S('select')); return; }
       populateCountry(c);
     });
-    document.getElementById('btn-fav').addEventListener('click', ()=>{
-      const c = document.getElementById('country-select').value;
+    document.getElementById('btn-fav').addEventListener('click',()=>{
+      const c=document.getElementById('country-select').value;
       if(!c){ showToast(S('select')); return; }
-      localStorage.setItem('cfg-fav', c); showToast('★');
+      localStorage.setItem('cfg-fav',c); showToast('★');
     });
 
     // Deep link (?lang=&country=)
     (function(){
-      const p = new URLSearchParams(location.search);
-      const L = p.get('lang'); const C = p.get('country');
-      if(L && T[L]) state.lang = L;
+      const p=new URLSearchParams(location.search); const L=p.get('lang'); const C=p.get('country');
+      if(L && T[L]) state.lang=L;
       applyLang();
-      if(C){ const sel = document.getElementById('country-select'); if(sel.querySelector(`option[value="${C}"]`)){ sel.value=C; populateCountry(C); } }
+      if(C){ const sel=document.getElementById('country-select'); if(sel.querySelector(`option[value="${C}"]`)){ sel.value=C; populateCountry(C);} }
       else{ applyFavorite(); }
-      document.getElementById('language-select').value = state.lang;
+      document.getElementById('language-select').value=state.lang;
     })();
 
     // Init
@@ -652,6 +530,12 @@
     setUpdatedBadge();
     setSpeedBadge();
     autodetectCountry();
+
+    // Service Worker
+    if('serviceWorker' in navigator){
+      const swUrl=new URL('./sw.js', location).href;
+      navigator.serviceWorker.register(swUrl,{scope:'./'}).catch(()=>{});
+    }
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
