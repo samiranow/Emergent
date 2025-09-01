@@ -1,4 +1,3 @@
-
 # 🌍 ConfigForge V2Ray 
 
 **ConfigForge V2Ray** is an advanced open-source platform that aggregates and optimizes V2Ray VPN configurations from multiple sources.  
@@ -7,6 +6,47 @@ It automatically detects your country and suggests the **fastest configurations*
 ---
 
 ## 🌐 Access the Web Interface
+
+### Quick Global Subscriptions (Direct Links)
+Use these **global** subscription URLs in any V2Ray-compatible client (v2rayNG, V2RayN, Shadowrocket, etc.).  
+Click a link and copy the URL into your client’s **Subscriptions** section.
+
+| File | Description | Direct |
+|---|---|---|
+| `all.txt` | Full global list (ranked by average latency) | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/all.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/all.txt) |
+| `light.txt` | Top 30 fastest global configs | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/light.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/light.txt) |
+| `vless.txt` | Global VLESS-only list | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/vless.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/vless.txt) |
+| `vmess.txt` | Global VMess-only list | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/vmess.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/vmess.txt) |
+| `shadowsocks.txt` | Global Shadowsocks-only list | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/shadowsocks.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/shadowsocks.txt) |
+| `trojan.txt` | Global Trojan-only list | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/trojan.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/trojan.txt) |
+| `unknown.txt` | Other/unknown protocols | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/unknown.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/unknown.txt) |
+
+<details>
+<summary><strong>Show raw URLs (copy/paste)</strong></summary>
+
+```
+https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/all.txt
+https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/light.txt
+https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/vless.txt
+https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/vmess.txt
+https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/shadowsocks.txt
+https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/trojan.txt
+https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/unknown.txt
+```
+
+_Mirrors (jsDelivr):_
+
+```
+https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/all.txt
+https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/light.txt
+https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/vless.txt
+https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/vmess.txt
+https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/shadowsocks.txt
+https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/trojan.txt
+https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/unknown.txt
+```
+</details>
+
 For the easiest experience, use our **modern multi-language web interface**:  
 ➡️ **[https://shatakvpn.github.io/ConfigForge-V2Ray/](https://shatakvpn.github.io/ConfigForge-V2Ray/)**
 
