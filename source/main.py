@@ -15,7 +15,7 @@ from datetime import datetime
 
 # ──────────────── Configuration ────────────────
 URLS = [
-    "https://www.v2nodes.com/subscriptions/country/de/?key=769B61EA877690D",
+    "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/all_configs.txt",
 ]
 
 OUTPUT_DIR = "configs"
