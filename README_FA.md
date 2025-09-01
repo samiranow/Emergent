@@ -22,7 +22,7 @@
 | `unknown.txt` | سایر/نامشخص (ایران) | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/unknown.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/unknown.txt) |
 
 <details>
-<summary><strong>نمایش URLهای خام (Copy/Paste)</strong></summary>
+<summary><strong>نمایش URLهای خام</strong></summary>
 
 ```
 https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/all.txt
