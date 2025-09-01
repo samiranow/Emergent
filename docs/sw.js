@@ -1,5 +1,5 @@
-/* ConfigForge V2Ray SW — stale-while-revalidate */
-const SW_VERSION = 'cfv2-2025-09-02-a';
+/* ConfigForge V2Ray SW — stale-while-revalidate (simplified) */
+const SW_VERSION = 'cfv2-2025-09-02-b';
 const STATIC_CACHE = `static-${SW_VERSION}`;
 const RUNTIME_CACHE = `runtime-${SW_VERSION}`;
 
@@ -20,7 +20,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.map((k) => (k.includes('cfv2-') && k !== STATIC_CACHE && k !== RUNTIME_CACHE) ? caches.delete(k) : null))
+      Promise.all(keys.map((k) => (k.startsWith('static-') || k.startsWith('runtime-')) && k !== STATIC_CACHE && k !== RUNTIME_CACHE ? caches.delete(k) : null))
     ).then(()=>self.clients.claim())
   );
 });
@@ -37,9 +37,7 @@ self.addEventListener('fetch', (event) => {
       const cache = await caches.open(RUNTIME_CACHE);
       const cached = await cache.match(req);
       const fetchPromise = fetch(req).then((resp) => {
-        if (resp && (resp.status === 200 || resp.status === 304)) {
-          cache.put(req, resp.clone());
-        }
+        if (resp && (resp.status === 200 || resp.status === 304)) cache.put(req, resp.clone());
         return resp;
       }).catch(() => cached);
       return cached || fetchPromise;
