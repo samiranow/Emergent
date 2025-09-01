@@ -10,6 +10,7 @@ import requests
 import httpx
 import urllib3
 import zoneinfo
+from urllib.parse import quote
 
 from datetime import datetime
 
@@ -87,7 +88,7 @@ def maybe_base64_decode(s: str) -> str:
     s = s.strip()
     try:
         decoded = b64_decode(s)
-        if any(proto in decoded for proto in ("vless://", "vmess://", "trojan://", "ss://")):
+        if "://" in decoded:
             return decoded.strip()
     except Exception:
         pass
@@ -95,31 +96,28 @@ def maybe_base64_decode(s: str) -> str:
 
 # ──────────────── Parser ────────────────
 def detect_protocol(link: str) -> str:
-    l = link.strip().lower()
-    if l.startswith("vless://"):
-        return "vless"
-    if l.startswith("vmess://"):
-        return "vmess"
-    if l.startswith("ss://"):
+    """Return the scheme of a link (e.g., vmess, vless, ss, trojan, hysteria…)."""
+    m = re.match(r"([a-z0-9+.-]+)://", link.strip().lower())
+    if not m:
+        return "unknown"
+    proto = m.group(1)
+    if proto == "ss":
         return "shadowsocks"
-    if l.startswith("trojan://"):
-        return "trojan"
-    return "unknown"
+    return proto
 
 def extract_host(link: str, proto: str) -> str:
     try:
         if proto == "vmess":
             cfg = json.loads(b64_decode(link[8:]))
-            return cfg.get("add", "")
-        if proto == "vless":
-            m = re.search(r"vless://[^@]+@([^:/]+)", link)
-            return m.group(1) if m else ""
-        if proto == "shadowsocks":
-            m = re.search(r"ss://(?:[^@]+@)?([^:/]+)", link)
-            return m.group(1) if m else ""
-        if proto == "trojan":
-            m = re.search(r"trojan://[^@]+@([^:/?#]+)", link)
-            return m.group(1) if m else ""
+            return f"{cfg.get('add', '')}:{cfg.get('port', '')}"
+
+        from urllib.parse import urlsplit
+
+        parsed = urlsplit(link)
+        netloc = parsed.netloc
+        if proto == "shadowsocks" and "@" in netloc:
+            netloc = netloc.split("@", 1)[1]
+        return netloc
     except Exception as e:
         logging.debug(f"extract_host error for [{proto}] {link}: {e}")
     return ""
@@ -215,62 +213,63 @@ def save_to_file(path: str, lines: list[str]):
     logging.info(f"Saved: {path} ({len(lines)} lines)")
 
 # ──────────────── Renaming Helpers ────────────────
-def rename_ss(link: str, ip: str, port: str, tag: str) -> str:
-    """
-    نسخه هوشمند rename برای Shadowsocks:
-    - Base64 کامل یا بدون Base64
-    - با یا بدون @
-    """
+
+def rename_vmess(link: str, ip: str, port: str, tag: str) -> str:
     try:
-        raw = link.split("ss://", 1)[1]
-        hash_tag = ""
-        if "#" in raw:
-            raw, hash_tag = raw.split("#", 1)
-
-        if "@" in raw:
-            creds, _ = raw.split("@", 1)
-            try:
-                decoded = b64_decode(creds)
-                if ":" in decoded:
-                    method, pwd = decoded.split(":", 1)
-                else:
-                    method, pwd = creds.split(":", 1)
-            except Exception:
-                if ":" in creds:
-                    method, pwd = creds.split(":", 1)
-                else:
-                    method, pwd = creds, "password"
-        else:
-            decoded = b64_decode(raw)
-            if ":" in decoded:
-                method, pwd = decoded.split(":", 1)
-            else:
-                method, pwd = decoded, "password"
-
-        new_creds = b64_encode(f"{method}:{pwd}")
-        return f"ss://{new_creds}@{ip}:{port}#{tag}"
+        raw = link.split("://", 1)[1]
+        cfg = json.loads(b64_decode(raw))
+        cfg.update({"add": ip, "port": int(port), "ps": tag})
+        return f"vmess://{b64_encode(json.dumps(cfg))}#{quote(tag)}"
     except Exception as e:
-        logging.warning(f"rename_ss failed: {e}")
+        logging.debug(f"vmess rename error: {e}")
         return link
 
-def rename_trojan_or_vless(link: str, ip: str, port: str, tag: str) -> str:
-    out = re.sub(r"@[^:/#]+(:\d+)?", f"@{ip}:{port}", link)
-    if "#" in out:
-        out = re.sub(r"#.*$", f"#{tag}", out)
-    else:
-        out += f"#{tag}"
-    return out
+def rename_shadowsocks(link: str, ip: str, port: str, tag: str) -> str:
+    try:
+        body = link.split("ss://", 1)[1]
+        if "#" in body:
+            body, _ = body.split("#", 1)
+        if "@" in body:
+            creds, _ = body.split("@", 1)
+            try:
+                method, pwd = b64_decode(creds).split(":", 1)
+            except Exception:
+                method, pwd = creds.split(":", 1)
+        else:
+            method, pwd = b64_decode(body).split(":", 1)
+        new_creds = b64_encode(f"{method}:{pwd}")
+        return f"ss://{new_creds}@{ip}:{port}#{quote(tag)}"
+    except Exception as e:
+        logging.debug(f"shadowsocks rename error: {e}")
+        return link
+
+def rename_generic(link: str, ip: str, port: str, tag: str) -> str:
+    """Rename any URL-style config by replacing host/port and appending tag."""
+    try:
+        if "@" in link:
+            out = re.sub(r"@[^:/#]+(:\d+)?", f"@{ip}:{port}", link)
+        else:
+            out = re.sub(r"://[^:/#]+(:\d+)?", f"://{ip}:{port}", link)
+
+        if "#" in out:
+            out = re.sub(r"#.*$", f"#{quote(tag)}", out)
+        else:
+            out += f"#{quote(tag)}"
+        return out
+    except Exception as e:
+        logging.debug(f"rename_generic error: {e}")
+        return link
 
 def rename_line(link: str) -> str:
     proto = detect_protocol(link)
-    host = extract_host(link, proto)
-    if not host:
+    host_port = extract_host(link, proto)
+    if not host_port:
         return link
 
-    if ":" in host:
-        host, port = host.split(":", 1)
+    if ":" in host_port:
+        host, port = host_port.rsplit(":", 1)
     else:
-        port = "443"
+        host, port = host_port, "443"
 
     try:
         ip = socket.gethostbyname(host)
@@ -283,22 +282,10 @@ def rename_line(link: str) -> str:
     tag = f"{flag} ShatalVPN {random.randint(100000, 999999)}"
 
     if proto == "vmess":
-        try:
-            raw = link.split("://", 1)[1]
-            cfg = json.loads(b64_decode(raw))
-            cfg.update({"add": ip, "port": int(port), "ps": tag})
-            return f"vmess://{b64_encode(json.dumps(cfg))}#{tag}"
-        except Exception as e:
-            logging.debug(f"vmess rename error: {e}")
-            return link
-
-    if proto == "ss":
-        return rename_ss(link, ip, port, tag)
-
-    if proto in ("vless", "trojan"):
-        return rename_trojan_or_vless(link, ip, port, tag)
-
-    return link
+        return rename_vmess(link, ip, port, tag)
+    if proto == "shadowsocks":
+        return rename_shadowsocks(link, ip, port, tag)
+    return rename_generic(link, ip, port, tag)
 
 # ──────────────── Main Flow ────────────────
 async def main_async():
@@ -314,10 +301,7 @@ async def main_async():
         # Fetch & categorize
         for url in URLS:
             blob = maybe_base64_decode(fetch_data(url))
-            configs = re.findall(
-                r"(vless://[^\s]+|vmess://[^\s]+|trojan://[^\s]+|ss://[^\s]+)",
-                blob,
-            )
+            configs = re.findall(r"[a-zA-Z][\w+.-]*://[^\s]+", blob)
             logging.info(f"Fetched {url} → {len(configs)} configs")
 
             for link in configs:
@@ -327,9 +311,7 @@ async def main_async():
                     continue
                 all_pairs.append((link, host))
                 for country in country_nodes:
-                    categorized.setdefault(country, {
-                        "vless": [], "vmess": [], "shadowsocks": [], "trojan": [], "unknown": []
-                    })[proto].append((link, host))
+                    categorized.setdefault(country, {}).setdefault(proto, []).append((link, host))
 
         # Prepare and run ping tasks concurrently (capped at 5 by semaphore)
         hosts = list({host for _, host in all_pairs})
