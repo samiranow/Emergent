@@ -21,31 +21,6 @@
 | `trojan.txt` | فقط Trojan (ایران) | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/trojan.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/trojan.txt) |
 | `unknown.txt` | سایر/نامشخص (ایران) | [Open](https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/unknown.txt) · [Mirror](https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/unknown.txt) |
 
-<details>
-<summary><strong>نمایش URLهای خام</strong></summary>
-
-```
-https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/all.txt
-https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/light.txt
-https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/vless.txt
-https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/vmess.txt
-https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/shadowsocks.txt
-https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/trojan.txt
-https://raw.githubusercontent.com/ShatakVPN/ConfigForge-V2Ray/main/configs/ir/unknown.txt
-```
-
-_میرورها (jsDelivr):_
-
-```
-https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/all.txt
-https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/light.txt
-https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/vless.txt
-https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/vmess.txt
-https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/shadowsocks.txt
-https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/trojan.txt
-https://cdn.jsdelivr.net/gh/ShatakVPN/ConfigForge-V2Ray@main/configs/ir/unknown.txt
-```
-</details>
 
 برای تجربه‌ی سریع و چندزبانه از **رابط وب مدرن** استفاده کنید:  
 ➡️ **[https://shatakvpn.github.io/ConfigForge-V2Ray/](https://shatakvpn.github.io/ConfigForge-V2Ray/)**
