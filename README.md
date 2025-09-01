@@ -124,7 +124,7 @@ You can **fork this repository** and let **GitHub Actions** handle everything fo
 
 ---
 ## ⭐ Repository Popularity
-[![Stargazers over time](https://starchart.cc/ShatakVPN/ConfigForge-V2Ray.svg?variant=adaptive)]([https://starchart.cc/ShatakVPN/ConfigForge-V2Ray](https://github.com/ShatakVPN/ConfigForge-V2Ray))
+[![Stargazers over time](https://starchart.cc/ShatakVPN/ConfigForge-V2Ray.svg?variant=adaptive)](https://starchart.cc/ShatakVPN/ConfigForge-V2Ray)
 
 <p align="center">
   <img src="https://img.shields.io/github/stars/ShatakVPN/ConfigForge?style=for-the-badge&color=yellow" alt="Stars" />
