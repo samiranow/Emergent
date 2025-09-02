@@ -18,13 +18,13 @@ from functools import lru_cache
 # ============================== Configuration ==============================
 
 URLS = [
-    "https://www.v2nodes.com/subscriptions/country/al/?key=769B61EA877690D",
-    "https://www.v2nodes.com/subscriptions/country/ar/?key=769B61EA877690D",
-    "https://www.v2nodes.com/subscriptions/country/au/?key=769B61EA877690D",
-    "https://www.v2nodes.com/subscriptions/country/at/?key=769B61EA877690D",
-    "https://www.v2nodes.com/subscriptions/country/bh/?key=769B61EA877690D",
-    "https://www.v2nodes.com/subscriptions/country/be/?key=769B61EA877690D",
-    "https://www.v2nodes.com/subscriptions/country/bo/?key=769B61EA877690D",
+    "https://raw.githubusercontent.com/M-Mashreghi/Free-V2ray-Collector/refs/heads/main/Config_by_country/server_IR.txt",
+    "https://raw.githubusercontent.com/Epodonios/bulk-xray-v2ray-vless-vmess-...-configs/refs/heads/main/sub/Iran/config.txt",
+    "https://raw.githubusercontent.com/Surfboardv2ray/Proxy-sorter/refs/heads/main/output/IR.txt",
+    "https://raw.githubusercontent.com/10ium/V2rayCollector/refs/heads/main/mixed_iran.txt",
+    "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/Countries/Iran.txt",
+    "https://api.vmess.free.nf/semua.txt",
+    "https://vmess.totp.eu.org/nekobox.txt",
     "https://www.v2nodes.com/subscriptions/country/br/?key=769B61EA877690D",
     "https://www.v2nodes.com/subscriptions/country/bg/?key=769B61EA877690D",
     "https://www.v2nodes.com/subscriptions/country/ca/?key=769B61EA877690D",
